@@ -2,12 +2,11 @@ package controller;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ServerSocket;
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class Forwarder implements Runnable {
 
-	private ServerSocket serverSocket;
 	private Socket sourceSocket;
 	private Socket forwardingSocket;
 
@@ -34,9 +33,12 @@ public class Forwarder implements Runnable {
 		try {
 			byte[] buf = new byte[4096];
 			InputStream in = sourceSocket.getInputStream();
-
+			OutputStream out = forwardingSocket.getOutputStream();
+			
 			int nRead;
 			while ((nRead = in.read(buf, 0, buf.length)) != -1) {
+				out.write(buf, 0, nRead);
+				out.flush();
 				System.out.write(buf, 0, nRead);
 			}
 
