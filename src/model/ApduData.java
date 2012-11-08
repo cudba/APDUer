@@ -10,7 +10,7 @@ public interface ApduData {
 	
 	public ArrayList<Apdu> getApduHistory();
 	
-	public void setApduListener(ApduListener listener);
+	public void addApduListener(ApduListener listener);
 	
 	public void clearApduHistory();
 	

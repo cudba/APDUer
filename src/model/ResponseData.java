@@ -19,7 +19,7 @@ public class ResponseData implements ApduData {
 		return responseApdu;
 	}
 
-	public void setApduListener(ApduListener listener) {
+	public void addApduListener(ApduListener listener) {
 		listeners.add(listener);
 	}
 

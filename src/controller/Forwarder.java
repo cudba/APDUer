@@ -42,19 +42,17 @@ public class Forwarder implements Runnable {
 			InputStream in = sourceSocket.getInputStream();
 			OutputStream out = forwardingSocket.getOutputStream();
 			
-			int nRead;
-			while ((nRead = in.read(buf, 0, buf.length)) != -1) {
+			while (in.read(buf, 0, buf.length) != -1) {
 				
-				// Example
+				// example -> fill in apdu
 				Apdu apdu = new Apdu(buf);
 				apdu.setDescription("Blabla - APDU");
 				data.addApdu(apdu);
 				
 				
-				
-				out.write(buf, 0, nRead);
+				out.write(apdu.getOriginalApdu());
 				out.flush();
-				System.out.write(buf, 0, nRead);
+				System.out.write(apdu.getOriginalApdu());
 			}
 
 		} catch (IOException e) {

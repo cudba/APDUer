@@ -20,8 +20,10 @@ public class RelaySession {
 	private ServerSocket serverSocket;
 	private Socket initiatorSocket;
 	
-	private CommandData apduCommands;
-	private ResponseData apduResponses;
+	// TODO: initialize model somewhere else :>
+	private CommandData apduCommands = new CommandData();
+	private ResponseData apduResponses = new ResponseData();
+	
 	
 	public RelaySession(Socket target) {
 		establishConnection();
