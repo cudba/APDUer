@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import model.CommandData;
+import model.ResponseData;
+
 /**
  * 
  * @author Curdin Barandun
@@ -16,6 +19,9 @@ public class RelaySession {
 	private final int PORT = 1234;
 	private ServerSocket serverSocket;
 	private Socket initiatorSocket;
+	
+	private CommandData apduCommands;
+	private ResponseData apduResponses;
 	
 	public RelaySession(Socket target) {
 		establishConnection();
@@ -32,8 +38,8 @@ public class RelaySession {
 	}
 
 	private void initForwarding(Socket target) {
-		new Thread(new Forwarder(initiatorSocket,target)).start();
-		new Thread(new Forwarder(target, initiatorSocket)).start();
+		new Thread(new Forwarder(initiatorSocket,target, apduCommands)).start();
+		new Thread(new Forwarder(target, initiatorSocket, apduResponses)).start();
 	}
 
 }

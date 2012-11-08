@@ -9,6 +9,11 @@ public class Apdu {
 	private byte[] modifiedApdu;
 	
 	private String description;
+	
+	
+	public Apdu(byte[] originalApdu) {
+		this.originalApdu = originalApdu;
+	}
 
 	public byte[] getOriginalApdu() {
 		return originalApdu;
