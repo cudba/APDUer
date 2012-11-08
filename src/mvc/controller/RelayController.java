@@ -3,6 +3,8 @@ package mvc.controller;
 import java.io.IOException;
 import java.net.Socket;
 
+import relay.session.RelaySession;
+
 public class RelayController {
 
 	public void startRelaySession() {

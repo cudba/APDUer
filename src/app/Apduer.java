@@ -1,5 +1,6 @@
-package mvc.controller;
+package app;
 
+import mvc.controller.RelayController;
 import mvc.view.MainFrame;
 
 public class Apduer {
