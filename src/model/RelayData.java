@@ -13,14 +13,16 @@ public class RelayData {
 	private ArrayList<Apdu> responseApdu = new ArrayList<Apdu>();
 
 	
+	
 	public void addCommandApdu(Apdu command) {
 		commandApdu.add(command);
+		commandNotification(command);
 	}
 	
 	public void addResponseApdu(Apdu response) {
 		responseApdu.add(response);
+		responseNotification(response);
 	}
-	
 	
 	public ArrayList<Apdu> getCommandApduHistory() {
 		return commandApdu;
@@ -41,5 +43,18 @@ public class RelayData {
 	public void clearResponseApduHistory() {
 		responseApdu.clear();
 	}
+	
+	private void responseNotification(Apdu response) {
+		for (ApduListener listener : listeners) {
+			listener.responseReceived(response);
+		}
+	}
+	
+	private void commandNotification(Apdu command) {
+		for (ApduListener listener : listeners) {
+			listener.commandReceived(command);
+		}
+	}
+
 }
 

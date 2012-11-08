@@ -1,9 +1,11 @@
 package listener;
 
+import model.Apdu;
+
 public interface ApduListener {
 
-	public void commandReceived();
+	public void commandReceived(Apdu commandApdu);
 	
-	public void responseReceived();
+	public void responseReceived(Apdu responseApdu);
 	
 }
