@@ -1,6 +1,6 @@
 package utils;
 
-import model.Apdu;
+import mvc.model.Apdu;
 
 public class Modifier {
 	
