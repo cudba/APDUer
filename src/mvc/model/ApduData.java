@@ -27,9 +27,9 @@ public class ApduData {
 		apdu.clear();
 	}
 
-	private void notifyView(Apdu command) {
+	private void notifyView(Apdu apdu) {
 		for (ApduListener listener : listeners) {
-			listener.commandReceived(command);
+			listener.commandReceived(apdu);
 		}
 	}
 	
