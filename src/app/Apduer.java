@@ -1,6 +1,7 @@
 package app;
 
 import mvc.controller.RelayController;
+import mvc.model.ApduData;
 import mvc.view.MainFrame;
 
 public class Apduer {
@@ -14,7 +15,10 @@ public class Apduer {
 		//cause output on console
 		view.setVisible(false);
 
+		ApduData commandData = new ApduData();
+		ApduData responseData = new ApduData();
 		RelayController controller = new RelayController();
+		controller.addModel(commandData, responseData);
 		controller.startRelaySession();
 		
 		

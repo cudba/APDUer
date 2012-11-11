@@ -40,6 +40,14 @@ public class Forwarder implements Runnable {
 		
 		try {
 			
+			/*
+			 * 		use of StreamTokenizer (maybe)
+			 * 
+			 *		Reader r = new BufferedReader(new InputStreamReader(sourceSocket.getInputStream()));
+			 *		StreamTokenizer tok = new StreamTokenizer(r);
+			 *
+			 * 
+			 */
 			in = sourceSocket.getInputStream();
 			out = forwardingSocket.getOutputStream();
 		
@@ -50,6 +58,8 @@ public class Forwarder implements Runnable {
 				while (in.read(buf, 0, buf.length) != -1) {
 					out.write(buf,0,buf.length);
 					out.flush();
+					Apdu apdu = new Apdu(buf);
+					data.addApdu(apdu);
 					System.out.write(buf, 0, buf.length);
 					System.out.flush();
 					buf = new byte[4096];

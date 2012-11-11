@@ -4,14 +4,33 @@ import java.util.ArrayList;
 
 import mvc.listener.ApduListener;
 
-public interface ApduData {
+public class ApduData {
 	
-	public void addApdu(Apdu apdu);
-	
-	public ArrayList<Apdu> getApduHistory();
-	
-	public void addApduListener(ApduListener listener);
-	
-	public void clearApduHistory();
+	private ArrayList<ApduListener> listeners = new ArrayList<ApduListener>();
+
+	private ArrayList<Apdu> apdu = new ArrayList<Apdu>();
+
+	public void addApdu(Apdu data) {
+		apdu.add(data);
+		notifyView(data);
+	}
+
+	public ArrayList<Apdu> getApduHistory() {
+		return apdu;
+	}
+
+	public void addApduListener(ApduListener listener) {
+		listeners.add(listener);
+	}
+
+	public void clearApduHistory() {
+		apdu.clear();
+	}
+
+	private void notifyView(Apdu command) {
+		for (ApduListener listener : listeners) {
+			listener.commandReceived(command);
+		}
+	}
 	
 }
