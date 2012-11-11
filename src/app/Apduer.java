@@ -10,7 +10,7 @@ public class Apduer {
 	public static void main(String[] args) {
 		
 		MainFrame view = new MainFrame();
-		
+		System.out.println("Just for git test");
 		//cause output on console
 		view.setVisible(false);
 
