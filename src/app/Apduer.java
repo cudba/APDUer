@@ -1,5 +1,6 @@
 package app;
 
+import mvc.controller.RelayController;
 import mvc.model.ApduData;
 import mvc.view.ApduListFrame;
 
@@ -22,8 +23,10 @@ public class Apduer {
 
 
 //		RelayController controller = new RelayController(int listenPort, String remoteHost, int remotePort);
-//		controller.addModel(commandData, responseData);
-//		controller.startRelaySession();
+		RelayController controller = new RelayController();
+		controller.setConnectionParameters(1234, "localhost", 4321);
+		controller.addModel(commandData, responseData);
+		controller.startRelaySession();
 		
 		
 	}
