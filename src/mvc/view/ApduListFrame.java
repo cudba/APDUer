@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Enumeration;
 
 import javax.swing.JButton;
@@ -14,6 +16,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
 import org.w3c.dom.CDATASection;
@@ -21,7 +25,7 @@ import org.w3c.dom.CDATASection;
 import mvc.listener.ApduListener;
 import mvc.model.*;
 
-public class MainFrame extends JFrame {
+public class ApduListFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel panel_options;
@@ -37,7 +41,7 @@ public class MainFrame extends JFrame {
 	private JTable table_rapdu;
 	private JToolBar toolBar;
 	
-	public MainFrame(ApduData responseApdu, ApduData commandApdu) {
+	public ApduListFrame(ApduData responseApdu, ApduData commandApdu) {
 		rApdu = responseApdu;
 		cApdu = commandApdu;
 		rApdu.addApduListener(createApduListener());
@@ -100,8 +104,8 @@ public class MainFrame extends JFrame {
 		panel_table.add(scrollPane_0, gbc_scrollPane_0);
 		
 		table_capdu = new JTable();
-		table_capdu.setModel(new CApduTableModel(cApdu));
-		configureSettings(table_capdu);
+		table_capdu.setModel(new ApduTableModel(cApdu, new String[]{"C-APDU","Description"}));
+		configureTable(table_capdu);
 		scrollPane_0.setViewportView(table_capdu);
 		
 		scrollPane_1 = new JScrollPane();
@@ -112,8 +116,8 @@ public class MainFrame extends JFrame {
 		panel_table.add(scrollPane_1, gbc_scrollPane_1);
 		
 		table_rapdu = new JTable();
-		table_rapdu.setModel(new RApduTableModel(rApdu));
-		configureSettings(table_rapdu);
+		table_rapdu.setModel(new ApduTableModel(rApdu, new String[]{"R-APDU","Description"}));
+		configureTable(table_rapdu);
 		scrollPane_1.setViewportView(table_rapdu);
 		
 		panel_options = new JPanel();
@@ -148,7 +152,7 @@ public class MainFrame extends JFrame {
 	}
 	
 	
-	private void configureSettings(JTable table) {
+	private void configureTable(JTable table) {
 	    table.setSelectionMode(0);
 //	    table.getSelectionModel().addListSelectionListener(this.selectListController);
 	    table.getTableHeader().setReorderingAllowed(false);

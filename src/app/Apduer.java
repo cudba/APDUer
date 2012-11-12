@@ -2,7 +2,7 @@ package app;
 
 import mvc.controller.RelayController;
 import mvc.model.ApduData;
-import mvc.view.MainFrame;
+import mvc.view.ApduListFrame;
 
 public class Apduer {
 
@@ -10,12 +10,19 @@ public class Apduer {
 	
 	public static void main(String[] args) {
 		
-		MainFrame view = new MainFrame(new ApduData(), new ApduData());
+		ApduData commandData = new ApduData();
+		ApduData responseData = new ApduData();	
+		
+		//start entrypoint
+		//get settings
+		//start relaysession
+		//start apdulistframe
+		
+		ApduListFrame view = new ApduListFrame(responseData, commandData);
 		view.setVisible(true);
 
-//		ApduData commandData = new ApduData();
-//		ApduData responseData = new ApduData();
-//		RelayController controller = new RelayController();
+
+//		RelayController controller = new RelayController(int listenPort, String remoteHost, int remotePort);
 //		controller.addModel(commandData, responseData);
 //		controller.startRelaySession();
 		

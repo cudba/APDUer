@@ -4,14 +4,15 @@ import javax.swing.table.AbstractTableModel;
 
 import mvc.listener.ApduListener;
 
-public class RApduTableModel extends AbstractTableModel {
+public class ApduTableModel extends AbstractTableModel {
 
 	private ApduData data;
-	String[] columnNames = { "R-APDU", "Description" };
+	String[] columnNames;;
 
-	public RApduTableModel(ApduData data) {
+	public ApduTableModel(ApduData data, String[] columnNames) {
 		this.data = data;
-		data.addApduListener(createApduListener());
+		this.columnNames = columnNames;
+		this.data.addApduListener(createApduListener());
 	}
 
 	private ApduListener createApduListener() {
