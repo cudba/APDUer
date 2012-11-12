@@ -1,29 +1,28 @@
 package mvc.view;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
-import org.w3c.dom.CDATASection;
-
 import mvc.listener.ApduListener;
-import mvc.model.*;
+import mvc.model.Apdu;
+import mvc.model.ApduData;
+import mvc.model.ApduTableModel;
 
 public class ApduListFrame extends JFrame {
 
@@ -39,7 +38,17 @@ public class ApduListFrame extends JFrame {
 	private JScrollPane scrollPane_1;
 	private JTable table_capdu;
 	private JTable table_rapdu;
-	private JToolBar toolBar;
+	private JMenuBar menuBar;
+	private JMenu mnFile;
+	private JMenu mnTools;
+	private JMenu mnHelp;
+	private JMenuItem mntmNew;
+	private JMenuItem mntmOpen;
+	private JMenuItem mntmSave;
+	private JMenuItem mntmExit;
+	private JMenuItem mntmModifier;
+	private JMenuItem mntmLoadTemplate;
+	private JMenuItem mntmAbout;
 	
 	public ApduListFrame(ApduData responseApdu, ApduData commandApdu) {
 		rApdu = responseApdu;
@@ -64,6 +73,40 @@ public class ApduListFrame extends JFrame {
 	private void initUi() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
+	    setMinimumSize(new Dimension(750, 250));
+	    
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		mntmNew = new JMenuItem("New");
+		mnFile.add(mntmNew);
+		
+		mntmOpen = new JMenuItem("Open");
+		mnFile.add(mntmOpen);
+		
+		mntmSave = new JMenuItem("Save");
+		mnFile.add(mntmSave);
+		
+		mntmExit = new JMenuItem("Exit");
+		mnFile.add(mntmExit);
+		
+		mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		mntmModifier = new JMenuItem("Modifier");
+		mnTools.add(mntmModifier);
+		
+		mntmLoadTemplate = new JMenuItem("Load template");
+		mnTools.add(mntmLoadTemplate);
+		
+		mnHelp = new JMenu("Help");
+		menuBar.add(mnHelp);
+		
+		mntmAbout = new JMenuItem("About");
+		mnHelp.add(mntmAbout);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -73,13 +116,6 @@ public class ApduListFrame extends JFrame {
 		gbl_contentPane.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_contentPane.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
-		
-		toolBar = new JToolBar();
-		GridBagConstraints gbc_toolBar = new GridBagConstraints();
-		gbc_toolBar.insets = new Insets(0, 0, 5, 0);
-		gbc_toolBar.gridx = 0;
-		gbc_toolBar.gridy = 0;
-		contentPane.add(toolBar, gbc_toolBar);
 		
 		panel_table = new JPanel();
 		GridBagConstraints gbc_panel_table = new GridBagConstraints();
