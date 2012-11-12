@@ -22,7 +22,6 @@ public class Apduer {
 		view.setVisible(true);
 
 
-//		RelayController controller = new RelayController(int listenPort, String remoteHost, int remotePort);
 		RelayController controller = new RelayController();
 		controller.setConnectionParameters(1234, "localhost", 4321);
 		controller.addModel(commandData, responseData);
