@@ -29,7 +29,7 @@ public class ApduData {
 
 	private void notifyView(Apdu apdu) {
 		for (ApduListener listener : listeners) {
-			listener.commandReceived(apdu);
+			listener.apduReceived(apdu);
 		}
 	}
 	

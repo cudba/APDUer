@@ -4,8 +4,7 @@ import mvc.model.Apdu;
 
 public interface ApduListener {
 
-	public void commandReceived(Apdu commandApdu);
+	public void apduReceived(Apdu apdu);
 	
-	public void responseReceived(Apdu responseApdu);
 	
 }
