@@ -1,37 +1,36 @@
 package mvc.view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.GridBagLayout;
-import javax.swing.JComboBox;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.border.EmptyBorder;
 
-public class EntryPoint extends JFrame {
+public class NewSession extends JDialog {
 
 	private JPanel contentPane;
 	private JTextField textFieldPortListen;
 	private JTextField textFieldForwardIP;
 	private JTextField textFieldForwardPort;
 
-	public EntryPoint() {
-		setResizable(false);
+	public NewSession() {
 		initGui();
 	}
 
 	private void initGui() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
 		setBounds(100, 100, 294, 176);
-		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -123,6 +122,12 @@ public class EntryPoint extends JFrame {
 		gbc_btnStart.gridx = 1;
 		gbc_btnStart.gridy = 4;
 		contentPane.add(btnStart, gbc_btnStart);
+		
+	    setModalityType(ModalityType.APPLICATION_MODAL);
+	    setTitle("New session");
+	    setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+//	    setLocationRelativeTo(null);
+	    setSize(300, 200);
 	}
 
 }

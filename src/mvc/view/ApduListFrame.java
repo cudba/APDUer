@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 
 import javax.swing.JButton;
@@ -71,6 +72,7 @@ public class ApduListFrame extends JFrame {
 	}
 
 	private void initUi() {
+		setTitle("APDUer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 	    setMinimumSize(new Dimension(750, 250));
@@ -79,9 +81,19 @@ public class ApduListFrame extends JFrame {
 		setJMenuBar(menuBar);
 		
 		mnFile = new JMenu("File");
+		mnFile.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(mnFile);
 		
 		mntmNew = new JMenuItem("New");
+		mntmNew.setMnemonic(KeyEvent.VK_N);
+		mntmNew.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				NewSession ns = new NewSession();
+				ns.setVisible(true);
+			}
+		});
 		mnFile.add(mntmNew);
 		
 		mntmOpen = new JMenuItem("Open");

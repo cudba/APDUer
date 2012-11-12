@@ -1,9 +1,7 @@
 package app;
 
-import mvc.controller.RelayController;
 import mvc.model.ApduData;
 import mvc.view.ApduListFrame;
-import mvc.view.EntryPoint;
 
 public class Apduer {
 
@@ -18,9 +16,6 @@ public class Apduer {
 		//get settings
 		//start relaysession
 		//start apdulistframe
-		
-		EntryPoint entryPoint = new EntryPoint();
-		entryPoint.setVisible(true);
 		
 		ApduListFrame view = new ApduListFrame(responseData, commandData);
 		view.setVisible(true);
