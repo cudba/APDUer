@@ -4,19 +4,19 @@ import javax.swing.table.AbstractTableModel;
 
 import mvc.listener.ApduListener;
 
-public class RAdpuTableModel extends AbstractTableModel {
+public class CApduTableModel extends AbstractTableModel {
 
 	private ApduData data;
-	String[] columnNames = { "R-APDU", "Description" };
+	String[] columnNames = { "C-APDU", "Description" };
 
-	public RAdpuTableModel(ApduData data) {
+	public CApduTableModel(ApduData data) {
 		this.data = data;
-		data.addApduListener(createApduListener());
+		this.data.addApduListener(createApduListener());
 	}
 
 	private ApduListener createApduListener() {
 		return new ApduListener() {
-			
+
 			@Override
 			public void apduReceived(Apdu apdu) {
 				updateTable();
@@ -28,6 +28,10 @@ public class RAdpuTableModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 
+	public String getColumnName(int col) {
+		return this.columnNames[col].toString();
+	}
+
 	@Override
 	public int getColumnCount() {
 		return this.columnNames.length;
@@ -35,12 +39,12 @@ public class RAdpuTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return data.getApduHistory().size();
+		return data.getApduList().size();
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Apdu apdu = data.getApduHistory().get(rowIndex);
+		Apdu apdu = data.getApduList().get(rowIndex);
 
 		if (columnIndex == 0) {
 			return apdu.getOriginalApdu().toString();

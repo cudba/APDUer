@@ -10,16 +10,14 @@ public class Apduer {
 	
 	public static void main(String[] args) {
 		
-		MainFrame view = new MainFrame();
-		System.out.println("Just for git test");
-		//cause output on console
-		view.setVisible(false);
+		MainFrame view = new MainFrame(new ApduData(), new ApduData());
+		view.setVisible(true);
 
-		ApduData commandData = new ApduData();
-		ApduData responseData = new ApduData();
-		RelayController controller = new RelayController();
-		controller.addModel(commandData, responseData);
-		controller.startRelaySession();
+//		ApduData commandData = new ApduData();
+//		ApduData responseData = new ApduData();
+//		RelayController controller = new RelayController();
+//		controller.addModel(commandData, responseData);
+//		controller.startRelaySession();
 		
 		
 	}

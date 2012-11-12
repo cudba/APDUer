@@ -6,5 +6,4 @@ public interface ApduListener {
 
 	public void apduReceived(Apdu apdu);
 	
-	
 }
