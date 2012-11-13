@@ -21,6 +21,9 @@ public class ApduStreamHandler {
 		int readBytes = 0;
 		while ((readBytes = inputStream.read(buffer, length, buffer.length - length)) != -1) {
 			length += readBytes;
+			
+			System.out.println(new String(buffer) + " bytes read");
+			
 			int delimiterIndex = indexOfDelimiter(buffer);
 			if (delimiterIndex >= 0)
 				return trim(buffer, delimiterIndex);

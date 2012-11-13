@@ -42,6 +42,7 @@ public class Forwarder implements Runnable {
 			while (true) {
 				byte[] receivedApdu = streamHandler.readApdu(inputStream);
 				Apdu apdu = new Apdu(receivedApdu);
+				System.out.println(apdu.toString() + " Apdu Created");
 				data.addApdu(apdu);
 				streamHandler.sendApdu(outStream, receivedApdu);
 				System.out.print(new String(apdu.getOriginalApdu()));
