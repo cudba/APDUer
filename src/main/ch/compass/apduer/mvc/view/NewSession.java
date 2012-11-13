@@ -5,7 +5,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.prefs.Preferences;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -36,8 +35,6 @@ public class NewSession extends JDialog {
 	}
 
 	private void definePrefs() {
-		//TODO prefs von aussen übergeben??
-//		prefs = Preferences.userRoot().node(this.getClass().getName());
 		textFieldPortListen.setText(controller.getSessionPrefs().get("listenPort", "1234"));
 		textFieldForwardIP.setText(controller.getSessionPrefs().get("remoteHost","127.0.0.1"));
 		textFieldForwardPort.setText(controller.getSessionPrefs().get("remotePort", "4321"));

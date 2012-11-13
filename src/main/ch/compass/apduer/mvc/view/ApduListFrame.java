@@ -23,9 +23,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableColumn;
 
 import ch.compass.apduer.mvc.controller.RelayController;
-import ch.compass.apduer.mvc.listener.ApduListener;
 import ch.compass.apduer.mvc.listener.SessionListener;
-import ch.compass.apduer.mvc.model.Apdu;
 import ch.compass.apduer.mvc.model.ApduData;
 import ch.compass.apduer.mvc.model.ApduTableModel;
 import ch.compass.apduer.mvc.model.CurrentSessionModel;
@@ -70,8 +68,6 @@ public class ApduListFrame extends JFrame {
 		rApdu = controller.getResponseData();
 		cApdu = controller.getCommandData();
 		currentSession = controller.getSessionModel();
-		rApdu.addApduListener(createApduListener());
-		cApdu.addApduListener(createApduListener());
 		currentSession.addSessionListener(createSessionListener());
 		initUi();
 		updateSessionPrefs();
@@ -92,17 +88,6 @@ public class ApduListFrame extends JFrame {
 		lblRPort.setText(Integer.toString(currentSession.getRemotePort()));
 		lblRHost.setText(currentSession.getRemoteHost());
 		
-	}
-
-	private ApduListener createApduListener() {
-		return new ApduListener() {
-			
-			@Override
-			public void apduReceived(Apdu apdu) {
-				// TODO Auto-generated method stub
-				
-			}
-		};
 	}
 
 	private void initUi() {
