@@ -136,11 +136,11 @@ public class NewSession extends JDialog {
 		JButton btnStart = new JButton("Start new session");
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				NewSession.this.dispose();
 				String portListen = textFieldPortListen.getText();
 				String remoteHost = textFieldForwardIP.getText();
 				String remotePort = textFieldForwardPort.getText();
 				controller.newSession(portListen, remoteHost, remotePort);
-				NewSession.this.dispose();
 			}
 		});
 		GridBagConstraints gbc_btnStart = new GridBagConstraints();
