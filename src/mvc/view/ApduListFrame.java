@@ -71,11 +71,6 @@ public class ApduListFrame extends JFrame {
 				// TODO Auto-generated method stub
 				
 			}
-
-			@Override
-			public void sessionChanged() {
-				// TODO Auto-generated method stub
-			}
 		};
 	}
 

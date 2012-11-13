@@ -6,10 +6,6 @@ import mvc.listener.ApduListener;
 
 public class ApduData {
 	
-	private String listenPort;
-	private String remoteHost;
-	private String remotePort;	
-	
 	private ArrayList<ApduListener> listeners = new ArrayList<ApduListener>();
 
 	private ArrayList<Apdu> apdu = new ArrayList<Apdu>();
@@ -34,19 +30,6 @@ public class ApduData {
 	private void notifyApduReceived(Apdu apdu) {
 		for (ApduListener listener : listeners) {
 			listener.apduReceived(apdu);
-		}
-	}
-	
-	private void setSession(String listenPort, String remoteHost, String remotePort){
-		this.listenPort = listenPort;
-		this.remoteHost = remoteHost;
-		this.remotePort = remotePort;
-		notifySessionChanged();
-	}
-
-	private void notifySessionChanged() {
-		for (ApduListener listener : listeners) {
-			listener.sessionChanged();
 		}
 	}
 	

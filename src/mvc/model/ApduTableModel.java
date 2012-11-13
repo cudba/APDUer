@@ -23,10 +23,6 @@ public class ApduTableModel extends AbstractTableModel {
 				updateTable();
 			}
 
-			@Override
-			public void sessionChanged() {
-				
-			}
 		};
 	}
 

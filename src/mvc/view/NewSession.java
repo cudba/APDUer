@@ -26,7 +26,6 @@ public class NewSession extends JDialog {
 	private JTextField textFieldForwardIP;
 	private JTextField textFieldForwardPort;
 
-	private Preferences prefs;
 	private RelayController controller;
 
 	public NewSession(RelayController controller) {
@@ -37,10 +36,10 @@ public class NewSession extends JDialog {
 
 	private void definePrefs() {
 		//TODO prefs von aussen übergeben??
-		prefs = Preferences.userRoot().node(this.getClass().getName());
-		textFieldPortListen.setText(prefs.get("listenPort", "1234"));
-		textFieldForwardIP.setText(prefs.get("remoteHost","127.0.0.1"));
-		textFieldForwardPort.setText(prefs.get("remotePort", "4321"));
+//		prefs = Preferences.userRoot().node(this.getClass().getName());
+		textFieldPortListen.setText(controller.getSessionPrefs().get("listenPort", "1234"));
+		textFieldForwardIP.setText(controller.getSessionPrefs().get("remoteHost","127.0.0.1"));
+		textFieldForwardPort.setText(controller.getSessionPrefs().get("remotePort", "4321"));
 	}
 
 
@@ -142,9 +141,6 @@ public class NewSession extends JDialog {
 				String portListen = textFieldPortListen.getText();
 				String remoteHost = textFieldForwardIP.getText();
 				String remotePort = textFieldForwardPort.getText();
-				prefs.put("listenPort", portListen);
-				prefs.put("remoteHost", remoteHost);
-				prefs.put("remotePort", remotePort);
 				controller.newSession(portListen, remoteHost, remotePort);
 				NewSession.this.dispose();
 			}
