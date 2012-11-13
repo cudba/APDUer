@@ -4,17 +4,14 @@ import java.util.ArrayList;
 
 public class Apdu {
 
-	
 	private byte[] originalApdu;
-	
-	
+
 	private byte[] modifiedApdu;
-	
+
 	private String description;
-	
+
 	private ArrayList<Field> fields;
-	
-	
+
 	public Apdu(byte[] originalApdu) {
 		this.originalApdu = originalApdu;
 	}
@@ -50,6 +47,10 @@ public class Apdu {
 	public void setFields(ArrayList<Field> fields) {
 		this.fields = fields;
 	}
-	
+
+	@Override
+	public String toString() {
+		return new String(originalApdu);
+	}
 
 }
