@@ -35,21 +35,14 @@ public class Forwarder implements Runnable {
 				+ sourceSocket.getInetAddress().getHostAddress() + " to "
 				+ forwardingSocket.getInetAddress().getHostAddress());
 
-		try {
-			InputStream inputStream = sourceSocket.getInputStream();
-			OutputStream outStream = forwardingSocket.getOutputStream();
-			try {
-				while (true) {
-					byte[] receivedApdu = streamHandler.readStream(inputStream);
-					Apdu apdu = new Apdu(receivedApdu);
-					data.addApdu(apdu);
-					streamHandler.sendStream(outStream, receivedApdu);
-					System.out.print(new String(apdu.getOriginalApdu()));
-				}
-
-			} finally {
-				inputStream.close();
-				outStream.close();
+		try (InputStream inputStream = sourceSocket.getInputStream();
+				OutputStream outStream = forwardingSocket.getOutputStream()) {
+			while (true) {
+				byte[] receivedApdu = streamHandler.readStream(inputStream);
+				Apdu apdu = new Apdu(receivedApdu);
+				data.addApdu(apdu);
+				streamHandler.sendStream(outStream, receivedApdu);
+				System.out.print(new String(apdu.getOriginalApdu()));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
