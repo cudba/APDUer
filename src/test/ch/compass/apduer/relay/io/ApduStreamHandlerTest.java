@@ -1,5 +1,4 @@
-package test.ch.compass.apduer.relay.io;
-
+package ch.compass.apduer.relay.io;
 import static org.junit.Assert.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -7,7 +6,6 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 
-import relay.io.ApduStreamHandler;
 
 public class ApduStreamHandlerTest {
 
