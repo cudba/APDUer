@@ -12,7 +12,7 @@ public class ApduData {
 
 	public void addApdu(Apdu data) {
 		apdu.add(data);
-		notify(data);
+		notifyApduReceived(data);
 	}
 
 	public ArrayList<Apdu> getApduList() {
@@ -27,7 +27,7 @@ public class ApduData {
 		apdu.clear();
 	}
 
-	private void notify(Apdu apdu) {
+	private void notifyApduReceived(Apdu apdu) {
 		for (ApduListener listener : listeners) {
 			listener.apduReceived(apdu);
 		}

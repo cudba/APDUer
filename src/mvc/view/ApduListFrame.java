@@ -20,10 +20,14 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableColumn;
 
+import mvc.controller.RelayController;
 import mvc.listener.ApduListener;
+import mvc.listener.SessionListener;
 import mvc.model.Apdu;
 import mvc.model.ApduData;
 import mvc.model.ApduTableModel;
+import mvc.model.CurrentSessionModel;
+import javax.swing.JLabel;
 
 public class ApduListFrame extends JFrame {
 
@@ -34,6 +38,8 @@ public class ApduListFrame extends JFrame {
 
 	private ApduData rApdu;
 	private ApduData cApdu;
+	private CurrentSessionModel currentSession;
+	private RelayController controller;
 	private JPanel panel_table;
 	private JScrollPane scrollPane_0;
 	private JScrollPane scrollPane_1;
@@ -50,13 +56,39 @@ public class ApduListFrame extends JFrame {
 	private JMenuItem mntmModifier;
 	private JMenuItem mntmLoadTemplate;
 	private JMenuItem mntmAbout;
+	private JLabel lblListenport;
+	private JLabel lblLPort;
+	private JLabel lblRemotehost;
+	private JLabel lblRHost;
+	private JLabel lblRemoteport;
+	private JLabel lblRPort;
 	
-	public ApduListFrame(ApduData responseApdu, ApduData commandApdu) {
-		rApdu = responseApdu;
-		cApdu = commandApdu;
+	public ApduListFrame(RelayController controller) {
+		this.controller = controller;
+		rApdu = controller.getResponseData();
+		cApdu = controller.getCommandData();
+		currentSession = controller.getSessionModel();
 		rApdu.addApduListener(createApduListener());
 		cApdu.addApduListener(createApduListener());
+		currentSession.addSessionListener(createSessionListener());
 		initUi();
+		updateSessionPrefs();
+	}
+
+	private SessionListener createSessionListener() {
+		return new SessionListener() {
+			
+			@Override
+			public void sessionChanged() {
+				updateSessionPrefs();
+			}
+		};
+	}
+
+	protected void updateSessionPrefs() {
+		lblLPort.setText(currentSession.getListenPort());
+		lblRPort.setText(currentSession.getRemotePort());
+		lblRHost.setText(currentSession.getRemoteHost());
 		
 	}
 
@@ -90,7 +122,7 @@ public class ApduListFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				NewSession ns = new NewSession();
+				NewSession ns = new NewSession(controller);
 				ns.setVisible(true);
 			}
 		});
@@ -175,9 +207,9 @@ public class ApduListFrame extends JFrame {
 		gbc_panel_options.gridy = 2;
 		contentPane.add(panel_options, gbc_panel_options);
 		GridBagLayout gbl_panel_options = new GridBagLayout();
-		gbl_panel_options.columnWidths = new int[]{0, 0, 0};
+		gbl_panel_options.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_options.rowHeights = new int[]{0, 0};
-		gbl_panel_options.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_options.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel_options.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_options.setLayout(gbl_panel_options);
 		
@@ -194,9 +226,57 @@ public class ApduListFrame extends JFrame {
 			}
 		});
 		GridBagConstraints gbc_btnSend = new GridBagConstraints();
+		gbc_btnSend.insets = new Insets(0, 0, 0, 5);
 		gbc_btnSend.gridx = 1;
 		gbc_btnSend.gridy = 0;
 		panel_options.add(btnSend, gbc_btnSend);
+		
+		lblListenport = new JLabel("Listenport: ");
+		GridBagConstraints gbc_lblListenport = new GridBagConstraints();
+		gbc_lblListenport.anchor = GridBagConstraints.EAST;
+		gbc_lblListenport.insets = new Insets(0, 0, 0, 5);
+		gbc_lblListenport.gridx = 3;
+		gbc_lblListenport.gridy = 0;
+		panel_options.add(lblListenport, gbc_lblListenport);
+		
+		lblLPort = new JLabel("port");
+		GridBagConstraints gbc_lblLPort = new GridBagConstraints();
+		gbc_lblLPort.anchor = GridBagConstraints.WEST;
+		gbc_lblLPort.insets = new Insets(0, 0, 0, 5);
+		gbc_lblLPort.gridx = 4;
+		gbc_lblLPort.gridy = 0;
+		panel_options.add(lblLPort, gbc_lblLPort);
+		
+		lblRemotehost = new JLabel("Remotehost: ");
+		GridBagConstraints gbc_lblRemotehost = new GridBagConstraints();
+		gbc_lblRemotehost.anchor = GridBagConstraints.EAST;
+		gbc_lblRemotehost.insets = new Insets(0, 0, 0, 5);
+		gbc_lblRemotehost.gridx = 5;
+		gbc_lblRemotehost.gridy = 0;
+		panel_options.add(lblRemotehost, gbc_lblRemotehost);
+		
+		lblRHost = new JLabel("host");
+		GridBagConstraints gbc_lblRHost = new GridBagConstraints();
+		gbc_lblRHost.anchor = GridBagConstraints.WEST;
+		gbc_lblRHost.insets = new Insets(0, 0, 0, 5);
+		gbc_lblRHost.gridx = 6;
+		gbc_lblRHost.gridy = 0;
+		panel_options.add(lblRHost, gbc_lblRHost);
+		
+		lblRemoteport = new JLabel("Remoteport: ");
+		GridBagConstraints gbc_lblRemoteport = new GridBagConstraints();
+		gbc_lblRemoteport.anchor = GridBagConstraints.EAST;
+		gbc_lblRemoteport.insets = new Insets(0, 0, 0, 5);
+		gbc_lblRemoteport.gridx = 7;
+		gbc_lblRemoteport.gridy = 0;
+		panel_options.add(lblRemoteport, gbc_lblRemoteport);
+		
+		lblRPort = new JLabel("remPort");
+		GridBagConstraints gbc_lblRPort = new GridBagConstraints();
+		gbc_lblRPort.anchor = GridBagConstraints.WEST;
+		gbc_lblRPort.gridx = 8;
+		gbc_lblRPort.gridy = 0;
+		panel_options.add(lblRPort, gbc_lblRPort);
 	}
 	
 	

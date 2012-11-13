@@ -22,6 +22,7 @@ public class ApduTableModel extends AbstractTableModel {
 			public void apduReceived(Apdu apdu) {
 				updateTable();
 			}
+
 		};
 	}
 

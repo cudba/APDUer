@@ -17,6 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import mvc.controller.RelayController;
+
 public class NewSession extends JDialog {
 
 	private JPanel contentPane;
@@ -24,19 +26,20 @@ public class NewSession extends JDialog {
 	private JTextField textFieldForwardIP;
 	private JTextField textFieldForwardPort;
 
-	private Preferences prefs;
+	private RelayController controller;
 
-	public NewSession() {
+	public NewSession(RelayController controller) {
+		this.controller = controller;
 		initGui();
 		definePrefs();
 	}
 
 	private void definePrefs() {
 		//TODO prefs von aussen übergeben??
-		prefs = Preferences.userRoot().node(this.getClass().getName());
-		textFieldPortListen.setText(prefs.get("listenPort", "1234"));
-		textFieldForwardIP.setText(prefs.get("remoteHost","127.0.0.1"));
-		textFieldForwardPort.setText(prefs.get("remotePort", "4321"));
+//		prefs = Preferences.userRoot().node(this.getClass().getName());
+		textFieldPortListen.setText(controller.getSessionPrefs().get("listenPort", "1234"));
+		textFieldForwardIP.setText(controller.getSessionPrefs().get("remoteHost","127.0.0.1"));
+		textFieldForwardPort.setText(controller.getSessionPrefs().get("remotePort", "4321"));
 	}
 
 
@@ -132,12 +135,13 @@ public class NewSession extends JDialog {
 		contentPane.add(textFieldForwardPort, gbc_textFieldForwardPort);
 		textFieldForwardPort.setColumns(10);
 
-		JButton btnStart = new JButton("Close and start new session");
+		JButton btnStart = new JButton("Start new session");
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				prefs.put("listenPort", textFieldPortListen.getText());
-				prefs.put("remoteHost", textFieldForwardIP.getText());
-				prefs.put("remotePort", textFieldForwardPort.getText());
+				String portListen = textFieldPortListen.getText();
+				String remoteHost = textFieldForwardIP.getText();
+				String remotePort = textFieldForwardPort.getText();
+				controller.newSession(portListen, remoteHost, remotePort);
 				NewSession.this.dispose();
 			}
 		});
@@ -150,7 +154,7 @@ public class NewSession extends JDialog {
 		setTitle("New session");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
-		setSize(412, 173);
+		setSize(338, 173);
 	}
 
 }
