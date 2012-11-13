@@ -28,6 +28,7 @@ import mvc.model.ApduData;
 import mvc.model.ApduTableModel;
 import mvc.model.CurrentSessionModel;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class ApduListFrame extends JFrame {
 
@@ -232,6 +233,7 @@ public class ApduListFrame extends JFrame {
 		panel_options.add(btnSend, gbc_btnSend);
 		
 		lblListenport = new JLabel("Listenport: ");
+		lblListenport.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_lblListenport = new GridBagConstraints();
 		gbc_lblListenport.anchor = GridBagConstraints.EAST;
 		gbc_lblListenport.insets = new Insets(0, 0, 0, 5);
@@ -248,6 +250,7 @@ public class ApduListFrame extends JFrame {
 		panel_options.add(lblLPort, gbc_lblLPort);
 		
 		lblRemotehost = new JLabel("Remotehost: ");
+		lblRemotehost.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_lblRemotehost = new GridBagConstraints();
 		gbc_lblRemotehost.anchor = GridBagConstraints.EAST;
 		gbc_lblRemotehost.insets = new Insets(0, 0, 0, 5);
@@ -264,6 +267,7 @@ public class ApduListFrame extends JFrame {
 		panel_options.add(lblRHost, gbc_lblRHost);
 		
 		lblRemoteport = new JLabel("Remoteport: ");
+		lblRemoteport.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_lblRemoteport = new GridBagConstraints();
 		gbc_lblRemoteport.anchor = GridBagConstraints.EAST;
 		gbc_lblRemoteport.insets = new Insets(0, 0, 0, 5);
