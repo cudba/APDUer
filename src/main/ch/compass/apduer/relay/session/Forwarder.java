@@ -1,5 +1,7 @@
 package ch.compass.apduer.relay.session;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,13 +33,12 @@ public class Forwarder implements Runnable {
 	}
 
 	private void relayCommunication() {
-
 		System.out.println("Relay from "
 				+ sourceSocket.getInetAddress().getHostAddress() + " to "
 				+ forwardingSocket.getInetAddress().getHostAddress());
 
-		try (InputStream inputStream = sourceSocket.getInputStream();
-				OutputStream outStream = forwardingSocket.getOutputStream()) {
+		try (InputStream inputStream = new BufferedInputStream(sourceSocket.getInputStream());
+				OutputStream outStream = new BufferedOutputStream(forwardingSocket.getOutputStream())) {
 			while (true) {
 				byte[] receivedApdu = streamHandler.readApdu(inputStream);
 				Apdu apdu = new Apdu(receivedApdu);
