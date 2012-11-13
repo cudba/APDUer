@@ -18,7 +18,7 @@ public class Forwarder implements Runnable {
 	private Socket sourceSocket;
 	private Socket forwardingSocket;
 	private ApduData data;
-	private ApduStreamHandler streamHandler = new ApduStreamHandler('#');
+	private ApduStreamHandler streamHandler = new ApduStreamHandler();
 
 	public Forwarder(Socket sourceSocket, Socket forwardingSocket, ApduData data) {
 		this.sourceSocket = sourceSocket;

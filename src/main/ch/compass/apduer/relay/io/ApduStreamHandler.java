@@ -12,54 +12,39 @@ import ch.compass.apduer.mvc.model.Apdu;
 public class ApduStreamHandler {
 
 	private static final int BUFFER_SIZE = 1024;
-	private char delimiter;
 
-	public ApduStreamHandler(char delimiter) {
-		this.delimiter = delimiter;
+	public ApduStreamHandler() {
 
 	}
 
 	public Queue<Apdu> readApdu(InputStream inputStream) throws IOException {
+		LibNfcApduExtractor extractor = new LibNfcApduExtractor();
 		byte[] buffer = new byte[BUFFER_SIZE];
 		Queue<Apdu> apduQueue = new LinkedList<Apdu>();
-		ArrayList<Integer> delimiterIndices;
 
 		int length = 0;
 		int readBytes = 0;
-		while ((readBytes = inputStream.read(buffer, length, buffer.length - length)) > 0) {
+		if ((readBytes = inputStream.read(buffer, length, buffer.length)) != -1) {
+			
 			length += readBytes;
 			System.out.println(length + " Bytes read...");
-			delimiterIndices = getDelimiterIndices(buffer);
-			int lastDelimiterIndex = extractApdusToQueue(delimiterIndices,buffer, apduQueue);
-			eraseExtractedApdus(buffer, lastDelimiterIndex);
-			length -= lastDelimiterIndex;
+			
+			int missingBytes = extractor.extractApdusToQueue(buffer, apduQueue, length);
+			
+			if ((length + missingBytes) > buffer.length) {
+				buffer = enlarge(buffer);
+			}
+			
+			while((readBytes = inputStream.read(buffer, length, missingBytes)) != 0) {
+				length += readBytes;
+				//TODO: add new bytes to apdu
+			}
 			return apduQueue;
 		}
-		
-		if(length > 0) {
-			byte[] lastApdu = trim(buffer, 0, length);
-			apduQueue.add(new Apdu(lastApdu));
-		}
-		return null;
-		
-
+		throw new IOException("Stream disconnected...Nein?... Doch!... OOHHHHHCCHH!");
 	}
 
-	private int extractApdusToQueue(ArrayList<Integer> delimiterIndices, byte[] buffer, Queue<Apdu> apduQueue) {
-		ArrayList<Integer> indices = delimiterIndices;
-		
-		int startIndex = 0;
-		int endIndex = 0;
-		
-		for (int i = 0; i < indices.size() - 1; i++) {
-			startIndex = indices.get(i);
-			endIndex = indices.get(i+1);
-			int size = endIndex - startIndex;
-			byte[] apdu = trim(buffer, startIndex, size);
-			apduQueue.add(new Apdu(apdu));
-		}
-		return endIndex;
-	}
+	
 
 	private byte[] eraseExtractedApdus(byte[] buffer, int trailerIndex) {
 		byte[] cleanBuffer = new byte[BUFFER_SIZE];
@@ -67,15 +52,7 @@ public class ApduStreamHandler {
 		return cleanBuffer;
 	}
 
-	private ArrayList<Integer> getDelimiterIndices(byte[] buffer) {
-		ArrayList<Integer> indices = new ArrayList<Integer>();
-		for (int i = 0; i < buffer.length; i++) {
-			if(buffer[i] == delimiter)
-				indices.add(i);
-				
-		}
-		return indices;
-	}
+	
 
 	public void sendApdu(OutputStream outputStream, byte[] apdu) {
 		byte[] buffer = apdu;
@@ -91,12 +68,6 @@ public class ApduStreamHandler {
 	private byte[] enlarge(byte[] array) {
 		byte[] newArray = new byte[array.length << 1];
 		System.arraycopy(array, 0, newArray, 0, array.length);
-		return newArray;
-	}
-
-	private byte[] trim(byte[] array,int fromIndex, int length) {
-		byte[] newArray = new byte[length];
-		System.arraycopy(array, fromIndex, newArray, 0, length);
 		return newArray;
 	}
 }
