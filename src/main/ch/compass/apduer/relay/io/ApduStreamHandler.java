@@ -3,6 +3,11 @@ package ch.compass.apduer.relay.io;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import ch.compass.apduer.mvc.model.Apdu;
 
 public class ApduStreamHandler {
 
@@ -14,46 +19,74 @@ public class ApduStreamHandler {
 
 	}
 
-	public byte[] readApdu(InputStream inputStream) throws IOException {
+	public Queue<Apdu> readApdu(InputStream inputStream) throws IOException {
 		byte[] buffer = new byte[BUFFER_SIZE];
+		Queue<Apdu> apduQueue = new LinkedList<Apdu>();
+		ArrayList<Integer> delimiterIndices;
 
 		int length = 0;
 		int readBytes = 0;
-		while ((readBytes = inputStream.read(buffer, length, buffer.length - length)) != -1) {
+		while ((readBytes = inputStream.read(buffer, length, buffer.length - length)) > 0) {
 			length += readBytes;
-			
-			System.out.println(new String(buffer) + " bytes read");
-			
-			int delimiterIndex = indexOfDelimiter(buffer);
-			if (delimiterIndex >= 0)
-				return trim(buffer, delimiterIndex);
-
-			if (buffer.length == length)
-				buffer = enlarge(buffer);
+			System.out.println(length + " Bytes read...");
+			delimiterIndices = getDelimiterIndices(buffer);
+			int lastDelimiterIndex = extractApdusToQueue(delimiterIndices,buffer, apduQueue);
+			eraseExtractedApdus(buffer, lastDelimiterIndex);
+			length -= lastDelimiterIndex;
+			return apduQueue;
 		}
+		
+		if(length > 0) {
+			byte[] lastApdu = trim(buffer, 0, length);
+			apduQueue.add(new Apdu(lastApdu));
+		}
+		return null;
+		
 
-		throw new IOException("Stream closed");
 	}
 
-	private int indexOfDelimiter(byte[] buffer) {
-		for (int i = 0; i < buffer.length; i++) {
-			if (buffer[i] == delimiter) {
-				return i;
-			}
+	private int extractApdusToQueue(ArrayList<Integer> delimiterIndices, byte[] buffer, Queue<Apdu> apduQueue) {
+		ArrayList<Integer> indices = delimiterIndices;
+		
+		int startIndex = 0;
+		int endIndex = 0;
+		
+		for (int i = 0; i < indices.size() - 1; i++) {
+			startIndex = indices.get(i);
+			endIndex = indices.get(i+1);
+			int size = endIndex - startIndex;
+			byte[] apdu = trim(buffer, startIndex, size);
+			apduQueue.add(new Apdu(apdu));
 		}
-		return -1;
+		return endIndex;
+	}
+
+	private byte[] eraseExtractedApdus(byte[] buffer, int trailerIndex) {
+		byte[] cleanBuffer = new byte[BUFFER_SIZE];
+		System.arraycopy(buffer, trailerIndex, cleanBuffer, 0, buffer.length - trailerIndex);
+		return cleanBuffer;
+	}
+
+	private ArrayList<Integer> getDelimiterIndices(byte[] buffer) {
+		ArrayList<Integer> indices = new ArrayList<Integer>();
+		for (int i = 0; i < buffer.length; i++) {
+			if(buffer[i] == delimiter)
+				indices.add(i);
+				
+		}
+		return indices;
 	}
 
 	public void sendApdu(OutputStream outputStream, byte[] apdu) {
 		byte[] buffer = apdu;
 		try {
 			outputStream.write(buffer);
-			outputStream.write(delimiter);
 			outputStream.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
 
 	private byte[] enlarge(byte[] array) {
 		byte[] newArray = new byte[array.length << 1];
@@ -61,9 +94,9 @@ public class ApduStreamHandler {
 		return newArray;
 	}
 
-	private byte[] trim(byte[] array, int length) {
+	private byte[] trim(byte[] array,int fromIndex, int length) {
 		byte[] newArray = new byte[length];
-		System.arraycopy(array, 0, newArray, 0, length);
+		System.arraycopy(array, fromIndex, newArray, 0, length);
 		return newArray;
 	}
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Queue;
 
 import ch.compass.apduer.mvc.model.Apdu;
 import ch.compass.apduer.mvc.model.ApduData;
@@ -40,12 +41,16 @@ public class Forwarder implements Runnable {
 		try (InputStream inputStream = new BufferedInputStream(sourceSocket.getInputStream());
 				OutputStream outStream = new BufferedOutputStream(forwardingSocket.getOutputStream())) {
 			while (true) {
-				byte[] receivedApdu = streamHandler.readApdu(inputStream);
-				Apdu apdu = new Apdu(receivedApdu);
-				System.out.println(apdu.toString() + " Apdu Created");
-				data.addApdu(apdu);
-				streamHandler.sendApdu(outStream, receivedApdu);
-				System.out.print(new String(apdu.getOriginalApdu()));
+				Queue<Apdu> receivedApdus = streamHandler.readApdu(inputStream);
+				System.out.println("Adding received Apdus");
+
+				while(!receivedApdus.isEmpty()) {
+					Apdu apdu = receivedApdus.poll();
+					data.addApdu(apdu);
+					streamHandler.sendApdu(outStream, apdu.getOriginalApdu());
+					System.out.println(apdu.toString());
+				}
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
