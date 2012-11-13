@@ -50,7 +50,7 @@ public class ApduTableModel extends AbstractTableModel {
 		Apdu apdu = data.getApduList().get(rowIndex);
 
 		if (columnIndex == 0) {
-			return apdu.getOriginalApdu().toString();
+			return apdu.toString();
 		} else {
 			return apdu.getDescription();
 		}
