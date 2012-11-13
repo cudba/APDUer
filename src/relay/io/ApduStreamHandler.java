@@ -52,7 +52,7 @@ public class ApduStreamHandler {
 				buffer = enlarge(buffer);
 		}
 		
-		return null;
+		throw new IOException("");
 	}
 
 	private byte[] enlarge(byte[] array) {

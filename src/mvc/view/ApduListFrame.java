@@ -11,12 +11,14 @@ import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableColumn;
 
@@ -27,8 +29,6 @@ import mvc.model.Apdu;
 import mvc.model.ApduData;
 import mvc.model.ApduTableModel;
 import mvc.model.CurrentSessionModel;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 
 public class ApduListFrame extends JFrame {
 

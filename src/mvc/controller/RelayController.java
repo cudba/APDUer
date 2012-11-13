@@ -45,7 +45,6 @@ public class RelayController {
 		sessionPrefs.put("remoteHost", remoteHost);
 		sessionPrefs.put("remotePort", remotePort);
 		sessionModel.setSession(portListen, remoteHost, remotePort);
-		// TODO Auto-generated method stub
 		
 	}
 
