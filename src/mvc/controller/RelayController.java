@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.prefs.Preferences;
 
 import mvc.model.ApduData;
+import mvc.model.CurrentSessionModel;
 
 import relay.session.RelaySession;
 
@@ -13,6 +14,7 @@ public class RelayController {
 
 	private ApduData commandData;
 	private ApduData responseData;
+	private CurrentSessionModel sessionModel;
 	private Preferences sessionPrefs;
 	
 	public RelayController(){
@@ -27,10 +29,10 @@ public class RelayController {
 		}
 	}
 
-	public void addModel(ApduData commandData, ApduData responseData) {
+	public void addModel(ApduData commandData, ApduData responseData, CurrentSessionModel sessionModel) {
 		this.commandData = commandData;
 		this.responseData = responseData;
-		
+		this.sessionModel = sessionModel;
 	}
 
 	public void newSession(String portListen, String remoteHost,
@@ -38,6 +40,7 @@ public class RelayController {
 		sessionPrefs.put("listenPort", portListen);
 		sessionPrefs.put("remoteHost", remoteHost);
 		sessionPrefs.put("remotePort", remotePort);
+		sessionModel.setSession(portListen, remoteHost, remotePort);
 		// TODO Auto-generated method stub
 		
 	}
@@ -48,6 +51,18 @@ public class RelayController {
 
 	public void setSessionPrefs(Preferences sessionPrefs) {
 		this.sessionPrefs = sessionPrefs;
+	}
+	
+	public ApduData getCommandData() {
+		return commandData;
+	}
+	
+	public ApduData getResponseData() {
+		return responseData;
+	}
+	
+	public CurrentSessionModel getSessionModel() {
+		return sessionModel;
 	}
 
 }

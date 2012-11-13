@@ -22,9 +22,12 @@ import javax.swing.table.TableColumn;
 
 import mvc.controller.RelayController;
 import mvc.listener.ApduListener;
+import mvc.listener.SessionListener;
 import mvc.model.Apdu;
 import mvc.model.ApduData;
 import mvc.model.ApduTableModel;
+import mvc.model.CurrentSessionModel;
+import javax.swing.JLabel;
 
 public class ApduListFrame extends JFrame {
 
@@ -35,6 +38,7 @@ public class ApduListFrame extends JFrame {
 
 	private ApduData rApdu;
 	private ApduData cApdu;
+	private CurrentSessionModel currentSession;
 	private RelayController controller;
 	private JPanel panel_table;
 	private JScrollPane scrollPane_0;
@@ -52,14 +56,31 @@ public class ApduListFrame extends JFrame {
 	private JMenuItem mntmModifier;
 	private JMenuItem mntmLoadTemplate;
 	private JMenuItem mntmAbout;
+	private JLabel lblCurrent;
 	
 	public ApduListFrame(ApduData responseApdu, ApduData commandApdu, RelayController controller) {
 		this.controller = controller;
-		rApdu = responseApdu;
-		cApdu = commandApdu;
+		rApdu = controller.getResponseData();
+		cApdu = controller.getCommandData();
+		currentSession = controller.getSessionModel();
 		rApdu.addApduListener(createApduListener());
 		cApdu.addApduListener(createApduListener());
+		currentSession.addSessionListener(createSessionListener());
 		initUi();
+		
+	}
+
+	private SessionListener createSessionListener() {
+		return new SessionListener() {
+			
+			@Override
+			public void sessionChanged() {
+				updateSessionPrefs();
+			}
+		};
+	}
+
+	protected void updateSessionPrefs() {
 		
 	}
 
@@ -178,9 +199,9 @@ public class ApduListFrame extends JFrame {
 		gbc_panel_options.gridy = 2;
 		contentPane.add(panel_options, gbc_panel_options);
 		GridBagLayout gbl_panel_options = new GridBagLayout();
-		gbl_panel_options.columnWidths = new int[]{0, 0, 0};
+		gbl_panel_options.columnWidths = new int[]{0, 0, 0, 0, 0};
 		gbl_panel_options.rowHeights = new int[]{0, 0};
-		gbl_panel_options.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_options.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel_options.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_options.setLayout(gbl_panel_options);
 		
@@ -197,9 +218,16 @@ public class ApduListFrame extends JFrame {
 			}
 		});
 		GridBagConstraints gbc_btnSend = new GridBagConstraints();
+		gbc_btnSend.insets = new Insets(0, 0, 0, 5);
 		gbc_btnSend.gridx = 1;
 		gbc_btnSend.gridy = 0;
 		panel_options.add(btnSend, gbc_btnSend);
+		
+		lblCurrent = new JLabel("Current settings: ");
+		GridBagConstraints gbc_lblCurrent = new GridBagConstraints();
+		gbc_lblCurrent.gridx = 3;
+		gbc_lblCurrent.gridy = 0;
+		panel_options.add(lblCurrent, gbc_lblCurrent);
 	}
 	
 	
