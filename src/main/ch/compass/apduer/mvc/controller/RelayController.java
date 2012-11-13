@@ -17,18 +17,15 @@ public class RelayController {
 	private ApduData responseData;
 	private CurrentSessionModel sessionModel;
 	private Preferences sessionPrefs;
-	private int serverPort;
-	private String remoteHost;
-	private int remotePort;
 	
 	public RelayController(){
-		setSessionPrefs(Preferences.userRoot().node(this.getClass().getName()));
+		sessionPrefs = Preferences.userRoot().node(this.getClass().getName());
 	}
 
 	public void startRelaySession() {
 		try {
-			Socket targetSocket = new Socket(remoteHost,remotePort);
-			new RelaySession(serverPort, targetSocket, commandData, responseData);
+			Socket targetSocket = new Socket(sessionModel.getRemoteHost(),sessionModel.getRemotePort());
+			new RelaySession(sessionModel.getListenPort(), targetSocket, commandData, responseData);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -42,21 +39,20 @@ public class RelayController {
 
 	public void newSession(String portListen, String remoteHost,
 			String remotePort) {
+		stopRelaySession();
 		sessionPrefs.put("listenPort", portListen);
 		sessionPrefs.put("remoteHost", remoteHost);
 		sessionPrefs.put("remotePort", remotePort);
-		sessionModel.setSession(portListen, remoteHost, remotePort);
+		sessionModel.setSession(Integer.parseInt(portListen), remoteHost, Integer.parseInt(remotePort));
+		startRelaySession();
 		
 	}
 
-	public Preferences getSessionPrefs() {
-		return sessionPrefs;
+	private void stopRelaySession() {
+		// TODO Auto-generated method stub
+		
 	}
 
-	public void setSessionPrefs(Preferences sessionPrefs) {
-		this.sessionPrefs = sessionPrefs;
-	}
-	
 	public ApduData getCommandData() {
 		return commandData;
 	}
@@ -68,11 +64,9 @@ public class RelayController {
 	public CurrentSessionModel getSessionModel() {
 		return sessionModel;
 	}
-	public void setConnectionParameters(int serverPort, String remoteHost, int remotePort) {
-		this.serverPort = serverPort;
-		this.remoteHost = remoteHost;
-		this.remotePort = remotePort;
-		
+
+	public Preferences getSessionPrefs() {
+		return sessionPrefs;
 	}
 
 }

@@ -7,18 +7,14 @@ import ch.compass.apduer.mvc.view.ApduListFrame;
 
 public class Apduer {
 
-	//TODO: move into another package
-	
 	public static void main(String[] args) {
+		
+		//TODO inizialize models and view in controller and just start controller?
 		
 		ApduData commandData = new ApduData();
 		ApduData responseData = new ApduData();	
 		CurrentSessionModel sessionModel = new CurrentSessionModel();
 		
-		//start entrypoint
-		//get settings
-		//start relaysession
-		//start apdulistframe
 		RelayController controller = new RelayController();
 		controller.addModel(commandData, responseData, sessionModel);
 		
@@ -26,10 +22,6 @@ public class Apduer {
 		view.setVisible(true);
 
 
-		controller.setConnectionParameters(1234, "localhost", 4321);
-		controller.startRelaySession();
-		
-		
 	}
 	
 }

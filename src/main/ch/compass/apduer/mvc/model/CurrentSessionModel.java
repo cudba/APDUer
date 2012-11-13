@@ -7,21 +7,21 @@ import ch.compass.apduer.mvc.listener.SessionListener;
 
 public class CurrentSessionModel {
 	
-	private String listenPort;
+	private int listenPort;
 	private String remoteHost;
-	private String remotePort;
+	private int remotePort;
 	
 	private ArrayList<SessionListener> listeners = new ArrayList<SessionListener>();
 
 	
-	public void setSession(String listenPort, String remoteHost, String remotePort) {
+	public void setSession(int listenPort, String remoteHost, int remotePort) {
 		this.listenPort = listenPort;
 		this.remoteHost = remoteHost;
 		this.remotePort = remotePort;
 		notifySessionChanged();
 	}
 	
-	public String getListenPort() {
+	public int getListenPort() {
 		return listenPort;
 	}
 	
@@ -29,7 +29,7 @@ public class CurrentSessionModel {
 		return remoteHost;
 	}
 	
-	public String getRemotePort() {
+	public int getRemotePort() {
 		return remotePort;
 	}
 	

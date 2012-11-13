@@ -88,8 +88,8 @@ public class ApduListFrame extends JFrame {
 	}
 
 	protected void updateSessionPrefs() {
-		lblLPort.setText(currentSession.getListenPort());
-		lblRPort.setText(currentSession.getRemotePort());
+		lblLPort.setText(Integer.toString(currentSession.getListenPort()));
+		lblRPort.setText(Integer.toString(currentSession.getRemotePort()));
 		lblRHost.setText(currentSession.getRemoteHost());
 		
 	}
