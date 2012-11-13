@@ -20,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableColumn;
 
+import mvc.controller.RelayController;
 import mvc.listener.ApduListener;
 import mvc.model.Apdu;
 import mvc.model.ApduData;
@@ -34,6 +35,7 @@ public class ApduListFrame extends JFrame {
 
 	private ApduData rApdu;
 	private ApduData cApdu;
+	private RelayController controller;
 	private JPanel panel_table;
 	private JScrollPane scrollPane_0;
 	private JScrollPane scrollPane_1;
@@ -51,7 +53,8 @@ public class ApduListFrame extends JFrame {
 	private JMenuItem mntmLoadTemplate;
 	private JMenuItem mntmAbout;
 	
-	public ApduListFrame(ApduData responseApdu, ApduData commandApdu) {
+	public ApduListFrame(ApduData responseApdu, ApduData commandApdu, RelayController controller) {
+		this.controller = controller;
 		rApdu = responseApdu;
 		cApdu = commandApdu;
 		rApdu.addApduListener(createApduListener());
@@ -67,6 +70,11 @@ public class ApduListFrame extends JFrame {
 			public void apduReceived(Apdu apdu) {
 				// TODO Auto-generated method stub
 				
+			}
+
+			@Override
+			public void sessionChanged() {
+				// TODO Auto-generated method stub
 			}
 		};
 	}
@@ -90,7 +98,7 @@ public class ApduListFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				NewSession ns = new NewSession();
+				NewSession ns = new NewSession(controller);
 				ns.setVisible(true);
 			}
 		});

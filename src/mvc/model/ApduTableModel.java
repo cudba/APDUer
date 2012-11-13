@@ -22,6 +22,11 @@ public class ApduTableModel extends AbstractTableModel {
 			public void apduReceived(Apdu apdu) {
 				updateTable();
 			}
+
+			@Override
+			public void sessionChanged() {
+				
+			}
 		};
 	}
 

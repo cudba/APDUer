@@ -27,4 +27,10 @@ public class RelayController {
 		
 	}
 
+	public void newSession(String portListen, String remoteHost,
+			String remotePort) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
