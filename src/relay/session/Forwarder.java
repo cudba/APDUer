@@ -7,12 +7,14 @@ import java.net.Socket;
 
 import mvc.model.Apdu;
 import mvc.model.ApduData;
+import relay.io.ApduStreamHandler;
 
 public class Forwarder implements Runnable {
 
 	private Socket sourceSocket;
 	private Socket forwardingSocket;
 	private ApduData data;
+	private ApduStreamHandler streamHandler = new ApduStreamHandler('#');
 
 	public Forwarder(Socket sourceSocket, Socket forwardingSocket, ApduData data) {
 		this.sourceSocket = sourceSocket;
@@ -33,48 +35,25 @@ public class Forwarder implements Runnable {
 				+ sourceSocket.getInetAddress().getHostAddress() + " to "
 				+ forwardingSocket.getInetAddress().getHostAddress());
 
-		// TODO: move into ApduReader Class
-
-		OutputStream out;
-		InputStream in;
-		
 		try {
-			
-			/*
-			 * 		use of StreamTokenizer (maybe)
-			 * 
-			 *		Reader r = new BufferedReader(new InputStreamReader(sourceSocket.getInputStream()));
-			 *		StreamTokenizer tok = new StreamTokenizer(r);
-			 *
-			 * 
-			 */
-			in = sourceSocket.getInputStream();
-			out = forwardingSocket.getOutputStream();
-		
-		while (true) {
+			InputStream inputStream = sourceSocket.getInputStream();
+			OutputStream outStream = forwardingSocket.getOutputStream();
 			try {
-				byte[] buf = new byte[4096];
-
-				while (in.read(buf, 0, buf.length) != -1) {
-					out.write(buf,0,buf.length);
-					out.flush();
-					Apdu apdu = new Apdu(buf);
+				while (true) {
+					byte[] receivedApdu = streamHandler.readStream(inputStream);
+					Apdu apdu = new Apdu(receivedApdu);
 					data.addApdu(apdu);
-					System.out.write(buf, 0, buf.length);
-					System.out.flush();
-					buf = new byte[4096];
-
+					streamHandler.sendStream(outStream, receivedApdu);
+					System.out.print(new String(apdu.getOriginalApdu()));
 				}
-				
 
-			} catch (IOException e) {
-				e.printStackTrace();
+			} finally {
+				inputStream.close();
+				outStream.close();
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
 
+	}
 }

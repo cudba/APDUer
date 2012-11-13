@@ -58,7 +58,7 @@ public class ApduListFrame extends JFrame {
 	private JMenuItem mntmAbout;
 	private JLabel lblCurrent;
 	
-	public ApduListFrame(ApduData responseApdu, ApduData commandApdu, RelayController controller) {
+	public ApduListFrame(RelayController controller) {
 		this.controller = controller;
 		rApdu = controller.getResponseData();
 		cApdu = controller.getCommandData();

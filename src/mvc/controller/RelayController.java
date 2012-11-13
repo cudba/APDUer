@@ -16,6 +16,9 @@ public class RelayController {
 	private ApduData responseData;
 	private CurrentSessionModel sessionModel;
 	private Preferences sessionPrefs;
+	private int serverPort;
+	private String remoteHost;
+	private int remotePort;
 	
 	public RelayController(){
 		setSessionPrefs(Preferences.userRoot().node(this.getClass().getName()));
@@ -23,7 +26,8 @@ public class RelayController {
 
 	public void startRelaySession() {
 		try {
-			new RelaySession(new Socket("localhost", 4321), commandData, responseData);
+			Socket targetSocket = new Socket(remoteHost,remotePort);
+			new RelaySession(serverPort, targetSocket, commandData, responseData);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -63,6 +67,12 @@ public class RelayController {
 	
 	public CurrentSessionModel getSessionModel() {
 		return sessionModel;
+	}
+	public void setConnectionParameters(int serverPort, String remoteHost, int remotePort) {
+		this.serverPort = serverPort;
+		this.remoteHost = remoteHost;
+		this.remotePort = remotePort;
+		
 	}
 
 }

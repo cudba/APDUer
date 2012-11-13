@@ -15,17 +15,18 @@ import mvc.model.ApduData;
  */
 public class RelaySession {
 	
-	private final int PORT = 1234;
 	private ServerSocket serverSocket;
 	private Socket initiatorSocket;
 	private ApduData commandData;
 	private ApduData responseData;
+	private int serverPort;
 	
 	// TODO: initialize model somewhere else :>
 	
 	
 	
-	public RelaySession(Socket target, ApduData commandData, ApduData responseData) {
+	public RelaySession(int serverPort, Socket target, ApduData commandData, ApduData responseData) {
+		this.serverPort = serverPort;
 		this.commandData = commandData;
 		this.responseData = responseData;
 		establishConnection();
@@ -34,7 +35,7 @@ public class RelaySession {
 
 	private void establishConnection() {
 		try {
-			serverSocket = new ServerSocket(PORT);
+			serverSocket = new ServerSocket(serverPort);
 			initiatorSocket = serverSocket.accept();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -1,5 +1,7 @@
 package mvc.model;
 
+import java.util.ArrayList;
+
 public class Apdu {
 
 	
@@ -9,6 +11,8 @@ public class Apdu {
 	private byte[] modifiedApdu;
 	
 	private String description;
+	
+	private ArrayList<Field> fields;
 	
 	
 	public Apdu(byte[] originalApdu) {
@@ -37,6 +41,14 @@ public class Apdu {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public ArrayList<Field> getFields() {
+		return fields;
+	}
+
+	public void setFields(ArrayList<Field> fields) {
+		this.fields = fields;
 	}
 	
 
