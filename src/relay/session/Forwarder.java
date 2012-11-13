@@ -38,10 +38,10 @@ public class Forwarder implements Runnable {
 		try (InputStream inputStream = sourceSocket.getInputStream();
 				OutputStream outStream = forwardingSocket.getOutputStream()) {
 			while (true) {
-				byte[] receivedApdu = streamHandler.readStream(inputStream);
+				byte[] receivedApdu = streamHandler.readApdu(inputStream);
 				Apdu apdu = new Apdu(receivedApdu);
 				data.addApdu(apdu);
-				streamHandler.sendStream(outStream, receivedApdu);
+				streamHandler.sendApdu(outStream, receivedApdu);
 				System.out.print(new String(apdu.getOriginalApdu()));
 			}
 		} catch (IOException e) {
