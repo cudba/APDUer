@@ -15,10 +15,8 @@ public class RelayController {
 
 	private ApduData apduData;
 	private CurrentSessionModel sessionModel;
-	private Preferences sessionPrefs;
 	
 	public RelayController(){
-		sessionPrefs = Preferences.userRoot().node(this.getClass().getName());
 	}
 
 	public void startRelaySession() {
@@ -38,9 +36,6 @@ public class RelayController {
 	public void newSession(String portListen, String remoteHost,
 			String remotePort) {
 		stopRelaySession();
-		sessionPrefs.put("listenPort", portListen);
-		sessionPrefs.put("remoteHost", remoteHost);
-		sessionPrefs.put("remotePort", remotePort);
 		sessionModel.setSession(Integer.parseInt(portListen), remoteHost, Integer.parseInt(remotePort));
 		startRelaySession();
 		
@@ -58,9 +53,4 @@ public class RelayController {
 	public CurrentSessionModel getSessionModel() {
 		return sessionModel;
 	}
-
-	public Preferences getSessionPrefs() {
-		return sessionPrefs;
-	}
-
 }

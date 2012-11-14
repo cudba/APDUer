@@ -1,36 +1,40 @@
 package ch.compass.apduer.mvc.model;
 
 import java.util.ArrayList;
+import java.util.prefs.Preferences;
 
 import ch.compass.apduer.mvc.listener.SessionListener;
 
 
 public class CurrentSessionModel {
 	
-	private int listenPort;
-	private String remoteHost;
-	private int remotePort;
+	private Preferences sessionPrefs;
 	
 	private ArrayList<SessionListener> listeners = new ArrayList<SessionListener>();
+	
+	public CurrentSessionModel(){
+		this.sessionPrefs = Preferences.userRoot().node(this.getClass().getName());
+
+	}
 
 	
 	public void setSession(int listenPort, String remoteHost, int remotePort) {
-		this.listenPort = listenPort;
-		this.remoteHost = remoteHost;
-		this.remotePort = remotePort;
+		sessionPrefs.putInt("listenPort", listenPort);
+		sessionPrefs.put("remoteHost", remoteHost);
+		sessionPrefs.putInt("remotePort", remotePort);
 		notifySessionChanged();
 	}
 	
 	public int getListenPort() {
-		return listenPort;
+		return sessionPrefs.getInt("listenPort", 1234);
 	}
 	
 	public String getRemoteHost() {
-		return remoteHost;
+		return sessionPrefs.get("remoteHost", "127.0.0.1");
 	}
 	
 	public int getRemotePort() {
-		return remotePort;
+		return sessionPrefs.getInt("remotePort", 4321);
 	}
 	
 	public void addSessionListener(SessionListener listener) {

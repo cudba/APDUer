@@ -31,13 +31,13 @@ public class NewSession extends JDialog {
 	public NewSession(RelayController controller) {
 		this.controller = controller;
 		initGui();
-		definePrefs();
+		loadFields();
 	}
 
-	private void definePrefs() {
-		textFieldPortListen.setText(controller.getSessionPrefs().get("listenPort", "1234"));
-		textFieldForwardIP.setText(controller.getSessionPrefs().get("remoteHost","127.0.0.1"));
-		textFieldForwardPort.setText(controller.getSessionPrefs().get("remotePort", "4321"));
+	private void loadFields() {
+		textFieldPortListen.setText(Integer.toString(controller.getSessionModel().getListenPort()));
+		textFieldForwardIP.setText(controller.getSessionModel().getRemoteHost());
+		textFieldForwardPort.setText(Integer.toString(controller.getSessionModel().getRemotePort()));
 	}
 
 
