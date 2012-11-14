@@ -38,7 +38,7 @@ public class ApduStreamHandler {
 			if((readBytes = inputStream.read(buffer, length, missingBytes)) != 0) {
 				int startIndex = length;
 				length += readBytes;
-				//TODO: add queue
+				//TODO: add apdu to queue
 			}
 			return apduQueue;
 		}
