@@ -7,13 +7,16 @@ public class Apdu {
 	private byte[] plainApdu;
 	private byte[] modifiedApdu;
 	private byte[] preamble;
+	private byte[] trailer;
 	private String description;
 	private String type;
 	private int size;
 	private ArrayList<Field> fields;
+	
+	private byte[] originalApdu;
 
 	public Apdu(byte[] originalApdu) {
-		this.plainApdu = originalApdu;
+		this.originalApdu = originalApdu;
 	}
 
 	public byte[] getPlainApdu() {
@@ -22,6 +25,10 @@ public class Apdu {
 
 	public byte[] getModifiedApdu() {
 		return modifiedApdu;
+	}
+	
+	public void setPlainApdu(byte[] plainApdu) {
+		this.plainApdu = plainApdu;
 	}
 
 	public void setModifiedApdu(byte[] modifiedApdu) {
@@ -76,6 +83,18 @@ public class Apdu {
 	
 	public int getSize() {
 		return size;
+	}
+
+	public byte[] getOriginalApdu() {
+		return originalApdu;
+	}
+
+	public void setTrailer(byte[] trailer) {
+		this.trailer = trailer;
+	}
+	
+	public byte[] getTrailer() {
+		return trailer;
 	}
 
 }

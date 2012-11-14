@@ -55,8 +55,10 @@ public class ApduStreamHandler {
 
 	
 
-	public void sendApdu(OutputStream outputStream, byte[] apdu) {
-		byte[] buffer = apdu;
+	public void sendApdu(OutputStream outputStream, Apdu apdu) {
+		LibNfcApduWrapper wrapper = new LibNfcApduWrapper();
+		
+		byte[] buffer = wrapper.wrap(apdu);
 		try {
 			outputStream.write(buffer);
 			outputStream.flush();

@@ -56,11 +56,11 @@ public class ApduTableModel extends AbstractTableModel {
 	    case 1:
 	      return apdu.getType();
 	    case 2:
-	      return apdu.toString();
+	      return new String(apdu.getPlainApdu());
 	    case 3:
 	      return new String(apdu.getPreamble());
 	    case 4:
-	      return apdu.getDescription();
+	      return new String(apdu.getTrailer());
 	    }
 	    return null;
 

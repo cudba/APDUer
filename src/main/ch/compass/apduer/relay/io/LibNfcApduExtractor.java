@@ -31,7 +31,6 @@ public class LibNfcApduExtractor {
 			endIndex = indices.get(i + 1);
 			int size = endIndex - startIndex;
 			byte[] rawApdu = trim(buffer, startIndex, size);
-			System.out.println(new Apdu(rawApdu).toString());
 			Apdu apdu = splitApdu(rawApdu);
 			apduQueue.add(apdu);
 		}
@@ -51,31 +50,43 @@ public class LibNfcApduExtractor {
 	private Apdu splitApdu(byte[] rawApdu) {
 		// TODO Auto-generated method stub
 		int size = getApduSize(rawApdu);
-		System.out.println(size);
-//		byte[] preamble = getApduPreamble(rawApdu, size);
-//		byte[] pureApdu = getPureApdu(rawApdu, size);
-//		byte[] trailer = getApduTrailer(rawApdu, size);
+		byte[] preamble = getApduPreamble(rawApdu, size);
+		byte[] plainApdu = getPlainApdu(rawApdu, size);
+		byte[] trailer = getApduTrailer(rawApdu, size);
 		Apdu newApdu = new Apdu(rawApdu);
-//		newApdu.setPreamble(preamble);
-//		newApdu.setTrailer(trailer);
+		newApdu.setPreamble(preamble);
+		newApdu.setPlainApdu(plainApdu);
+		newApdu.setTrailer(trailer);
 		newApdu.setSize(size);
 		return newApdu;
 	}
 
 
-	private byte[] getPureApdu(byte[] rawApdu, int size) {
+	private byte[] getApduTrailer(byte[] rawApdu, int size) {
 		for (int i = 0; i < rawApdu.length; i++) {
 			if(rawApdu[i] == ':'){
-				for (int j = 0; j < size; j++) {
-					
-				}
+				int endOfPlainApdu = i+3*size+1;
+				return trim(rawApdu, endOfPlainApdu, rawApdu.length - endOfPlainApdu);
 			}
 		}
 		return null;
 	}
 
+	private byte[] getPlainApdu(byte[] rawApdu, int size) {
+		for (int i = 0; i < rawApdu.length; i++) {
+			if(rawApdu[i] == ':'){
+				return trim(rawApdu, i+2, size*3-1);		}
+		}
+		return rawApdu;
+	}
+
 	private byte[] getApduPreamble(byte[] rawApdu, int size) {
-		return trim(rawApdu, 0, size*3-2);
+		for (int i = 0; i < rawApdu.length; i++) {
+			if(rawApdu[i] == ':'){
+				return trim(rawApdu, 0, i+2);
+			}
+		}
+		return rawApdu;
 	}
 
 	private int getApduSize(byte[] rawApdu) {
@@ -87,7 +98,6 @@ public class LibNfcApduExtractor {
 				size[1] = rawApdu[i+2];
 				size[2] = rawApdu[i+3];
 				size[3] = rawApdu[i+4];
-				System.out.println(new String(size));
 				value = Integer.parseInt(new String(size),16);
 				System.out.println("Size: " + value);
 				return value;

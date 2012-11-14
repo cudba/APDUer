@@ -47,7 +47,7 @@ public class Forwarder implements Runnable {
 				while(!receivedApdus.isEmpty()) {
 					Apdu apdu = receivedApdus.poll();
 					data.addApdu(apdu);
-					streamHandler.sendApdu(outStream, apdu.getPlainApdu());
+					streamHandler.sendApdu(outStream, apdu);
 					System.out.println(apdu.toString());
 				}
 				
