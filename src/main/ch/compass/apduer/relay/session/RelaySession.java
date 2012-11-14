@@ -31,7 +31,7 @@ public class RelaySession {
 		this.commandData = commandData;
 		this.responseData = responseData;
 		establishConnection();
-		initForwarding(target);
+		initForwardingThread(target);
 	}
 
 	private void establishConnection() {
@@ -43,7 +43,7 @@ public class RelaySession {
 		}
 	}
 
-	private void initForwarding(Socket target) {
+	private void initForwardingThread(Socket target) {
 		new Thread(new Forwarder(initiatorSocket,target, commandData)).start();
 		new Thread(new Forwarder(target, initiatorSocket, responseData)).start();
 	}
