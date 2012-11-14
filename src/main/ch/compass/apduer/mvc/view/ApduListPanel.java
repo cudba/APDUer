@@ -28,9 +28,8 @@ import ch.compass.apduer.mvc.model.ApduData;
 import ch.compass.apduer.mvc.model.ApduTableModel;
 import ch.compass.apduer.mvc.model.CurrentSessionModel;
 
-public class ApduListFrame extends JFrame {
+public class ApduListPanel extends JPanel {
 
-	private JPanel contentPane;
 	private JPanel panel_options;
 	private JButton btnTrap;
 	private JButton btnSend;
@@ -41,17 +40,6 @@ public class ApduListFrame extends JFrame {
 	private JPanel panel_table;
 	private JScrollPane scrollPane_0;
 	private JTable table_capdu;
-	private JMenuBar menuBar;
-	private JMenu mnFile;
-	private JMenu mnTools;
-	private JMenu mnHelp;
-	private JMenuItem mntmNew;
-	private JMenuItem mntmOpen;
-	private JMenuItem mntmSave;
-	private JMenuItem mntmExit;
-	private JMenuItem mntmModifier;
-	private JMenuItem mntmLoadTemplate;
-	private JMenuItem mntmAbout;
 	private JLabel lblListenport;
 	private JLabel lblLPort;
 	private JLabel lblRemotehost;
@@ -59,7 +47,7 @@ public class ApduListFrame extends JFrame {
 	private JLabel lblRemoteport;
 	private JLabel lblRPort;
 
-	public ApduListFrame(RelayController controller) {
+	public ApduListPanel(RelayController controller) {
 		this.controller = controller;
 		apduData = controller.getApduData();
 		currentSession = controller.getSessionModel();
@@ -86,71 +74,24 @@ public class ApduListFrame extends JFrame {
 	}
 
 	private void initUi() {
-		setTitle("Gonzo Proxy");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
 		setMinimumSize(new Dimension(750, 250));
+		setMaximumSize(new Dimension(750, 250));
 
-		menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-
-		mnFile = new JMenu("File");
-		mnFile.setMnemonic(KeyEvent.VK_F);
-		menuBar.add(mnFile);
-
-		mntmNew = new JMenuItem("New");
-		mntmNew.setMnemonic(KeyEvent.VK_N);
-		mntmNew.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				NewSession ns = new NewSession(controller);
-				ns.setVisible(true);
-			}
-		});
-		mnFile.add(mntmNew);
-
-		mntmOpen = new JMenuItem("Open");
-		mnFile.add(mntmOpen);
-
-		mntmSave = new JMenuItem("Save");
-		mnFile.add(mntmSave);
-
-		mntmExit = new JMenuItem("Exit");
-		mnFile.add(mntmExit);
-
-		mnTools = new JMenu("Tools");
-		menuBar.add(mnTools);
-
-		mntmModifier = new JMenuItem("Modifier");
-		mnTools.add(mntmModifier);
-
-		mntmLoadTemplate = new JMenuItem("Load template");
-		mnTools.add(mntmLoadTemplate);
-
-		mnHelp = new JMenu("Help");
-		menuBar.add(mnHelp);
-
-		mntmAbout = new JMenuItem("About");
-		mnHelp.add(mntmAbout);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 0, 0 };
-		gbl_contentPane.rowHeights = new int[] { 0, 0, 26, 0 };
-		gbl_contentPane.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 1.0, 0.0,
-				Double.MIN_VALUE };
-		contentPane.setLayout(gbl_contentPane);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{0, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0};
+		setLayout(gridBagLayout);
 
 		panel_table = new JPanel();
 		GridBagConstraints gbc_panel_table = new GridBagConstraints();
 		gbc_panel_table.insets = new Insets(0, 0, 5, 0);
 		gbc_panel_table.fill = GridBagConstraints.BOTH;
 		gbc_panel_table.gridx = 0;
-		gbc_panel_table.gridy = 1;
-		contentPane.add(panel_table, gbc_panel_table);
+		gbc_panel_table.gridy = 0;
+		add(panel_table, gbc_panel_table);
+		
 		GridBagLayout gbl_panel_table = new GridBagLayout();
 		gbl_panel_table.columnWidths = new int[] { 0, 0 };
 		gbl_panel_table.rowHeights = new int[] { 0, 0 };
@@ -175,8 +116,8 @@ public class ApduListFrame extends JFrame {
 		GridBagConstraints gbc_panel_options = new GridBagConstraints();
 		gbc_panel_options.fill = GridBagConstraints.BOTH;
 		gbc_panel_options.gridx = 0;
-		gbc_panel_options.gridy = 2;
-		contentPane.add(panel_options, gbc_panel_options);
+		gbc_panel_options.gridy = 1;
+		add(panel_options, gbc_panel_options);
 		GridBagLayout gbl_panel_options = new GridBagLayout();
 		gbl_panel_options.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0 };

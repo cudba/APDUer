@@ -3,7 +3,9 @@ package ch.compass.apduer;
 import ch.compass.apduer.mvc.controller.RelayController;
 import ch.compass.apduer.mvc.model.ApduData;
 import ch.compass.apduer.mvc.model.CurrentSessionModel;
-import ch.compass.apduer.mvc.view.ApduListFrame;
+import ch.compass.apduer.mvc.view.ApduListPanel;
+import ch.compass.apduer.mvc.view.ApduListPanel;
+import ch.compass.apduer.mvc.view.GonzoProxyFrame;
 
 public class Apduer {
 
@@ -16,8 +18,10 @@ public class Apduer {
 		
 		RelayController controller = new RelayController();
 		controller.addModel(apduData, sessionModel);		
-		ApduListFrame view = new ApduListFrame(controller);
-		view.setVisible(true);
+//		ApduListFrame view = new ApduListFrame(controller);
+//		view.setVisible(true);
+		GonzoProxyFrame frame = new GonzoProxyFrame(controller);
+		frame.setVisible(true);
 
 
 	}
