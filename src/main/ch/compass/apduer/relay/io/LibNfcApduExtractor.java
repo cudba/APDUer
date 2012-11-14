@@ -10,6 +10,8 @@ public class LibNfcApduExtractor {
 	private static final char DELIMITER = '#';
 	private static final int BUFFER_SIZE = 1024;
 	
+	private byte[] tmpFinalApdu;
+	
 	/**
 	 * 
 	 * @return	Number of missing Bytes from last Apdu in Buffer
@@ -29,18 +31,28 @@ public class LibNfcApduExtractor {
 			apduQueue.add(new Apdu(apdu));
 		}
 		
-		byte [] trailerApdu = trim(buffer,endIndex, readBytes);
+		byte [] finalApdu = trim(buffer,endIndex, readBytes);
 		
 		int missingBytes;
-		if ((missingBytes = getMissingBytes(trailerApdu)) == 0) {
-			apduQueue.add(new Apdu(trailerApdu));
+		if ((missingBytes = getMissingBytes(finalApdu)) == 0) {
+			apduQueue.add(new Apdu(finalApdu));
 			return 0;
 		}
+		tmpFinalApdu = finalApdu;
 		return missingBytes;
 	}
 	
 	private int getMissingBytes(byte[] trailerApdu) {
 		return 0;
+	}
+	
+	public byte[] buildFinalApdu(byte[] missingBytes) {
+		//TODO: trim missingBytes
+		return merge(tmpFinalApdu, missingBytes);
+	}
+
+	private byte[] merge(byte[] tmpFinalApdu, byte[] missingBytes) {
+		return null;
 	}
 
 	private byte[] trim(byte[] array,int fromIndex, int length) {
