@@ -48,12 +48,22 @@ public class ApduTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Apdu apdu = data.getApduList().get(rowIndex);
+		
+		switch (columnIndex)
+	    {
+	    case 0:
+	      return rowIndex;
+	    case 1:
+	      return apdu.getType();
+	    case 2:
+	      return apdu.toString();
+	    case 3:
+	      return new String(apdu.getPreamble());
+	    case 4:
+	      return apdu.getDescription();
+	    }
+	    return null;
 
-		if (columnIndex == 0) {
-			return apdu.toString();
-		} else {
-			return apdu.getDescription();
-		}
 	}
 
 }

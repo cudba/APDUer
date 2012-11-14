@@ -13,8 +13,7 @@ import ch.compass.apduer.relay.session.RelaySession;
 public class RelayController {
 	
 
-	private ApduData commandData;
-	private ApduData responseData;
+	private ApduData apduData;
 	private CurrentSessionModel sessionModel;
 	private Preferences sessionPrefs;
 	
@@ -25,15 +24,14 @@ public class RelayController {
 	public void startRelaySession() {
 		try {
 			Socket targetSocket = new Socket(sessionModel.getRemoteHost(),sessionModel.getRemotePort());
-			new RelaySession(sessionModel.getListenPort(), targetSocket, commandData, responseData);
+			new RelaySession(sessionModel.getListenPort(), targetSocket, apduData);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void addModel(ApduData commandData, ApduData responseData, CurrentSessionModel sessionModel) {
-		this.commandData = commandData;
-		this.responseData = responseData;
+	public void addModel(ApduData apduData, CurrentSessionModel sessionModel) {
+		this.apduData = apduData;
 		this.sessionModel = sessionModel;
 	}
 
@@ -53,12 +51,8 @@ public class RelayController {
 		
 	}
 
-	public ApduData getCommandData() {
-		return commandData;
-	}
-	
-	public ApduData getResponseData() {
-		return responseData;
+	public ApduData getApduData() {
+		return apduData;
 	}
 	
 	public CurrentSessionModel getSessionModel() {

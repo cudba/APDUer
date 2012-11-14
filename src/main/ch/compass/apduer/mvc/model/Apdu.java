@@ -4,24 +4,20 @@ import java.util.ArrayList;
 
 public class Apdu {
 
-	private byte[] originalApdu;
-
+	private byte[] plainApdu;
 	private byte[] modifiedApdu;
-
+	private byte[] preamble;
 	private String description;
-
+	private String type;
+	private int size;
 	private ArrayList<Field> fields;
 
 	public Apdu(byte[] originalApdu) {
-		this.originalApdu = originalApdu;
+		this.plainApdu = originalApdu;
 	}
 
-	public byte[] getOriginalApdu() {
-		return originalApdu;
-	}
-
-	public void setOriginalApdu(byte[] originalApdu) {
-		this.originalApdu = originalApdu;
+	public byte[] getPlainApdu() {
+		return plainApdu;
 	}
 
 	public byte[] getModifiedApdu() {
@@ -48,9 +44,38 @@ public class Apdu {
 		this.fields = fields;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	@Override
 	public String toString() {
-		return new String(originalApdu);
+		return new String(plainApdu);
+	}
+
+	public String toAscii() {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	public void setPreamble(byte[] preamble) {
+		this.preamble = preamble;
+	}
+	
+	public byte[] getPreamble() {
+		return preamble;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+	
+	public int getSize() {
+		return size;
 	}
 
 }

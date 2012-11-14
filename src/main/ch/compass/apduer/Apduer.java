@@ -11,13 +11,11 @@ public class Apduer {
 		
 		//TODO inizialize models and view in controller and just start controller?
 		
-		ApduData commandData = new ApduData();
-		ApduData responseData = new ApduData();	
+		ApduData apduData = new ApduData();
 		CurrentSessionModel sessionModel = new CurrentSessionModel();
 		
 		RelayController controller = new RelayController();
-		controller.addModel(commandData, responseData, sessionModel);
-		
+		controller.addModel(apduData, sessionModel);		
 		ApduListFrame view = new ApduListFrame(controller);
 		view.setVisible(true);
 

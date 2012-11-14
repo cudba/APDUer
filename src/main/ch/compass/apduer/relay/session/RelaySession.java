@@ -18,7 +18,7 @@ public class RelaySession {
 	
 	private ServerSocket serverSocket;
 	private Socket initiatorSocket;
-	private ApduData commandData;
+	private ApduData apduData;
 	private ApduData responseData;
 	private int serverPort;
 	
@@ -26,12 +26,11 @@ public class RelaySession {
 	
 	
 	
-	public RelaySession(int serverPort, Socket target, ApduData commandData, ApduData responseData) {
+	public RelaySession(int serverPort, Socket target, ApduData apduData) {
 		this.serverPort = serverPort;
-		this.commandData = commandData;
-		this.responseData = responseData;
+		this.apduData = apduData;
 		establishConnection();
-		initForwardingThread(target);
+		initForwardingThreads(target);
 	}
 
 	private void establishConnection() {
@@ -43,9 +42,9 @@ public class RelaySession {
 		}
 	}
 
-	private void initForwardingThread(Socket target) {
-		new Thread(new Forwarder(initiatorSocket,target, commandData)).start();
-		new Thread(new Forwarder(target, initiatorSocket, responseData)).start();
+	private void initForwardingThreads(Socket target) {
+		new Thread(new Forwarder(initiatorSocket,target, apduData)).start();
+		new Thread(new Forwarder(target, initiatorSocket, apduData)).start();
 	}
 
 }

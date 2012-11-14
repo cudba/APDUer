@@ -1,6 +1,7 @@
 package ch.compass.apduer.mvc.model;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 import ch.compass.apduer.mvc.listener.ApduListener;
 
@@ -8,11 +9,13 @@ import ch.compass.apduer.mvc.listener.ApduListener;
 public class ApduData {
 	
 	private ArrayList<ApduListener> listeners = new ArrayList<ApduListener>();
-
 	private ArrayList<Apdu> apdu = new ArrayList<Apdu>();
+	private Semaphore lock = new Semaphore(1);
 
-	public void addApdu(Apdu data) {
+	public void addApdu(Apdu data) throws InterruptedException {
+		lock.acquire();
 		apdu.add(data);
+		lock.release();
 		notifyApduReceived(data);
 	}
 
