@@ -19,11 +19,13 @@ public class Forwarder implements Runnable {
 	private Socket forwardingSocket;
 	private ApduData data;
 	private ApduStreamHandler streamHandler = new ApduStreamHandler();
+	private String type;
 
-	public Forwarder(Socket sourceSocket, Socket forwardingSocket, ApduData data) {
+	public Forwarder(Socket sourceSocket, Socket forwardingSocket, ApduData data, String type) {
 		this.sourceSocket = sourceSocket;
 		this.forwardingSocket = forwardingSocket;
 		this.data = data;
+		this.type = type;
 	}
 
 	@Override
@@ -47,6 +49,7 @@ public class Forwarder implements Runnable {
 				while(!receivedApdus.isEmpty()) {
 					Apdu apdu = receivedApdus.poll();
 					data.addApdu(apdu);
+					apdu.setType(type);
 					streamHandler.sendApdu(outStream, apdu);
 					System.out.println(apdu.toString());
 				}

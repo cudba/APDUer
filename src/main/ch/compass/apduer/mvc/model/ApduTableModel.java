@@ -54,7 +54,11 @@ public class ApduTableModel extends AbstractTableModel {
 	    case 0:
 	      return rowIndex;
 	    case 1:
-	      return apdu.getType();
+	    	if(apdu.getType().equals("command")){
+	    		return "C";
+	    	}else if(apdu.getType().equals("response")){
+	    		return "R";
+	    	}
 	    case 2:
 	      return new String(apdu.getPlainApdu());
 	    case 3:

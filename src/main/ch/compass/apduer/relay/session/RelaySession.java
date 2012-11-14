@@ -43,8 +43,8 @@ public class RelaySession {
 	}
 
 	private void initForwardingThreads(Socket target) {
-		new Thread(new Forwarder(initiatorSocket,target, apduData)).start();
-		new Thread(new Forwarder(target, initiatorSocket, apduData)).start();
+		new Thread(new Forwarder(initiatorSocket,target, apduData, "command")).start();
+		new Thread(new Forwarder(target, initiatorSocket, apduData, "response")).start();
 	}
 
 }
