@@ -49,7 +49,15 @@ public class Forwarder implements Runnable {
 				while(!receivedApdus.isEmpty()) {
 					Apdu apdu = receivedApdus.poll();
 					data.addApdu(apdu);
+					//apdu needs new isModified field for type column in table
+					//if isTrapped -> yield
+					//if apdu is manually modified, apduData.getSendApdu is overwritten by modified apdu and 
+					//modified apdu is added in apduData list
+					//if modifier.isActive -> modifier.modify(apdu)
+					//modified apdu is added to apduData list and apduData.getSendApdu is overwritten by modified apdu 
 					apdu.setType(type);
+					// new: streamHandler.sendApdu(outStream, data.getSendApdu());
+
 					streamHandler.sendApdu(outStream, apdu);
 					System.out.println(apdu.toString());
 				}
