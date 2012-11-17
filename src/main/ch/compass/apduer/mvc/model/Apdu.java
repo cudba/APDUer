@@ -97,4 +97,8 @@ public class Apdu {
 		return trailer;
 	}
 
+	public void addField(Field field) {
+		fields.add(field);
+	}
+
 }

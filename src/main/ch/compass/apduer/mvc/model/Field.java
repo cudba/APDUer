@@ -3,14 +3,15 @@ package ch.compass.apduer.mvc.model;
 public class Field {
 	
 	private String name;
-	private byte value;
+	private String value;
 	private String description;
+	
 
-	public Field(String name, byte value, String description) {
+
+	public Field(String name, String value, String description) {
 		this.name = name;
 		this.value = value;
 		this.description = description;
-		
 	}
 
 	public String getName() {
@@ -21,11 +22,11 @@ public class Field {
 		this.name = name;
 	}
 
-	public byte getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(byte value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 
@@ -37,5 +38,8 @@ public class Field {
 		this.description = description;
 	}
 	
+	public int getFieldSize() {
+		return value.length();
+	}
 	
 }
