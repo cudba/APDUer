@@ -8,6 +8,11 @@ import javax.swing.border.TitledBorder;
 
 public class ApduDetailPanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5129650768327234148L;
+
 	public ApduDetailPanel() {
 		setBorder(new TitledBorder(null, "APDU Detail", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GridBagLayout gridBagLayout = new GridBagLayout();

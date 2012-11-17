@@ -2,7 +2,6 @@ package ch.compass.apduer.mvc.controller;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.prefs.Preferences;
 
 import ch.compass.apduer.mvc.model.ApduData;
 import ch.compass.apduer.mvc.model.CurrentSessionModel;

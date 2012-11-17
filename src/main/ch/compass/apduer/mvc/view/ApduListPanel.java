@@ -6,20 +6,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableColumn;
 
 import ch.compass.apduer.mvc.controller.RelayController;
@@ -30,6 +24,10 @@ import ch.compass.apduer.mvc.model.CurrentSessionModel;
 
 public class ApduListPanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2478811834671649441L;
 	private JPanel panel_options;
 	private JButton btnTrap;
 	private JButton btnSend;

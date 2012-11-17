@@ -3,8 +3,6 @@ package ch.compass.apduer;
 import ch.compass.apduer.mvc.controller.RelayController;
 import ch.compass.apduer.mvc.model.ApduData;
 import ch.compass.apduer.mvc.model.CurrentSessionModel;
-import ch.compass.apduer.mvc.view.ApduListPanel;
-import ch.compass.apduer.mvc.view.ApduListPanel;
 import ch.compass.apduer.mvc.view.GonzoProxyFrame;
 
 public class Apduer {

@@ -3,7 +3,6 @@ package ch.compass.apduer.relay.io;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -44,16 +43,6 @@ public class ApduStreamHandler {
 		}
 		throw new IOException("Stream disconnected...Nein?... Doch!... OOHHHHHCCHH!");
 	}
-
-	
-
-	private byte[] eraseExtractedApdus(byte[] buffer, int trailerIndex) {
-		byte[] cleanBuffer = new byte[BUFFER_SIZE];
-		System.arraycopy(buffer, trailerIndex, cleanBuffer, 0, buffer.length - trailerIndex);
-		return cleanBuffer;
-	}
-
-	
 
 	public void sendApdu(OutputStream outputStream, Apdu apdu) {
 		LibNfcApduWrapper wrapper = new LibNfcApduWrapper();

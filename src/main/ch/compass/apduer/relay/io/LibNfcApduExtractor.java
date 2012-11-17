@@ -1,8 +1,6 @@
 package ch.compass.apduer.relay.io;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Queue;
 
 import ch.compass.apduer.mvc.model.Apdu;
@@ -10,7 +8,6 @@ import ch.compass.apduer.mvc.model.Apdu;
 public class LibNfcApduExtractor {
 
 	private static final char DELIMITER = '#';
-	private static final int BUFFER_SIZE = 1024;
 
 	private byte[] tmpApdu;
 

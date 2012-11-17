@@ -7,6 +7,10 @@ import ch.compass.apduer.mvc.listener.ApduListener;
 
 public class ApduTableModel extends AbstractTableModel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1437358812481945385L;
 	private ApduData data;
 	String[] columnNames;;
 

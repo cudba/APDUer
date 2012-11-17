@@ -21,6 +21,10 @@ import ch.compass.apduer.mvc.controller.RelayController;
 
 public class NewSession extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7042508576478156546L;
 	private JPanel contentPane;
 	private JTextField textFieldPortListen;
 	private JTextField textFieldForwardIP;

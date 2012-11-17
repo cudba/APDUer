@@ -19,7 +19,6 @@ public class RelaySession {
 	private ServerSocket serverSocket;
 	private Socket initiatorSocket;
 	private ApduData apduData;
-	private ApduData responseData;
 	private int serverPort;
 	
 	// TODO: initialize model somewhere else :>
