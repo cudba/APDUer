@@ -51,7 +51,7 @@ public class Forwarder implements Runnable {
 
 				while(!receivedApdus.isEmpty()) {
 					Apdu apdu = receivedApdus.poll();
-					parsingHandler.processApdu(apdu);
+//					parsingHandler.processApdu(apdu);
 					data.addApdu(apdu);
 					//apdu needs new isModified field for type column in table
 					//if isTrapped -> yield
