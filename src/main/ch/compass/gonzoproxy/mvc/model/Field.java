@@ -2,9 +2,20 @@ package ch.compass.gonzoproxy.mvc.model;
 
 public class Field {
 
-	private String name = "";
-	private String value = "";
-	private String description = "";
+
+	private String name;
+	private String value;
+	private String description;
+
+	public Field() {
+		
+	}
+	
+	public Field(String name, String value, String description) {
+		this.name = name;
+		this.value = value;
+		this.description = description;
+	}
 
 	public String getName() {
 		return name;

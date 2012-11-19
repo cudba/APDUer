@@ -63,7 +63,6 @@ public class ApduTableModel extends AbstractTableModel {
 			return apdu.getDescription();
 		case 4:
 			return "";
-//			return apdu.getFields().get(rowIndex).getDescription();
 		}
 		return null;
 

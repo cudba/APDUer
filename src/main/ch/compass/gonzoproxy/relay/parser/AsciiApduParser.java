@@ -10,7 +10,9 @@ public class AsciiApduParser implements Parser {
 
 	private static final int BYTES_TO_IDENTIFY = 1;
 
-	private static final int ENCODING_OFFSET = 3;
+	private static final int ENCODING_OFFSET = 2;
+	
+	private static final int WHITESPACE_OFFSET = 1;
 
 	private static final int DEFAULT_FIELDLENGTH = 1;
 
@@ -28,20 +30,22 @@ public class AsciiApduParser implements Parser {
 			if (!valueMatches(idByte, template.getFields().get(i))) {
 				return false;
 			}
-			offset += DEFAULT_FIELDLENGTH * ENCODING_OFFSET;
+			offset += DEFAULT_FIELDLENGTH * (ENCODING_OFFSET + WHITESPACE_OFFSET);
 		}
 		return true;
 	}
 
 	private boolean valueMatches(byte[] idByte, Field field) {
 		String apduValue = new String(idByte);
+		System.out.println(apduValue);
 		String templateValue = field.getValue();
+		System.out.println(templateValue);
 		return apduValue.equals(templateValue);
 	}
 
 	private boolean containsIdBytes(byte[] plainApdu) {
 
-		return plainApdu.length >= BYTES_TO_IDENTIFY * ENCODING_OFFSET;
+		return plainApdu.length >= BYTES_TO_IDENTIFY * (ENCODING_OFFSET + WHITESPACE_OFFSET);
 	}
 
 	@Override
@@ -53,16 +57,20 @@ public class AsciiApduParser implements Parser {
 		int fieldLength = DEFAULT_FIELDLENGTH;
 		int offset = 0;
 		for (int i = 0; i < templateFields.size(); i++) {
-			Field processingField = templateFields.get(i);
-			parseField(plainApdu, offset, fieldLength, processingField);
+			Field processingField = getCopyOf(templateFields.get(i));
+			parseField(plainApdu, offset, fieldLength + ENCODING_OFFSET, processingField);
 			if (isLengthField(processingField)) {
 				fieldLength = Integer.parseInt(processingField.getValue(), 16);
 			} else {
 				fieldLength = DEFAULT_FIELDLENGTH;
 			}
-			offset += fieldLength * ENCODING_OFFSET;
+			offset += fieldLength * (ENCODING_OFFSET + WHITESPACE_OFFSET);
 		}
 		return true;
+	}
+
+	private Field getCopyOf(Field field) {
+		return new Field(field.getName(), field.getValue(), field.getDescription());
 	}
 
 	private void setApduDescription(ApduTemplate template) {
