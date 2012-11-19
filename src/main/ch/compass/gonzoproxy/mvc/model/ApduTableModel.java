@@ -60,9 +60,10 @@ public class ApduTableModel extends AbstractTableModel {
 		case 2:
 			return new String(apdu.getPlainApdu());
 		case 3:
-			return new String(apdu.getFields().get(0).getDescription());
+			return apdu.getDescription();
 		case 4:
-			return new String();
+			return "";
+//			return apdu.getFields().get(rowIndex).getDescription();
 		}
 		return null;
 

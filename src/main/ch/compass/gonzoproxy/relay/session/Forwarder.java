@@ -17,12 +17,14 @@ import ch.compass.gonzoproxy.relay.parser.ParsingHandler;
 
 public class Forwarder implements Runnable {
 
+	private boolean sessionIsAlive = true;
+	private ParsingHandler parsingHandler = new ParsingHandler();
+
 	private Socket sourceSocket;
 	private Socket forwardingSocket;
 	private ApduData data;
 	private ApduStreamHandler streamHandler = new ApduStreamHandler();
 	private ApduType type;
-	private ParsingHandler parsingHandler = new ParsingHandler();
 	
 	public Forwarder(Socket sourceSocket, Socket forwardingSocket, ApduData data, ApduType type) {
 		this.sourceSocket = sourceSocket;
@@ -45,13 +47,11 @@ public class Forwarder implements Runnable {
 
 		try (InputStream inputStream = new BufferedInputStream(sourceSocket.getInputStream());
 				OutputStream outStream = new BufferedOutputStream(forwardingSocket.getOutputStream())) {
-			while (true) {
+			while (sessionIsAlive) {
 				Queue<Apdu> receivedApdus = streamHandler.readApdu(inputStream);
-				System.out.println("Adding received Apdus");
-
 				while(!receivedApdus.isEmpty()) {
 					Apdu apdu = receivedApdus.poll();
-//					parsingHandler.processApdu(apdu);
+					parsingHandler.processApdu(apdu);
 					data.addApdu(apdu);
 					//apdu needs new isModified field for type column in table
 					//if isTrapped -> yield
@@ -71,5 +71,9 @@ public class Forwarder implements Runnable {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void stop() {
+		sessionIsAlive = false;
 	}
 }

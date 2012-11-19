@@ -1,18 +1,10 @@
 package ch.compass.gonzoproxy.mvc.model;
 
 public class Field {
-	
-	private String name;
-	private String value;
-	private String description;
-	
 
-
-	public Field(String name, String value, String description) {
-		this.name = name;
-		this.value = value;
-		this.description = description;
-	}
+	private String name = "";
+	private String value = "";
+	private String description = "";
 
 	public String getName() {
 		return name;
@@ -37,9 +29,5 @@ public class Field {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	public int getFieldSize() {
-		return value.length();
-	}
-	
+
 }

@@ -8,7 +8,7 @@ import ch.compass.gonzoproxy.relay.session.RelaySession;
 
 public class RelayController {
 	
-
+	private RelaySession relaySession;
 	private ApduData apduData;
 	private CurrentSessionModel sessionModel;
 	
@@ -16,7 +16,8 @@ public class RelayController {
 	}
 
 	public void startRelaySession() {
-		new Thread(new RelaySession(sessionModel)).start();
+		relaySession = new RelaySession(sessionModel); 
+		new Thread(relaySession).start();
 	}
 
 	public void addModel(ApduData apduData, CurrentSessionModel sessionModel) {
@@ -40,7 +41,6 @@ public class RelayController {
 	}
 
 	private void stopRelaySession() {
-		// TODO Auto-generated method stub
 		
 	}
 

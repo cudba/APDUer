@@ -22,6 +22,9 @@ public class RelaySession implements Runnable {
 	private Socket target;
 	private CurrentSessionModel sessionModel;
 	
+	private Forwarder commandForwarder;
+	private Forwarder responseForwarder;
+	
 	
 	
 	public RelaySession(CurrentSessionModel sessionModel) {
@@ -31,7 +34,18 @@ public class RelaySession implements Runnable {
 	@Override
 	public void run() {
 		establishConnection();
-		initForwardingThreads();
+		initForwarder();
+		startForwardingThreads();
+	}
+	
+	public void stop() {
+		commandForwarder.stop();
+		responseForwarder.stop();
+	}
+
+	private void initForwarder() {
+		commandForwarder = new Forwarder(initiatorSocket,target, sessionModel.getSessionData(), ApduType.COMMAND);
+		responseForwarder = new Forwarder(target, initiatorSocket, sessionModel.getSessionData(), ApduType.RESPONSE);
 	}
 
 	private void establishConnection() {
@@ -44,10 +58,9 @@ public class RelaySession implements Runnable {
 		}
 	}
 
-	private void initForwardingThreads() {
-		new Thread(new Forwarder(initiatorSocket,target, sessionModel.getSessionData(), ApduType.COMMAND)).start();
-		new Thread(new Forwarder(target, initiatorSocket, sessionModel.getSessionData(), ApduType.RESPONSE)).start();
+	private void startForwardingThreads() {
+		new Thread(commandForwarder).start();
+		new Thread(responseForwarder).start();
 	}
-
-
+	
 }

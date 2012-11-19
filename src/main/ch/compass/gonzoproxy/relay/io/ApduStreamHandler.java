@@ -26,7 +26,6 @@ public class ApduStreamHandler {
 		if ((readBytes = inputStream.read(buffer, length, buffer.length)) != -1) {
 			
 			length += readBytes;
-			System.out.println(length + " Bytes read...");
 			
 			int missingBytes = extractor.extractApdusToQueue(buffer, apduQueue, length);
 			
