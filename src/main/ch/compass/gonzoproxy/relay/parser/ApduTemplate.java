@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import ch.compass.gonzoproxy.mvc.model.Field;
+import ch.compass.gonzoproxy.utils.ByteArrays;
 
 public class ApduTemplate {
 
@@ -63,14 +64,15 @@ public class ApduTemplate {
 
 	public boolean accept(Parser parser) {
 		byte[] plainApdu = parser.getProcessingApdu().getPlainApdu();
+		int fieldsize = parser.getDefaultFieldsize();
 		int offset = 0;
 		for (int i = 0; i < identificationBytes.size(); i++) {
-			byte[] idBytes = new byte[] { plainApdu[offset],
-					plainApdu[offset + 1] };
+			byte[] idBytes = ByteArrays.trim(plainApdu, offset, offset + fieldsize);
+			
 			if (!identificationByteMatches(i, idBytes)) {
 				return false;
 			}
-			offset += parser.getFormattingOffset();
+			offset += parser.getEncodingOffset();
 		}
 		return parser.tryParse(this);
 	}

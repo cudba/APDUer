@@ -6,5 +6,6 @@ public interface Parser {
 	public void setProcessingApdu(Apdu apdu);
 	public Apdu getProcessingApdu();
 	public boolean tryParse(ApduTemplate template);
-	public int getFormattingOffset();
+	public int getEncodingOffset();
+	public int getDefaultFieldsize();
 }
