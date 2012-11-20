@@ -10,7 +10,7 @@ import ch.compass.gonzoproxy.utils.ByteArrays;
 public class AsciiApduParser implements Parser {
 
 	private static final int ENCODING_OFFSET = 2;
-	
+
 	private static final int WHITESPACE_OFFSET = 1;
 
 	private static final int DEFAULT_FIELDLENGTH = 1;
@@ -20,25 +20,34 @@ public class AsciiApduParser implements Parser {
 	public boolean templateIsAccepted(ApduTemplate template) {
 		byte[] plainApdu = processingApdu.getPlainApdu();
 		ArrayList<Field> templateFields = template.getFields();
-//		if (!fieldCountMatches(plainApdu, template.getFields().size())) {
-//			return false;
-//		}
+		// if (!fieldCountMatches(plainApdu, template.getFields().size())) {
+		// return false;
+		// }
 		int fieldLength = DEFAULT_FIELDLENGTH;
 		int offset = 0;
 		for (int i = 0; i < templateFields.size(); i++) {
-			if ((offset + fieldLength * ENCODING_OFFSET) > plainApdu.length ) {
+			if ((offset + fieldLength * ENCODING_OFFSET) > plainApdu.length) {
 				return false;
 			}
-			
+
 			Field processingField = template.getFields().get(i);
-			if(isIdentifierField(processingField)){
-				byte[] idByte = ByteArrays.trim(plainApdu, offset, fieldLength * ENCODING_OFFSET);
+			if (isIdentifierField(processingField)) {
+				byte[] idByte;
+				if (hasCustomLenght(fieldLength)) {
+					idByte = ByteArrays.trim(plainApdu, offset, fieldLength
+							* (ENCODING_OFFSET + WHITESPACE_OFFSET)
+							- WHITESPACE_OFFSET);
+				} else {
+					idByte = ByteArrays.trim(plainApdu, offset, fieldLength
+							* ENCODING_OFFSET);
+				}
 				if (!valueMatches(idByte, templateFields.get(i))) {
 					return false;
 				}
 				System.out.println("Field matched");
 			}
-			offset += DEFAULT_FIELDLENGTH * (ENCODING_OFFSET + WHITESPACE_OFFSET);
+			offset += DEFAULT_FIELDLENGTH
+					* (ENCODING_OFFSET + WHITESPACE_OFFSET);
 			if (isLengthField(processingField)) {
 				fieldLength = hexToInt(processingField.getValue());
 			} else {
@@ -47,6 +56,7 @@ public class AsciiApduParser implements Parser {
 		}
 		return true;
 	}
+
 
 	private boolean isIdentifierField(Field processingField) {
 		return processingField.getValue() != null;
@@ -58,7 +68,6 @@ public class AsciiApduParser implements Parser {
 		return apduValue.equals(templateValue);
 	}
 
-
 	@Override
 	public boolean tryParse(ApduTemplate template) {
 		setApduDescription(template);
@@ -69,15 +78,18 @@ public class AsciiApduParser implements Parser {
 		int offset = 0;
 		for (int i = 0; i < templateFields.size(); i++) {
 			Field processingField = getCopyOf(templateFields.get(i));
-			
-			if(fieldLength > DEFAULT_FIELDLENGTH){
-				parseValueToField(plainApdu, offset, fieldLength * (ENCODING_OFFSET + WHITESPACE_OFFSET) - WHITESPACE_OFFSET, processingField);
-			}else{
-				parseValueToField(plainApdu, offset, fieldLength * ENCODING_OFFSET, processingField);
+
+			if (hasCustomLenght(fieldLength)) {
+				parseValueToField(plainApdu, offset, fieldLength
+						* (ENCODING_OFFSET + WHITESPACE_OFFSET)
+						- WHITESPACE_OFFSET, processingField);
+			} else {
+				parseValueToField(plainApdu, offset, fieldLength
+						* ENCODING_OFFSET, processingField);
 			}
-			
+
 			offset += fieldLength * (ENCODING_OFFSET + WHITESPACE_OFFSET);
-			
+
 			if (isLengthField(processingField)) {
 				fieldLength = hexToInt(processingField.getValue());
 			} else {
@@ -87,8 +99,8 @@ public class AsciiApduParser implements Parser {
 		return true;
 	}
 
-	private void parseValueToField(byte[] plainApdu, int offset, int fieldLength,
-			Field field) {
+	private void parseValueToField(byte[] plainApdu, int offset,
+			int fieldLength, Field field) {
 		if ((offset + fieldLength) <= plainApdu.length) {
 			byte[] value = ByteArrays.trim(plainApdu, offset, fieldLength);
 			setFieldValue(field, value);
@@ -96,22 +108,27 @@ public class AsciiApduParser implements Parser {
 		}
 	}
 
+	private boolean hasCustomLenght(int fieldLength) {
+		return fieldLength > DEFAULT_FIELDLENGTH;
+	}
+
 	private void setFieldValue(Field field, byte[] value) {
 		field.setValue(new String(value));
 	}
-	
+
 	private int hexToInt(String hexValue) {
 		return Integer.parseInt(hexValue, 16);
 	}
-	
+
 	private Field getCopyOf(Field field) {
-		return new Field(field.getName(), field.getValue(), field.getDescription());
+		return new Field(field.getName(), field.getValue(),
+				field.getDescription());
 	}
-	
+
 	private void setApduDescription(ApduTemplate template) {
 		processingApdu.setDescription(template.getApduDescription());
 	}
-	
+
 	private boolean isLengthField(Field processingField) {
 		return processingField.getName().equals("LEN");
 	}

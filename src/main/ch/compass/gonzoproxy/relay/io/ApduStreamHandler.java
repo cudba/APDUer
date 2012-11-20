@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.utils.ByteArrays;
 
 public class ApduStreamHandler {
 
@@ -30,7 +31,7 @@ public class ApduStreamHandler {
 			int missingBytes = extractor.extractApdusToQueue(buffer, apduQueue, length);
 			
 			if ((length + missingBytes) > buffer.length) {
-				buffer = enlarge(buffer);
+				buffer = ByteArrays.enlarge(buffer);
 			}
 			
 			if((readBytes = inputStream.read(buffer, length, missingBytes)) != 0) {
@@ -55,10 +56,4 @@ public class ApduStreamHandler {
 		}
 	}
 	
-
-	private byte[] enlarge(byte[] array) {
-		byte[] newArray = new byte[array.length << 1];
-		System.arraycopy(array, 0, newArray, 0, array.length);
-		return newArray;
-	}
 }
