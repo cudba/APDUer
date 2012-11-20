@@ -37,9 +37,7 @@ public class AsciiApduParser implements Parser {
 
 	private boolean valueMatches(byte[] idByte, Field field) {
 		String apduValue = new String(idByte);
-		System.out.println(apduValue);
 		String templateValue = field.getValue();
-		System.out.println(templateValue);
 		return apduValue.equals(templateValue);
 	}
 
@@ -58,7 +56,7 @@ public class AsciiApduParser implements Parser {
 		int offset = 0;
 		for (int i = 0; i < templateFields.size(); i++) {
 			Field processingField = getCopyOf(templateFields.get(i));
-			parseField(plainApdu, offset, fieldLength + ENCODING_OFFSET, processingField);
+			parseField(plainApdu, offset, fieldLength * ENCODING_OFFSET, processingField);
 			if (isLengthField(processingField)) {
 				fieldLength = Integer.parseInt(processingField.getValue(), 16);
 			} else {
@@ -82,11 +80,11 @@ public class AsciiApduParser implements Parser {
 	}
 
 	private void parseField(byte[] plainApdu, int offset, int fieldsize,
-			Field templateField) {
-		if ((offset + fieldsize) < plainApdu.length) {
+			Field field) {
+		if ((offset + fieldsize) <= plainApdu.length) {
 			byte[] value = ByteArrays.trim(plainApdu, offset, fieldsize);
-			setFieldValue(templateField, value);
-			processingApdu.addField(templateField);
+			setFieldValue(field, value);
+			processingApdu.addField(field);
 		}
 	}
 
