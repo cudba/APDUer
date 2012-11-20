@@ -9,10 +9,10 @@ import ch.compass.gonzoproxy.mvc.listener.SessionListener;
 public class CurrentSessionModel {
 	
 	private Preferences sessionPrefs;
-	
 	private ArrayList<SessionListener> listeners = new ArrayList<SessionListener>();
-
 	private ApduData apduData;
+	private Boolean cmdTrap = false;
+	private Boolean resTrap = false;
 	
 	public CurrentSessionModel(){
 		this.sessionPrefs = Preferences.userRoot().node(this.getClass().getName());
@@ -57,5 +57,21 @@ public class CurrentSessionModel {
 	
 	public ApduData getSessionData() {
 		return apduData;
+	}
+	
+	public Boolean isResponseTrapped() {
+		return resTrap;
+	}
+	
+	public Boolean isCommandTrapped() {
+		return cmdTrap;
+	}
+	
+	public void setCmdTrap(Boolean cmdTrap) {
+		this.cmdTrap = cmdTrap;
+	}
+	
+	public void setResTrap(Boolean resTrap) {
+		this.resTrap = resTrap;
 	}
 }

@@ -29,6 +29,13 @@ public class ApduData {
 
 	public void clear() {
 		apdu.clear();
+		notifyClear();
+	}
+
+	private void notifyClear() {
+		for (ApduListener listener : listeners) {
+			listener.apduCleared();
+		}
 	}
 
 	private void notifyApduReceived(Apdu apdu) {

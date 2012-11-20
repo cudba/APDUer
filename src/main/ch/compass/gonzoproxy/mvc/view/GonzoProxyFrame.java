@@ -12,6 +12,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -19,9 +20,6 @@ import javax.swing.event.ListSelectionListener;
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
 import ch.compass.gonzoproxy.mvc.model.Apdu;
 import ch.compass.gonzoproxy.mvc.model.ApduData;
-
-import javax.swing.JSplitPane;
-import java.awt.Insets;
 
 public class GonzoProxyFrame extends JFrame {
 

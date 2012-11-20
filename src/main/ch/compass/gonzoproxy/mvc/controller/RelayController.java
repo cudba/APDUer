@@ -28,7 +28,6 @@ public class RelayController {
 	public void newSession(String portListen, String remoteHost,
 			String remotePort) {
 		generateNewSessionDescription(portListen, remoteHost, remotePort);
-//		stopRelaySession();
 		startRelaySession();
 		
 	}
@@ -39,9 +38,12 @@ public class RelayController {
 		apduData.clear();
 		sessionModel.addSessionData(apduData);
 	}
-
-	private void stopRelaySession() {
-		relaySession.stop();
+	
+	public void clearSession(){
+//		apduData.clear();
+		if(relaySession != null){
+			relaySession.stop();
+		}
 	}
 
 	public ApduData getApduData() {
@@ -50,5 +52,26 @@ public class RelayController {
 	
 	public CurrentSessionModel getSessionModel() {
 		return sessionModel;
+	}
+
+	public void changeCommandTrap() {
+		if(sessionModel.isCommandTrapped()){
+			sessionModel.setCmdTrap(false);
+		}else{
+			sessionModel.setCmdTrap(true);
+		}
+	}
+
+	public void changeResponseTrap() {
+		if(sessionModel.isResponseTrapped()){
+			sessionModel.setResTrap(false);
+		}else{
+			sessionModel.setResTrap(true);
+		}
+	}
+
+	public void sendApdu() {
+		// TODO Auto-generated method stub
+		
 	}
 }
