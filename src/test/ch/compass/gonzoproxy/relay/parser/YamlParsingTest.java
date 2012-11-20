@@ -1,7 +1,7 @@
 package ch.compass.gonzoproxy.relay.parser;
 
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -16,8 +16,8 @@ import ch.compass.gonzoproxy.mvc.model.Field;
 public class YamlParsingTest extends TestCase {
 	@
 	Test
-	public void testLoadAtsTemplate() {
-		try (InputStream input = new FileInputStream("templates/ats.apdu")) {
+	public void testLoadAtsTemplate() throws FileNotFoundException {
+		InputStream input = new FileInputStream("templates/ats.apdu");
 			Yaml beanLoader = new Yaml();
 			ApduTemplate parsed = beanLoader.loadAs(input, ApduTemplate.class);
 			
@@ -26,9 +26,6 @@ public class YamlParsingTest extends TestCase {
 			int expectedAtsFields = 9;
 			ArrayList<Field> fields = parsed.getFields();
 			assertEquals(expectedAtsFields, fields.size());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 
