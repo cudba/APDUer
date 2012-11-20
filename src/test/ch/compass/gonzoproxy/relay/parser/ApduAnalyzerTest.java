@@ -40,8 +40,8 @@ public class ApduAnalyzerTest {
 	public void testProcessUnknownLibNfcApdu() {
 		ApduAnalyzer parserHanlder = new ApduAnalyzer();
 
-		String fakePlainApdu = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
-		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
+		String fakePlainApdu = "ff ff ff ff";
+		String libnfcInput = "C-APDU 0004: ff ff ff ff";
 		Apdu apdu = new Apdu(libnfcInput.getBytes());
 		apdu.setPlainApdu(fakePlainApdu.getBytes());
 

@@ -17,6 +17,8 @@ fields:
 - name: T7
   description: Seventh Byte
 - name: T8
+  value: a1
   description: Eigth Byte
 - name: T9
+  value: 80
   description: Ninth Byte
