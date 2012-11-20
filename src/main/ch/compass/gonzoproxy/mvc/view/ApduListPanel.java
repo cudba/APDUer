@@ -72,8 +72,8 @@ public class ApduListPanel extends JPanel {
 	}
 
 	private void initUi() {
-		setMinimumSize(new Dimension(750, 250));
-		setMaximumSize(new Dimension(750, 250));
+		setMinimumSize(new Dimension(750, 100));
+//		setMaximumSize(new Dimension(750, 250));
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
