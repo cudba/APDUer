@@ -13,8 +13,13 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
+import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.ApduData;
+
 import javax.swing.JSplitPane;
 import java.awt.Insets;
 
@@ -37,15 +42,22 @@ public class GonzoProxyFrame extends JFrame {
 	private JMenuItem mntmLoadTemplate;
 	private JMenuItem mntmAbout;
 	private JSplitPane splitPane;
-	private JPanel panelList;
-	private JPanel panelDetail;
+	private ApduListPanel panelList;
+	private ApduDetailPanel panelDetail;
+	private Apdu editApdu;
+	private ApduData data;
 
-	public GonzoProxyFrame(final RelayController controller) {
+	public GonzoProxyFrame(RelayController controller) {
+		data = controller.getApduData();
+		initGui(controller);
+	}
+
+	private void initGui(final RelayController controller) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setTitle("Gonzo Proxy");
 		setMinimumSize(new Dimension(750, 450));
-		
+
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
@@ -63,6 +75,7 @@ public class GonzoProxyFrame extends JFrame {
 				ns.setVisible(true);
 			}
 		});
+
 		mnFile.add(mntmNew);
 
 		mntmOpen = new JMenuItem("Open");
@@ -88,17 +101,17 @@ public class GonzoProxyFrame extends JFrame {
 
 		mntmAbout = new JMenuItem("About");
 		mnHelp.add(mntmAbout);
-		
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{0, 0};
-		gbl_contentPane.rowHeights = new int[]{134, 0};
-		gbl_contentPane.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_contentPane.columnWidths = new int[] { 0, 0 };
+		gbl_contentPane.rowHeights = new int[] { 134, 0 };
+		gbl_contentPane.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
-		
+
 		splitPane = new JSplitPane();
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		GridBagConstraints gbc_splitPane = new GridBagConstraints();
@@ -106,11 +119,27 @@ public class GonzoProxyFrame extends JFrame {
 		gbc_splitPane.gridx = 0;
 		gbc_splitPane.gridy = 0;
 		contentPane.add(splitPane, gbc_splitPane);
-		
-		panelList = new ApduListPanel(controller);
+
+		panelList = new ApduListPanel(controller, new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				int index = e.getFirstIndex();
+
+				if (index == -1) {
+					GonzoProxyFrame.this.panelDetail.clearAllFields();
+				} else {
+					GonzoProxyFrame.this.editApdu = ((Apdu) GonzoProxyFrame.this.data
+							.getApduList().get(index));
+					GonzoProxyFrame.this.panelDetail
+							.setApdu(GonzoProxyFrame.this.editApdu);
+				}
+
+			}
+		});
 		splitPane.setLeftComponent(panelList);
-		
-		panelDetail = new ApduDetailPanel();
+
+		panelDetail = new ApduDetailPanel(controller);
 		splitPane.setRightComponent(panelDetail);
 	}
 

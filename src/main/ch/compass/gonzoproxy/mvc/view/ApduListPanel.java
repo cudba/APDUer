@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
@@ -37,19 +39,22 @@ public class ApduListPanel extends JPanel {
 	private RelayController controller;
 	private JPanel panel_table;
 	private JScrollPane scrollPane_0;
-	private JTable table_capdu;
+	private JTable table_apduList;
 	private JLabel lblListenport;
 	private JLabel lblLPort;
 	private JLabel lblRemotehost;
 	private JLabel lblRHost;
 	private JLabel lblRemoteport;
 	private JLabel lblRPort;
+	private ListSelectionListener lsl;
 
-	public ApduListPanel(RelayController controller) {
+	public ApduListPanel(RelayController controller,
+			ListSelectionListener listSelectionListener) {
 		this.controller = controller;
 		apduData = controller.getApduData();
 		currentSession = controller.getSessionModel();
 		currentSession.addSessionListener(createSessionListener());
+		this.lsl = listSelectionListener;
 		initUi();
 		updateSessionPrefs();
 	}
@@ -73,13 +78,13 @@ public class ApduListPanel extends JPanel {
 
 	private void initUi() {
 		setMinimumSize(new Dimension(750, 100));
-//		setMaximumSize(new Dimension(750, 250));
+		// setMaximumSize(new Dimension(750, 250));
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, 0.0};
+		gridBagLayout.columnWidths = new int[] { 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0 };
+		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 1.0, 0.0 };
 		setLayout(gridBagLayout);
 
 		panel_table = new JPanel();
@@ -89,7 +94,7 @@ public class ApduListPanel extends JPanel {
 		gbc_panel_table.gridx = 0;
 		gbc_panel_table.gridy = 0;
 		add(panel_table, gbc_panel_table);
-		
+
 		GridBagLayout gbl_panel_table = new GridBagLayout();
 		gbl_panel_table.columnWidths = new int[] { 0, 0 };
 		gbl_panel_table.rowHeights = new int[] { 0, 0 };
@@ -104,11 +109,33 @@ public class ApduListPanel extends JPanel {
 		gbc_scrollPane_0.gridy = 0;
 		panel_table.add(scrollPane_0, gbc_scrollPane_0);
 
-		table_capdu = new JTable();
-		table_capdu.setModel(new ApduTableModel(apduData, new String[] { "#",
+		table_apduList = new JTable();
+		table_apduList.setModel(new ApduTableModel(apduData, new String[] { "#",
 				"Type", "APDU", "ASCII", "Description" }));
-		configureTable(table_capdu);
-		scrollPane_0.setViewportView(table_capdu);
+
+		table_apduList.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+
+					@Override
+					public void valueChanged(ListSelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						int index = ApduListPanel.this.table_apduList.getSelectedRow();
+						if (index != -1)
+							lsl.valueChanged(new ListSelectionEvent(
+									this, ApduListPanel.this.table_apduList
+											.convertRowIndexToModel(index),
+									ApduListPanel.this.table_apduList
+											.convertRowIndexToModel(index),
+									true));
+						else
+							lsl.valueChanged(new ListSelectionEvent(this,
+											-1, -1, true));
+
+					}
+				});
+
+		configureTable(table_apduList);
+		scrollPane_0.setViewportView(table_apduList);
 
 		panel_options = new JPanel();
 		GridBagConstraints gbc_panel_options = new GridBagConstraints();
