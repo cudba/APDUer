@@ -2,13 +2,15 @@ package ch.compass.gonzoproxy.relay.parser;
 
 import java.util.List;
 
+import org.junit.runners.ParentRunner;
+
 import ch.compass.gonzoproxy.mvc.model.Apdu;
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.utils.ByteArrays;
 
 public class AsciiApduParser implements Parser {
 
-	private static final int BYTES_TO_IDENTIFY = 1;
+	private static final int BYTES_TO_IDENTIFY = 2;
 
 	private static final int ENCODING_OFFSET = 2;
 	
@@ -43,7 +45,7 @@ public class AsciiApduParser implements Parser {
 
 	private boolean containsIdBytes(byte[] plainApdu) {
 
-		return plainApdu.length >= BYTES_TO_IDENTIFY * (ENCODING_OFFSET + WHITESPACE_OFFSET);
+		return plainApdu.length >= BYTES_TO_IDENTIFY * (ENCODING_OFFSET + WHITESPACE_OFFSET) - WHITESPACE_OFFSET;
 	}
 
 	@Override
@@ -56,13 +58,17 @@ public class AsciiApduParser implements Parser {
 		int offset = 0;
 		for (int i = 0; i < templateFields.size(); i++) {
 			Field processingField = getCopyOf(templateFields.get(i));
-			parseField(plainApdu, offset, fieldLength * ENCODING_OFFSET, processingField);
+			if(fieldLength > DEFAULT_FIELDLENGTH){
+				parseField(plainApdu, offset, fieldLength * (ENCODING_OFFSET + WHITESPACE_OFFSET) - WHITESPACE_OFFSET, processingField);
+			}else{
+				parseField(plainApdu, offset, fieldLength * ENCODING_OFFSET, processingField);
+			}
+			offset += fieldLength * (ENCODING_OFFSET + WHITESPACE_OFFSET);
 			if (isLengthField(processingField)) {
 				fieldLength = Integer.parseInt(processingField.getValue(), 16);
 			} else {
 				fieldLength = DEFAULT_FIELDLENGTH;
 			}
-			offset += fieldLength * (ENCODING_OFFSET + WHITESPACE_OFFSET);
 		}
 		return true;
 	}

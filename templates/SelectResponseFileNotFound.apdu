@@ -1,9 +1,6 @@
 apduDescription: Select Response - File not found
 fields:
 - name: S1
-  value: 6A
-  description: Status Byte 1
+  value: 6a
 - name: S2
   value: 82
-  description: Status Byte 2
-
