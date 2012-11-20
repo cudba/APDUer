@@ -46,6 +46,10 @@ public class RelayController {
 		}
 	}
 
+	public void stopRelaySession() {
+		relaySession.stop();
+	}
+
 	public ApduData getApduData() {
 		return apduData;
 	}
