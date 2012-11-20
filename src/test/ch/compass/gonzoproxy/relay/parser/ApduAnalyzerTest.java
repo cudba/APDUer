@@ -2,15 +2,8 @@ package ch.compass.gonzoproxy.relay.parser;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 
 import org.junit.Test;
-import org.yaml.snakeyaml.Yaml;
 
 import ch.compass.gonzoproxy.mvc.model.Apdu;
 import ch.compass.gonzoproxy.mvc.model.Field;

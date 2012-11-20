@@ -2,8 +2,6 @@ package ch.compass.gonzoproxy.relay.parser;
 
 import java.util.List;
 
-import org.junit.runners.ParentRunner;
-
 import ch.compass.gonzoproxy.mvc.model.Apdu;
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.utils.ByteArrays;

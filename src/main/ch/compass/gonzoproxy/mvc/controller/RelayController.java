@@ -40,7 +40,7 @@ public class RelayController {
 		sessionModel.addSessionData(apduData);
 	}
 
-	private void stopRelaySession() {
+	public void stopRelaySession() {
 		relaySession.stop();
 	}
 
