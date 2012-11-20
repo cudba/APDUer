@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
+import javax.swing.JSplitPane;
+import java.awt.Insets;
 
 public class GonzoProxyFrame extends JFrame {
 
@@ -34,6 +36,9 @@ public class GonzoProxyFrame extends JFrame {
 	private JMenu mnHelp;
 	private JMenuItem mntmLoadTemplate;
 	private JMenuItem mntmAbout;
+	private JSplitPane splitPane;
+	private JPanel panelList;
+	private JPanel panelDetail;
 
 	public GonzoProxyFrame(final RelayController controller) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -89,24 +94,24 @@ public class GonzoProxyFrame extends JFrame {
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{0, 0};
-		gbl_contentPane.rowHeights = new int[]{134, 0, 0};
+		gbl_contentPane.rowHeights = new int[]{134, 0};
 		gbl_contentPane.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
-		JPanel panelApduList = new ApduListPanel(controller);
-		GridBagConstraints gbc_panelApduList = new GridBagConstraints();
-		gbc_panelApduList.fill = GridBagConstraints.BOTH;
-		gbc_panelApduList.gridx = 0;
-		gbc_panelApduList.gridy = 0;
-		contentPane.add(panelApduList, gbc_panelApduList);
+		splitPane = new JSplitPane();
+		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		GridBagConstraints gbc_splitPane = new GridBagConstraints();
+		gbc_splitPane.fill = GridBagConstraints.BOTH;
+		gbc_splitPane.gridx = 0;
+		gbc_splitPane.gridy = 0;
+		contentPane.add(splitPane, gbc_splitPane);
 		
-		JPanel panelApduDetail = new ApduDetailPanel();
-		GridBagConstraints gbc_panelApduDetail = new GridBagConstraints();
-		gbc_panelApduDetail.fill = GridBagConstraints.BOTH;
-		gbc_panelApduDetail.gridx = 0;
-		gbc_panelApduDetail.gridy = 1;
-		contentPane.add(panelApduDetail, gbc_panelApduDetail);
+		panelList = new ApduListPanel(controller);
+		splitPane.setLeftComponent(panelList);
+		
+		panelDetail = new ApduDetailPanel();
+		splitPane.setRightComponent(panelDetail);
 	}
 
 }
