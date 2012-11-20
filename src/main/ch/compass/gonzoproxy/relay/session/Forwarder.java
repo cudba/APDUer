@@ -12,13 +12,13 @@ import ch.compass.gonzoproxy.mvc.model.Apdu;
 import ch.compass.gonzoproxy.mvc.model.ApduData;
 import ch.compass.gonzoproxy.mvc.model.ApduType;
 import ch.compass.gonzoproxy.relay.io.ApduStreamHandler;
-import ch.compass.gonzoproxy.relay.parser.ParsingHandler;
+import ch.compass.gonzoproxy.relay.parser.ApduAnalyzer;
 
 
 public class Forwarder implements Runnable {
 
 	private boolean sessionIsAlive = true;
-	private ParsingHandler parsingHandler = new ParsingHandler();
+	private ApduAnalyzer parsingHandler = new ApduAnalyzer();
 
 	private Socket sourceSocket;
 	private Socket forwardingSocket;
