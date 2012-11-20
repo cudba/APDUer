@@ -10,4 +10,5 @@ fields:
 - name: LEN
   description: Length
 - name: Data
+  description: Application Identifier
 - name: Le

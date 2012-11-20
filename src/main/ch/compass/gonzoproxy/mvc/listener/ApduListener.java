@@ -6,5 +6,7 @@ import ch.compass.gonzoproxy.mvc.model.Apdu;
 public interface ApduListener {
 
 	public void apduReceived(Apdu apdu);
+	
+	public void apduCleared();
 
 }

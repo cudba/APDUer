@@ -3,6 +3,7 @@ package ch.compass.gonzoproxy.mvc.view;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Enumeration;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -10,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.TableColumn;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
 import ch.compass.gonzoproxy.mvc.model.Apdu;
@@ -23,15 +25,14 @@ public class ApduDetailPanel extends JPanel {
 	private JTextPane textPane_ascii;
 	private JTextPane textPane_hex;
 	private Apdu editApdu;
-	private RelayController controller;
+//	private RelayController controller;
 
 	private DetailTableModel detailTableModel;
 
 	public ApduDetailPanel(RelayController controller) {
-		this.controller = controller;
-		//TODO klappt das?
+//		this.controller = controller;
 		this.editApdu = new Apdu(new byte[0]);
-		this.detailTableModel = new DetailTableModel(editApdu);
+		this.detailTableModel = new DetailTableModel(editApdu, controller.getApduData());
 		initGui();
 
 	}
@@ -56,6 +57,7 @@ public class ApduDetailPanel extends JPanel {
 
 		table_detail = new JTable();
 		table_detail.setModel(detailTableModel);
+		configureTable(table_detail);
 		scrollPane.setViewportView(table_detail);
 
 		JPanel panel = new JPanel();
@@ -107,6 +109,9 @@ public class ApduDetailPanel extends JPanel {
 
 		textPane_ascii = new JTextPane();
 		scrollPane_ascii.setViewportView(textPane_ascii);
+		
+		textPane_ascii.setEnabled(false);
+		textPane_hex.setEnabled(false);
 	}
 
 	public void clearAllFields() {
@@ -123,6 +128,29 @@ public class ApduDetailPanel extends JPanel {
 	private void updateFields() {
 		textPane_ascii.setText(editApdu.toAscii());
 		textPane_hex.setText(new String(editApdu.getPlainApdu()));
+	}
+	
+	private void configureTable(JTable table) {
+		table.setSelectionMode(0);
+		// table.getSelectionModel().addListSelectionListener(this.selectListController);
+		table.getTableHeader().setReorderingAllowed(false);
+		Enumeration<TableColumn> a = table.getColumnModel().getColumns();
+		for (int i = 0; a.hasMoreElements(); i++) {
+			TableColumn tb = (TableColumn) a.nextElement();
+			switch (i) {
+			case 0:
+				tb.setMinWidth(45);
+				tb.setMaxWidth(45);
+				break;
+			case 1:
+				tb.setPreferredWidth(250);
+				break;
+			case 2:
+				tb.setPreferredWidth(250);
+				break;
+			}
+
+		}
 	}
 
 }

@@ -27,6 +27,11 @@ public class ApduTableModel extends AbstractTableModel {
 				updateTable();
 			}
 
+			@Override
+			public void apduCleared() {
+				updateTable();
+			}
+
 		};
 	}
 
@@ -60,9 +65,9 @@ public class ApduTableModel extends AbstractTableModel {
 		case 2:
 			return new String(apdu.getPlainApdu());
 		case 3:
-			return apdu.getDescription();
+			return apdu.toAscii();
 		case 4:
-			return "";
+			return apdu.getDescription();
 		}
 		return null;
 

@@ -69,8 +69,8 @@ public class NewSession extends JDialog {
 		gbc_lblSelectInputMethod.gridy = 0;
 		contentPane.add(lblSelectInputMethod, gbc_lblSelectInputMethod);
 
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {
+		JComboBox<String> comboBox = new JComboBox<String>();
+		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {
 				"nfc-relay-picc", "pureAPDU" }));
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 0);

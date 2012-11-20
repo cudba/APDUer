@@ -52,8 +52,20 @@ public class RelaySession implements Runnable {
 	}
 
 	public void stop() {
-		commandForwarder.stop();
-		responseForwarder.stop();
+		if(commandForwarder != null){
+			commandForwarder.stop();
+		}
+		if(responseForwarder != null){
+			responseForwarder.stop();
+		}
+		if(serverSocket != null){
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void initForwarder() {
