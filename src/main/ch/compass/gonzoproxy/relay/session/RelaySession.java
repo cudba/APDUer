@@ -31,34 +31,22 @@ public class RelaySession implements Runnable {
 
 	@Override
 	public void run() {
-
-		try {
+		
 			establishConnection();
 			initForwarder();
 			startForwardingThreads();
-		} catch (IOException e) {
-			try {
-				serverSocket.close();
-				initiatorSocket.close();
-				target.close();
-				sessionModel.setSession(sessionModel.getListenPort(),
-						"Connection lost...", 0);
-				stop();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}
+
 
 	}
 
-	public void stop() {
-		if(commandForwarder != null){
+	public void stopForwarder() {
+		if (commandForwarder != null) {
 			commandForwarder.stop();
 		}
-		if(responseForwarder != null){
+		if (responseForwarder != null) {
 			responseForwarder.stop();
 		}
-		if(serverSocket != null){
+		if (serverSocket != null) {
 			try {
 				serverSocket.close();
 			} catch (IOException e) {
@@ -75,11 +63,27 @@ public class RelaySession implements Runnable {
 				sessionModel.getSessionData(), ApduType.RESPONSE);
 	}
 
-	private void establishConnection() throws IOException {
-		serverSocket = new ServerSocket(sessionModel.getListenPort());
-		initiatorSocket = serverSocket.accept();
-		target = new Socket(sessionModel.getRemoteHost(),
-				sessionModel.getRemotePort());
+	private void establishConnection() {
+		try {
+			serverSocket = new ServerSocket(sessionModel.getListenPort());
+			initiatorSocket = serverSocket.accept();
+			target = new Socket(sessionModel.getRemoteHost(),
+					sessionModel.getRemotePort());
+		} catch (IOException openSocket) {
+			try {
+				initiatorSocket.close();
+				target.close();
+			} catch (IOException closeSocket) {
+				closeSocket.printStackTrace();
+			}
+
+		}finally {
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void startForwardingThreads() {

@@ -14,7 +14,6 @@ import ch.compass.gonzoproxy.mvc.model.ApduType;
 import ch.compass.gonzoproxy.relay.io.ApduStreamHandler;
 import ch.compass.gonzoproxy.relay.parser.ApduAnalyzer;
 
-
 public class Forwarder implements Runnable {
 
 	private boolean sessionIsAlive = true;
@@ -25,8 +24,9 @@ public class Forwarder implements Runnable {
 	private ApduData data;
 	private ApduStreamHandler streamHandler = new ApduStreamHandler();
 	private ApduType type;
-	
-	public Forwarder(Socket sourceSocket, Socket forwardingSocket, ApduData data, ApduType type) {
+
+	public Forwarder(Socket sourceSocket, Socket forwardingSocket,
+			ApduData data, ApduType type) {
 		this.sourceSocket = sourceSocket;
 		this.forwardingSocket = forwardingSocket;
 		this.data = data;
@@ -45,34 +45,46 @@ public class Forwarder implements Runnable {
 				+ sourceSocket.getInetAddress().getHostAddress() + " to "
 				+ forwardingSocket.getInetAddress().getHostAddress());
 
-		try (InputStream inputStream = new BufferedInputStream(sourceSocket.getInputStream());
-				OutputStream outStream = new BufferedOutputStream(forwardingSocket.getOutputStream())) {
+		try (InputStream inputStream = new BufferedInputStream(
+				sourceSocket.getInputStream());
+				OutputStream outStream = new BufferedOutputStream(
+						forwardingSocket.getOutputStream())) {
 			while (sessionIsAlive) {
 				Queue<Apdu> receivedApdus = streamHandler.readApdu(inputStream);
-				while(!receivedApdus.isEmpty()) {
+				while (!receivedApdus.isEmpty()) {
 					Apdu apdu = receivedApdus.poll();
 					parsingHandler.processApdu(apdu);
 					data.addApdu(apdu);
-					//apdu needs new isModified field for type column in table
-					//if isTrapped -> yield
-					//if apdu is manually modified, apduData.getSendApdu is overwritten by modified apdu and 
-					//modified apdu is added in apduData list
-					//if modifier.isActive -> modifier.modify(apdu)
-					//modified apdu is added to apduData list and apduData.getSendApdu is overwritten by modified apdu 
+					// apdu needs new isModified field for type column in table
+					// if isTrapped -> yield
+					// if apdu is manually modified, apduData.getSendApdu is
+					// overwritten by modified apdu and
+					// modified apdu is added in apduData list
+					// if modifier.isActive -> modifier.modify(apdu)
+					// modified apdu is added to apduData list and
+					// apduData.getSendApdu is overwritten by modified apdu
 					apdu.setType(type);
-					// new: streamHandler.sendApdu(outStream, data.getSendApdu());
+					// new: streamHandler.sendApdu(outStream,
+					// data.getSendApdu());
 
 					streamHandler.sendApdu(outStream, apdu);
-					System.out.println(apdu.toString());
 				}
-				
+
 			}
 		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
+			System.out.println("forwarder exception");
+			try {
+				sourceSocket.close();
+				forwardingSocket.close();
+			} catch (IOException e1) {
+				e.printStackTrace();
+				e1.printStackTrace();
+			}
+			
 		}
 
 	}
-	
+
 	public void stop() {
 		sessionIsAlive = false;
 	}

@@ -42,12 +42,12 @@ public class RelayController {
 	public void clearSession(){
 //		apduData.clear();
 		if(relaySession != null){
-			relaySession.stop();
+			relaySession.stopForwarder();
 		}
 	}
 
 	public void stopRelaySession() {
-		relaySession.stop();
+		relaySession.stopForwarder();
 	}
 
 	public ApduData getApduData() {

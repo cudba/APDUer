@@ -40,7 +40,7 @@ public class ApduStreamHandler {
 			}
 			return apduQueue;
 		}
-		throw new IOException("Stream disconnected...Nein?... Doch!... OOHHHHHCCHH!");
+		throw new IOException();
 	}
 
 	public void sendApdu(OutputStream outputStream, Apdu apdu) {
