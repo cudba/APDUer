@@ -49,12 +49,20 @@ public class RelaySession implements Runnable {
 	}
 
 	private void establishConnection() {
-		try {
+		try{
 			serverSocket = new ServerSocket(sessionModel.getListenPort());
+			serverSocket.setReuseAddress(true);
 			initiatorSocket = serverSocket.accept();
 			target = new Socket(sessionModel.getRemoteHost(), sessionModel.getRemotePort());
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally{
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

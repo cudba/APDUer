@@ -28,7 +28,7 @@ public class RelayController {
 	public void newSession(String portListen, String remoteHost,
 			String remotePort) {
 		generateNewSessionDescription(portListen, remoteHost, remotePort);
-		stopRelaySession();
+//		stopRelaySession();
 		startRelaySession();
 		
 	}
@@ -41,7 +41,7 @@ public class RelayController {
 	}
 
 	private void stopRelaySession() {
-		
+		relaySession.stop();
 	}
 
 	public ApduData getApduData() {

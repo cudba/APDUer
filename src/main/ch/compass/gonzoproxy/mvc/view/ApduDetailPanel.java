@@ -30,7 +30,7 @@ public class ApduDetailPanel extends JPanel {
 	public ApduDetailPanel(RelayController controller) {
 		this.controller = controller;
 		//TODO klappt das?
-		this.editApdu = new Apdu(null);
+		this.editApdu = new Apdu(new byte[0]);
 		this.detailTableModel = new DetailTableModel(editApdu);
 		initGui();
 
@@ -55,6 +55,7 @@ public class ApduDetailPanel extends JPanel {
 		add(scrollPane, gbc_scrollPane);
 
 		table_detail = new JTable();
+		table_detail.setModel(detailTableModel);
 		scrollPane.setViewportView(table_detail);
 
 		JPanel panel = new JPanel();
