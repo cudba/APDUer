@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.rmi.UnexpectedException;
 import java.util.Queue;
 
 import ch.compass.gonzoproxy.mvc.model.Apdu;
@@ -19,7 +20,7 @@ import ch.compass.gonzoproxy.relay.parser.ApduAnalyzer;
 public class Forwarder implements Runnable {
 
 	private boolean sessionIsAlive = true;
-	
+
 	private ApduAnalyzer parsingHandler;
 	private ApduStreamHandler streamHandler;
 
@@ -39,28 +40,37 @@ public class Forwarder implements Runnable {
 	}
 
 	private void initForwardingComponents() {
-		parsingHandler = new ApduAnalyzer(sessionModel.getSessionMode(), type);
-		configureStreamHandler();
+		try {
+			parsingHandler = new ApduAnalyzer(sessionModel.getSessionMode(),
+					type);
+			configureStreamHandler();
+		} catch (UnexpectedException e) {
+			e.printStackTrace();
+		} finally {
+			closeSockets();
+		}
 	}
 
-	private void configureStreamHandler() {
+	private void configureStreamHandler() throws UnexpectedException {
 		switch (sessionModel.getSessionMode()) {
-		case LibNFC:	
+		case LibNFC:
 			LibNfcApduExtractor extractor = new LibNfcApduExtractor();
 			LibNfcApduWrapper wrapper = new LibNfcApduWrapper();
 			streamHandler = new ApduStreamHandler(extractor, wrapper);
 			break;
-			// TODO: no helpers found exception
+		// TODO: no helpers found exception
 		default:
-			break;
+			throw new UnexpectedException("No Matching StreamHelpers found");
 		}
 	}
 
 	@Override
 	public void run() {
-
 		relayCommunication();
+	}
 
+	public void stop() {
+		sessionIsAlive = false;
 	}
 
 	private void relayCommunication() {
@@ -81,16 +91,18 @@ public class Forwarder implements Runnable {
 					sessionModel.addApdu(apdu);
 					// apdu needs new isModified field for type column in table
 					// if isTrapped -> yield
-					
+
 					switch (type) {
 					case COMMAND:
-						while(sessionModel.isCommandTrapped() && !sessionModel.getSendOneCmd()){
+						while (sessionModel.isCommandTrapped()
+								&& !sessionModel.getSendOneCmd()) {
 							Thread.yield();
 						}
 						break;
-						
+
 					case RESPONSE:
-						while(sessionModel.isResponseTrapped() && !sessionModel.getSendOneRes()){
+						while (sessionModel.isResponseTrapped()
+								&& !sessionModel.getSendOneRes()) {
 							Thread.yield();
 						}
 					}
@@ -111,19 +123,19 @@ public class Forwarder implements Runnable {
 
 			}
 		} catch (IOException e) {
-			try {
-				sourceSocket.close();
-				forwardingSocket.close();
-			} catch (IOException e1) {
-				e.printStackTrace();
-				e1.printStackTrace();
-			}
-			
+			// TODO: status update sessionModel -> connection lost
+		} finally {
+			closeSockets();
 		}
 
 	}
 
-	public void stop() {
-		sessionIsAlive = false;
+	private void closeSockets() {
+		try {
+			sourceSocket.close();
+			forwardingSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
