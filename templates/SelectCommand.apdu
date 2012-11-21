@@ -7,7 +7,7 @@ fields:
 - name: P1
 - name: P2
   description: 00 first occurrence, 02 next occurrence
-- name: LEN
+- name: Lc
   description: Length
 - name: Data
   description: Application Identifier

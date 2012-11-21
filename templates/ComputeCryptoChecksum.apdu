@@ -8,7 +8,7 @@ fields:
   value: 82
 - name: P2
   value: 80
-- name: LEN
+- name: Lc
   description: Length
 - name: Data
   description: Unpredictable Number Data Object List (UDOL)

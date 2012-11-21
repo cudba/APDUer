@@ -8,7 +8,7 @@ fields:
   value: 00
 - name: P2
   value: 00
-- name: LEN
+- name: Lc
   description: Length
 - name: Data
   description: Processing Options Data Object List (PDOL)

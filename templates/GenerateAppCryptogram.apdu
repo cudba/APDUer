@@ -7,7 +7,7 @@ fields:
 - name: P1
 - name: P2
   value: 00
-- name: LEN
+- name: Lc
   description: Length
 - name: Data
   description: Card Risk Management Data Object List (CDOL)
