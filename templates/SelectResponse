@@ -1,8 +1,0 @@
-apduDescription: Select Response
-fields:
-- name: FCI
-  value: 6f
-  description: File Control Information Template
-- name: Lc
-  description: Length
-- name: Data

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import ch.compass.gonzoproxy.mvc.model.Apdu;
 
 public class LibNfcApduWrapper {
-	
+
 	private byte[] trailer;
 	private byte[] plainApdu;
 	private byte[] preamble;
@@ -13,28 +13,40 @@ public class LibNfcApduWrapper {
 	public byte[] wrap(Apdu apdu) {
 		this.trailer = apdu.getTrailer();
 		this.plainApdu = apdu.getPlainApdu();
-		this.preamble = computePreamle(apdu);
-		this.preamble = apdu.getPreamble();
-		
+		this.preamble = computePreamble(apdu);
+//		this.preamble = apdu.getPreamble();
+
 		int newSize = preamble.length + plainApdu.length + trailer.length;
-		
+
 		byte[] wrappedApdu = Arrays.copyOf(preamble, newSize);
-		System.arraycopy(plainApdu, 0, wrappedApdu, preamble.length, plainApdu.length);
-		System.arraycopy(trailer, 0, wrappedApdu, preamble.length + plainApdu.length, trailer.length);
-		
-		
+		System.arraycopy(plainApdu, 0, wrappedApdu, preamble.length,
+				plainApdu.length);
+		System.arraycopy(trailer, 0, wrappedApdu, preamble.length
+				+ plainApdu.length, trailer.length);
+
 		return wrappedApdu;
 	}
 
-	private byte[] computePreamle(Apdu apdu) {
-		byte[] origPreamble = apdu.getPreamble();
-		byte[] newPreamble = new byte[origPreamble.length];
-		
+	private byte[] computePreamble(Apdu apdu) {
+		byte[] newPreamble = apdu.getPreamble();
+		System.out.println("ORIG: " + Arrays.toString(newPreamble));
+		int lastSizeIndex = newPreamble.length - 1 - 2;
+
 		int apduSize = apdu.getSize();
-		byte[] sizeBytes = new byte[4];
+		String strApduSize = Integer.toHexString(apduSize);
+		byte[] newSize = strApduSize.getBytes();
+		int lastIndexNew = newSize.length - 1;
+
+		for (int i = 0; i < newSize.length; i++) {
+			newPreamble[lastSizeIndex - i] = newSize[lastIndexNew - i];
+		};
 		
+		apdu.setPreamble(newPreamble);
+
+		System.out.println("NEW: " + Arrays.toString(newPreamble));
 		
 		return newPreamble;
+
 	}
 
 }

@@ -25,7 +25,7 @@ public class DetailTableModel extends AbstractTableModel {
 			
 			@Override
 			public void apduReceived(Apdu apdu) {
-				DetailTableModel.this.setApdu(apdu);
+//				DetailTableModel.this.setApdu(apdu);
 			}
 			
 			@Override
