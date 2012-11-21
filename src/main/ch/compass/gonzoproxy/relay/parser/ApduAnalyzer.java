@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import org.yaml.snakeyaml.Yaml;
 
 import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.SessionFormat;
 
 public class ApduAnalyzer {
 
@@ -18,10 +19,14 @@ public class ApduAnalyzer {
 	private File[] templateFiles;
 	private ArrayList<ApduTemplate> templates = new ArrayList<ApduTemplate>();
 
-	private AsciiApduParser asciiParser = new AsciiApduParser();
+	private CommandParser commandParser = new CommandParser();
+	private ResponseParser responseParser = new ResponseParser();
 	private Parser selectedParser;
+	
+	private SessionFormat sessionFormat;
 
-	public ApduAnalyzer() {
+	public ApduAnalyzer(SessionFormat sessionFormat) {
+		this.sessionFormat = sessionFormat;
 		locateTemplateFiles();
 		loadTemplates();
 	}
@@ -72,8 +77,25 @@ public class ApduAnalyzer {
 
 	// TODO: fix
 	private void findMatchingParser(Apdu apdu) {
-		asciiParser.setProcessingApdu(apdu);
-		selectedParser = asciiParser;
+		switch (apdu.getType()) {
+		case COMMAND: 
+			selectedParser = commandParser;
+			setParserSettings();
+			break;
+			//TODO: response parser not implemented yet
+		case RESPONSE:
+			selectedParser = commandParser;
+			setParserSettings();
+
+		default:
+			break;
+		}
+		commandParser.setProcessingApdu(apdu);
+		selectedParser = commandParser;
+	}
+
+	private void setParserSettings() {
+		selectedParser.setEncodingSettings(sessionFormat.getEncodingOffset(), sessionFormat.getWhitespaceOffset());
 	}
 	
 	

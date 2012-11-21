@@ -7,15 +7,15 @@ import ch.compass.gonzoproxy.mvc.model.Apdu;
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.utils.ByteArrays;
 
-public class AsciiApduParser implements Parser {
-
-	private static final int ENCODING_OFFSET = 2;
-
-	private static final int WHITESPACE_OFFSET = 1;
+public class CommandParser implements Parser {
 
 	private static final int DEFAULT_FIELDLENGTH = 1;
 
+	private int encodingOffset = 1;
+	private int whitespaceOffset = 0;
+
 	private Apdu processingApdu;
+	
 
 	public boolean templateIsAccepted(ApduTemplate template) {
 		byte[] plainApdu = processingApdu.getPlainApdu();
@@ -26,7 +26,7 @@ public class AsciiApduParser implements Parser {
 		int fieldLength = DEFAULT_FIELDLENGTH;
 		int offset = 0;
 		for (int i = 0; i < templateFields.size(); i++) {
-			if ((offset + fieldLength * ENCODING_OFFSET) > plainApdu.length) {
+			if ((offset + fieldLength * encodingOffset) > plainApdu.length) {
 				return false;
 			}
 
@@ -35,11 +35,11 @@ public class AsciiApduParser implements Parser {
 				byte[] idByte;
 				if (hasCustomLenght(fieldLength)) {
 					idByte = ByteArrays.trim(plainApdu, offset, fieldLength
-							* (ENCODING_OFFSET + WHITESPACE_OFFSET)
-							- WHITESPACE_OFFSET);
+							* (encodingOffset + whitespaceOffset)
+							- whitespaceOffset);
 				} else {
 					idByte = ByteArrays.trim(plainApdu, offset, fieldLength
-							* ENCODING_OFFSET);
+							* encodingOffset);
 				}
 				if (!valueMatches(idByte, templateFields.get(i))) {
 					return false;
@@ -50,9 +50,9 @@ public class AsciiApduParser implements Parser {
 			//TODO: Refactor
 			int currentFieldOffset = offset;
 			offset += fieldLength
-					* (ENCODING_OFFSET + WHITESPACE_OFFSET);
+					* (encodingOffset + whitespaceOffset);
 			if (isLengthField(processingField)) {
-				byte[] length = ByteArrays.trim(plainApdu, currentFieldOffset, fieldLength * ENCODING_OFFSET);
+				byte[] length = ByteArrays.trim(plainApdu, currentFieldOffset, fieldLength * encodingOffset);
 				fieldLength = Integer.parseInt(new String(length), 16);
 			} else {
 				fieldLength = DEFAULT_FIELDLENGTH;
@@ -86,14 +86,14 @@ public class AsciiApduParser implements Parser {
 
 			if (hasCustomLenght(fieldLength)) {
 				parseValueToField(plainApdu, offset, fieldLength
-						* (ENCODING_OFFSET + WHITESPACE_OFFSET)
-						- WHITESPACE_OFFSET, processingField);
+						* (encodingOffset + whitespaceOffset)
+						- whitespaceOffset, processingField);
 			} else {
 				parseValueToField(plainApdu, offset, fieldLength
-						* ENCODING_OFFSET, processingField);
+						* encodingOffset, processingField);
 			}
 
-			offset += fieldLength * (ENCODING_OFFSET + WHITESPACE_OFFSET);
+			offset += fieldLength * (encodingOffset + whitespaceOffset);
 
 			if (isLengthField(processingField)) {
 				fieldLength = hexToInt(processingField.getValue());
@@ -143,9 +143,10 @@ public class AsciiApduParser implements Parser {
 		this.processingApdu = apdu;
 	}
 
-	@Override
-	public Apdu getProcessingApdu() {
-		return processingApdu;
+
+	public void setEncodingSettings(int encodingOffset, int whitespaceOffset) {
+		this.encodingOffset = encodingOffset;
+		this.whitespaceOffset = whitespaceOffset;
 	}
 
 }

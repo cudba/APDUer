@@ -6,7 +6,7 @@ import java.util.Queue;
 import ch.compass.gonzoproxy.mvc.model.Apdu;
 import ch.compass.gonzoproxy.utils.ByteArrays;
 
-public class LibNfcApduExtractor {
+public class LibNfcApduExtractor implements ApduExtractor {
 
 	private static final char DELIMITER = '#';
 

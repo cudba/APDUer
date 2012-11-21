@@ -11,6 +11,7 @@ public class CurrentSessionModel {
 	private Preferences sessionPrefs;
 	private ArrayList<SessionListener> listeners = new ArrayList<SessionListener>();
 	private ApduData apduData;
+	private SessionFormat sessionMode = SessionFormat.LibNFC;
 	private Boolean cmdTrap = false;
 	private Boolean resTrap = false;
 	private Boolean sendOneCmd;
@@ -98,5 +99,13 @@ public class CurrentSessionModel {
 
 	public void addApdu(Apdu apdu) {
 		apduData.addApdu(apdu);
+	}
+	
+	public SessionFormat getSessionMode() {
+		return sessionMode;
+	}
+	
+	public void setSessionMode(SessionFormat sessionMode) {
+		this.sessionMode = sessionMode;
 	}
 }

@@ -17,8 +17,8 @@ import ch.compass.gonzoproxy.relay.parser.ApduAnalyzer;
 public class Forwarder implements Runnable {
 
 	private boolean sessionIsAlive = true;
-	private ApduAnalyzer parsingHandler = new ApduAnalyzer();
-	private ApduStreamHandler streamHandler = new ApduStreamHandler();
+	private ApduAnalyzer parsingHandler;
+	private ApduStreamHandler streamHandler;
 
 	private Socket sourceSocket;
 	private Socket forwardingSocket;
@@ -31,6 +31,12 @@ public class Forwarder implements Runnable {
 		this.forwardingSocket = forwardingSocket;
 		this.sessionModel = sessionModel;
 		this.type = type;
+		initForwardingComponents();
+	}
+
+	private void initForwardingComponents() {
+		parsingHandler = new ApduAnalyzer(sessionModel.getSessionMode());
+		streamHandler = new ApduStreamHandler();
 	}
 
 	@Override
@@ -53,6 +59,7 @@ public class Forwarder implements Runnable {
 				Queue<Apdu> receivedApdus = streamHandler.readApdu(inputStream);
 				while (!receivedApdus.isEmpty()) {
 					Apdu apdu = receivedApdus.poll();
+					apdu.setType(type);
 					parsingHandler.processApdu(apdu);
 					sessionModel.addApdu(apdu);
 					// apdu needs new isModified field for type column in table

@@ -2,6 +2,7 @@ package ch.compass.gonzoproxy.mvc.controller;
 
 import ch.compass.gonzoproxy.mvc.model.ApduData;
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
+import ch.compass.gonzoproxy.mvc.model.SessionFormat;
 import ch.compass.gonzoproxy.relay.session.RelaySession;
 
 
@@ -37,6 +38,7 @@ public class RelayController {
 		sessionModel.setSession(Integer.parseInt(portListen), remoteHost, Integer.parseInt(remotePort));
 		apduData.clear();
 		sessionModel.addSessionData(apduData);
+		sessionModel.setSessionMode(SessionFormat.LibNFC);
 	}
 	
 	public void clearSession(){
