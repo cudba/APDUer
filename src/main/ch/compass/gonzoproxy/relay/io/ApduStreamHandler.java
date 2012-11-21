@@ -47,15 +47,11 @@ public class ApduStreamHandler {
 		throw new IOException();
 	}
 
-	public void sendApdu(OutputStream outputStream, Apdu apdu) {
+	public void sendApdu(OutputStream outputStream, Apdu apdu) throws IOException {
 		
 		byte[] buffer = wrapper.wrap(apdu);
-		try {
 			outputStream.write(buffer);
 			outputStream.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 }
