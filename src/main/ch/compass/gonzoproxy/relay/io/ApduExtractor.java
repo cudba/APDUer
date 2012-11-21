@@ -15,6 +15,8 @@ public interface ApduExtractor {
 	 * 			containing the unfinished content is returned.
 	 * 			Notice: A buffer size of 1024 is recommended for the returned buffer.
 	 */
+	
+	//TODO: Fuck you git 
 	public byte[] extractApdusToQueue(byte[] buffer, Queue<Apdu> apduQueue,
 			int readBytes);
 
