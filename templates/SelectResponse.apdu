@@ -1,0 +1,10 @@
+apduDescription: Select Response
+fields:
+- name: FCI
+  value: 6f
+  description: File Control Information Template
+- name: LEN
+  description: Length
+- name: AID
+  value: 84
+- name: Data

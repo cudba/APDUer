@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import ch.compass.gonzoproxy.mvc.model.Apdu;
 
-public class LibNfcApduWrapper {
+public class LibNfcApduWrapper implements ApduWrapper{
 
 	private byte[] trailer;
 	private byte[] plainApdu;
@@ -37,8 +37,7 @@ public class LibNfcApduWrapper {
 
 		for (int i = 0; i < newSize.length; i++) {
 			newPreamble[lastSizeIndex - i] = newSize[lastIndexNew - i];
-		}
-		;
+		};
 
 		apdu.setPreamble(newPreamble);
 
