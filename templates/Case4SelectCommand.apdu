@@ -1,4 +1,4 @@
-apduDescription: Select Command
+apduDescription: Case 4 Select Command
 fields:
 - name: CLA
   value: 00
@@ -12,3 +12,4 @@ fields:
 - name: Data
   description: Application Identifier
 - name: Le
+  value: 00

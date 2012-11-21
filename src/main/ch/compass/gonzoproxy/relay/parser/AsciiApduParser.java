@@ -58,6 +58,7 @@ public class AsciiApduParser implements Parser {
 				fieldLength = DEFAULT_FIELDLENGTH;
 			}
 		}
+		System.out.println("template accepted " + template.getApduDescription());
 		return true;
 	}
 
