@@ -36,13 +36,11 @@ public class ApduStreamHandler {
 				ByteArrays.enlarge(buffer);
 			}
 
-			if ((readBytes = inputStream.read(buffer, length, buffer.length)) != -1) {
+			if ((readBytes = inputStream.read(buffer, length, buffer.length - length)) != -1) {
 				length += readBytes;
 				buffer = extractor.extractApdusToQueue(buffer, apduQueue,
-						readBytes);
-			} else {
-				throw new IOException();
-			}
+						length);
+			} 
 
 			readCompleted = buffer.length == 0;
 
