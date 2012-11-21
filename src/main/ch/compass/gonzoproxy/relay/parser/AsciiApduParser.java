@@ -46,10 +46,14 @@ public class AsciiApduParser implements Parser {
 				}
 				System.out.println("Field matched");
 			}
-			offset += DEFAULT_FIELDLENGTH
+			
+			//TODO: Refactor
+			int currentFieldOffset = offset;
+			offset += fieldLength
 					* (ENCODING_OFFSET + WHITESPACE_OFFSET);
 			if (isLengthField(processingField)) {
-				fieldLength = hexToInt(processingField.getValue());
+				byte[] length = ByteArrays.trim(plainApdu, currentFieldOffset, fieldLength * ENCODING_OFFSET);
+				fieldLength = Integer.parseInt(new String(length), 16);
 			} else {
 				fieldLength = DEFAULT_FIELDLENGTH;
 			}
