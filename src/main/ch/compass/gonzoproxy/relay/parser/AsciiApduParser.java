@@ -20,9 +20,9 @@ public class AsciiApduParser implements Parser {
 	public boolean templateIsAccepted(ApduTemplate template) {
 		byte[] plainApdu = processingApdu.getPlainApdu();
 		ArrayList<Field> templateFields = template.getFields();
-		// if (!fieldCountMatches(plainApdu, template.getFields().size())) {
-		// return false;
-		// }
+//		 if (!fieldCountMatches(plainApdu, template.getFields().size())) {
+//		 return false;
+//		 }
 		int fieldLength = DEFAULT_FIELDLENGTH;
 		int offset = 0;
 		for (int i = 0; i < templateFields.size(); i++) {

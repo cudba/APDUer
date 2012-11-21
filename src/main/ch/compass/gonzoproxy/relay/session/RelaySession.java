@@ -31,11 +31,10 @@ public class RelaySession implements Runnable {
 
 	@Override
 	public void run() {
-		
-			establishConnection();
-			initForwarder();
-			startForwardingThreads();
 
+		establishConnection();
+		initForwarder();
+		startForwardingThreads();
 
 	}
 
@@ -58,9 +57,9 @@ public class RelaySession implements Runnable {
 
 	private void initForwarder() {
 		commandForwarder = new Forwarder(initiatorSocket, target,
-				sessionModel.getSessionData(), ApduType.COMMAND);
+				sessionModel, ApduType.COMMAND);
 		responseForwarder = new Forwarder(target, initiatorSocket,
-				sessionModel.getSessionData(), ApduType.RESPONSE);
+				sessionModel, ApduType.RESPONSE);
 	}
 
 	private void establishConnection() {
@@ -77,7 +76,7 @@ public class RelaySession implements Runnable {
 				closeSocket.printStackTrace();
 			}
 
-		}finally {
+		} finally {
 			try {
 				serverSocket.close();
 			} catch (IOException e) {

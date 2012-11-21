@@ -9,8 +9,8 @@ import java.net.Socket;
 import java.util.Queue;
 
 import ch.compass.gonzoproxy.mvc.model.Apdu;
-import ch.compass.gonzoproxy.mvc.model.ApduData;
 import ch.compass.gonzoproxy.mvc.model.ApduType;
+import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.relay.io.ApduStreamHandler;
 import ch.compass.gonzoproxy.relay.parser.ApduAnalyzer;
 
@@ -18,18 +18,18 @@ public class Forwarder implements Runnable {
 
 	private boolean sessionIsAlive = true;
 	private ApduAnalyzer parsingHandler = new ApduAnalyzer();
+	private ApduStreamHandler streamHandler = new ApduStreamHandler();
 
 	private Socket sourceSocket;
 	private Socket forwardingSocket;
-	private ApduData data;
-	private ApduStreamHandler streamHandler = new ApduStreamHandler();
 	private ApduType type;
+	private CurrentSessionModel sessionModel;
 
 	public Forwarder(Socket sourceSocket, Socket forwardingSocket,
-			ApduData data, ApduType type) {
+			CurrentSessionModel sessionModel, ApduType type) {
 		this.sourceSocket = sourceSocket;
 		this.forwardingSocket = forwardingSocket;
-		this.data = data;
+		this.sessionModel = sessionModel;
 		this.type = type;
 	}
 
@@ -54,7 +54,7 @@ public class Forwarder implements Runnable {
 				while (!receivedApdus.isEmpty()) {
 					Apdu apdu = receivedApdus.poll();
 					parsingHandler.processApdu(apdu);
-					data.addApdu(apdu);
+					sessionModel.addApdu(apdu);
 					// apdu needs new isModified field for type column in table
 					// if isTrapped -> yield
 					// if apdu is manually modified, apduData.getSendApdu is
@@ -71,8 +71,7 @@ public class Forwarder implements Runnable {
 				}
 
 			}
-		} catch (IOException | InterruptedException e) {
-			System.out.println("forwarder exception");
+		} catch (IOException e) {
 			try {
 				sourceSocket.close();
 				forwardingSocket.close();
