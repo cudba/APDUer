@@ -30,14 +30,14 @@ public class LibNfcApduExtractor implements ApduExtractor {
 			apduQueue.add(apdu);
 		}
 
-		byte[] singleApdu = ByteArrays.trim(buffer, endIndex, readBytes);
+		byte[] singleApdu = ByteArrays.trim(buffer, endIndex, readBytes - endIndex);
 
 		if (apduIsComplete(singleApdu)) {
 			Apdu apdu = splitApdu(singleApdu);
 			apduQueue.add(apdu);
 			return new byte[0];
 		} else {
-			return ByteArrays.enlarge(singleApdu, 1024);
+			return singleApdu;
 		}
 	}
 

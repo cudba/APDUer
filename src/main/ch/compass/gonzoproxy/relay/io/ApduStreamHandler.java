@@ -27,24 +27,31 @@ public class ApduStreamHandler {
 
 		int length = 0;
 		int readBytes = 0;
-		
+
 		boolean readCompleted = false;
-		
-		while(!readCompleted){
-			
-			if(length == buffer.length){
+
+		while (!readCompleted) {
+
+			if (length == buffer.length) {
 				ByteArrays.enlarge(buffer);
 			}
-			
-			if((readBytes = inputStream.read(buffer, length, buffer.length)) != -1){
+
+			if ((readBytes = inputStream.read(buffer, length, buffer.length)) != -1) {
 				length += readBytes;
-				buffer = extractor.extractApdusToQueue(buffer, apduQueue, readBytes);
-			}else {
+				buffer = extractor.extractApdusToQueue(buffer, apduQueue,
+						readBytes);
+			} else {
 				throw new IOException();
 			}
+
 			readCompleted = buffer.length == 0;
+
+			if (!readCompleted) {
+				length = buffer.length;
+				buffer = ByteArrays.enlarge(buffer, BUFFER_SIZE);
+			}
 		}
-			return apduQueue;
+		return apduQueue;
 	}
 
 	public void sendApdu(OutputStream outputStream, Apdu apdu)

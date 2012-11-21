@@ -13,7 +13,8 @@ public interface ApduExtractor {
 	 * 
 	 * @return 	Returns empty buffer if read is complete, in case some bytes are missing, a buffer 
 	 * 			containing the unfinished content is returned.
-	 * 			Notice: A buffer size of 1024 is recommended for the returned buffer.
+	 * 			Notice:	Its important that the returned buffer is not bigger than the content inside
+	 * 					
 	 */
 	
 	public byte[] extractApdusToQueue(byte[] buffer, Queue<Apdu> apduQueue,
