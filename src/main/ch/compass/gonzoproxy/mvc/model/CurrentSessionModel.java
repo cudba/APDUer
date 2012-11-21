@@ -13,6 +13,8 @@ public class CurrentSessionModel {
 	private ApduData apduData;
 	private Boolean cmdTrap = false;
 	private Boolean resTrap = false;
+	private Boolean sendOneCmd;
+	private Boolean sendOneRes;
 	
 	public CurrentSessionModel(){
 		this.sessionPrefs = Preferences.userRoot().node(this.getClass().getName());
@@ -73,5 +75,23 @@ public class CurrentSessionModel {
 	
 	public void setResTrap(Boolean resTrap) {
 		this.resTrap = resTrap;
+	}
+
+
+	public void sendOneCmd(boolean b) {
+		this.sendOneCmd = b;
+	}
+
+
+	public void sendOneRes(boolean b) {
+		this.sendOneRes = b;
+	}
+	
+	public Boolean getSendOneCmd() {
+		return sendOneCmd;
+	}
+	
+	public Boolean getSendOneRes() {
+		return sendOneRes;
 	}
 }

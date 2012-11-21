@@ -49,8 +49,9 @@ public class ApduListPanel extends JPanel {
 	private JLabel lblRemoteport;
 	private JLabel lblRPort;
 	private ListSelectionListener lsl;
-	private JButton btnForward;
+	private JButton btnSendRes;
 	private JButton btnClear;
+	private JButton btnSendCmd;
 
 	public ApduListPanel(RelayController controller,
 			ListSelectionListener listSelectionListener) {
@@ -146,10 +147,10 @@ public class ApduListPanel extends JPanel {
 		gbc_panel_options.gridy = 1;
 		add(panel_options, gbc_panel_options);
 		GridBagLayout gbl_panel_options = new GridBagLayout();
-		gbl_panel_options.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		gbl_panel_options.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0 };
 		gbl_panel_options.rowHeights = new int[] { 0, 0 };
-		gbl_panel_options.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+		gbl_panel_options.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_panel_options.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		panel_options.setLayout(gbl_panel_options);
@@ -180,27 +181,41 @@ public class ApduListPanel extends JPanel {
 				controller.changeResponseTrap();
 			}
 		});
+		
+		btnSendCmd = new JButton("");
+		btnSendCmd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.sendOneCmd();
+			}
+		});
+		btnSendCmd.setIcon(new ImageIcon(ApduListPanel.class.getResource("/ch/compass/gonzoproxy/mvc/view/icons/refresh.png")));
+		btnSendCmd.setToolTipText("Send trapped command");
+		GridBagConstraints gbc_btnSendCmd = new GridBagConstraints();
+		gbc_btnSendCmd.insets = new Insets(0, 0, 0, 5);
+		gbc_btnSendCmd.gridx = 1;
+		gbc_btnSendCmd.gridy = 0;
+		panel_options.add(btnSendCmd, gbc_btnSendCmd);
 		GridBagConstraints gbc_btnTrapRes = new GridBagConstraints();
 		gbc_btnTrapRes.insets = new Insets(0, 0, 0, 5);
-		gbc_btnTrapRes.gridx = 1;
+		gbc_btnTrapRes.gridx = 2;
 		gbc_btnTrapRes.gridy = 0;
 		panel_options.add(btnTrapRes, gbc_btnTrapRes);
 		
-		btnForward = new JButton("");
-		btnForward.setToolTipText("Send trapped APDU");
-		btnForward.addActionListener(new ActionListener() {
+		btnSendRes = new JButton("");
+		btnSendRes.setToolTipText("Send trapped response");
+		btnSendRes.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				controller.sendApdu();
+				controller.sendOneRes();
 			}
 		});
-		btnForward.setIcon(new ImageIcon(ApduListPanel.class.getResource("/ch/compass/gonzoproxy/mvc/view/icons/refresh.png")));
-		GridBagConstraints gbc_btnForward = new GridBagConstraints();
-		gbc_btnForward.insets = new Insets(0, 0, 0, 5);
-		gbc_btnForward.gridx = 2;
-		gbc_btnForward.gridy = 0;
-		panel_options.add(btnForward, gbc_btnForward);
+		btnSendRes.setIcon(new ImageIcon(ApduListPanel.class.getResource("/ch/compass/gonzoproxy/mvc/view/icons/refresh.png")));
+		GridBagConstraints gbc_btnSendRes = new GridBagConstraints();
+		gbc_btnSendRes.insets = new Insets(0, 0, 0, 5);
+		gbc_btnSendRes.gridx = 3;
+		gbc_btnSendRes.gridy = 0;
+		panel_options.add(btnSendRes, gbc_btnSendRes);
 		
 		btnClear = new JButton("");
 		btnClear.setToolTipText("Cancel session");
@@ -215,7 +230,7 @@ public class ApduListPanel extends JPanel {
 		
 		GridBagConstraints gbc_btnClear = new GridBagConstraints();
 		gbc_btnClear.insets = new Insets(0, 0, 0, 5);
-		gbc_btnClear.gridx = 3;
+		gbc_btnClear.gridx = 4;
 		gbc_btnClear.gridy = 0;
 		panel_options.add(btnClear, gbc_btnClear);
 
@@ -224,7 +239,7 @@ public class ApduListPanel extends JPanel {
 		GridBagConstraints gbc_lblListenport = new GridBagConstraints();
 		gbc_lblListenport.anchor = GridBagConstraints.EAST;
 		gbc_lblListenport.insets = new Insets(0, 0, 0, 5);
-		gbc_lblListenport.gridx = 5;
+		gbc_lblListenport.gridx = 6;
 		gbc_lblListenport.gridy = 0;
 		panel_options.add(lblListenport, gbc_lblListenport);
 
@@ -232,7 +247,7 @@ public class ApduListPanel extends JPanel {
 		GridBagConstraints gbc_lblLPort = new GridBagConstraints();
 		gbc_lblLPort.anchor = GridBagConstraints.WEST;
 		gbc_lblLPort.insets = new Insets(0, 0, 0, 5);
-		gbc_lblLPort.gridx = 6;
+		gbc_lblLPort.gridx = 7;
 		gbc_lblLPort.gridy = 0;
 		panel_options.add(lblLPort, gbc_lblLPort);
 
@@ -241,7 +256,7 @@ public class ApduListPanel extends JPanel {
 		GridBagConstraints gbc_lblRemotehost = new GridBagConstraints();
 		gbc_lblRemotehost.anchor = GridBagConstraints.EAST;
 		gbc_lblRemotehost.insets = new Insets(0, 0, 0, 5);
-		gbc_lblRemotehost.gridx = 7;
+		gbc_lblRemotehost.gridx = 8;
 		gbc_lblRemotehost.gridy = 0;
 		panel_options.add(lblRemotehost, gbc_lblRemotehost);
 
@@ -249,7 +264,7 @@ public class ApduListPanel extends JPanel {
 		GridBagConstraints gbc_lblRHost = new GridBagConstraints();
 		gbc_lblRHost.anchor = GridBagConstraints.WEST;
 		gbc_lblRHost.insets = new Insets(0, 0, 0, 5);
-		gbc_lblRHost.gridx = 8;
+		gbc_lblRHost.gridx = 9;
 		gbc_lblRHost.gridy = 0;
 		panel_options.add(lblRHost, gbc_lblRHost);
 
@@ -258,14 +273,14 @@ public class ApduListPanel extends JPanel {
 		GridBagConstraints gbc_lblRemoteport = new GridBagConstraints();
 		gbc_lblRemoteport.anchor = GridBagConstraints.EAST;
 		gbc_lblRemoteport.insets = new Insets(0, 0, 0, 5);
-		gbc_lblRemoteport.gridx = 9;
+		gbc_lblRemoteport.gridx = 10;
 		gbc_lblRemoteport.gridy = 0;
 		panel_options.add(lblRemoteport, gbc_lblRemoteport);
 
 		lblRPort = new JLabel("remPort");
 		GridBagConstraints gbc_lblRPort = new GridBagConstraints();
 		gbc_lblRPort.anchor = GridBagConstraints.WEST;
-		gbc_lblRPort.gridx = 10;
+		gbc_lblRPort.gridx = 11;
 		gbc_lblRPort.gridy = 0;
 		panel_options.add(lblRPort, gbc_lblRPort);
 	}

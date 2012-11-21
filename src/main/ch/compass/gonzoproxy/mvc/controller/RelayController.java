@@ -74,8 +74,11 @@ public class RelayController {
 		}
 	}
 
-	public void sendApdu() {
-		// TODO Auto-generated method stub
-		
+	public void sendOneCmd() {
+		sessionModel.sendOneCmd(true);
+	}
+
+	public void sendOneRes() {
+		sessionModel.sendOneRes(true);
 	}
 }

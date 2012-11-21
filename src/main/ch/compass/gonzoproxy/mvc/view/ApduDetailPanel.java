@@ -110,8 +110,8 @@ public class ApduDetailPanel extends JPanel {
 		textPane_ascii = new JTextPane();
 		scrollPane_ascii.setViewportView(textPane_ascii);
 		
-		textPane_ascii.setEnabled(false);
-		textPane_hex.setEnabled(false);
+//		textPane_ascii.setEnabled(false);
+//		textPane_hex.setEnabled(false);
 	}
 
 	public void clearAllFields() {

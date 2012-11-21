@@ -134,7 +134,7 @@ public class AsciiApduParser implements Parser {
 	}
 
 	private boolean isLengthField(Field processingField) {
-		return processingField.getName().equals("LEN");
+		return processingField.getName().equals("Lc");
 	}
 
 	@Override
