@@ -12,7 +12,6 @@ public class Apdu {
 	private ApduType type;
 	private int size;
 	private ArrayList<Field> fields = new ArrayList<Field>();
-	
 
 	private byte[] originalApdu;
 
@@ -27,7 +26,7 @@ public class Apdu {
 	public byte[] getModifiedApdu() {
 		return modifiedApdu;
 	}
-	
+
 	public void setPlainApdu(byte[] plainApdu) {
 		this.plainApdu = plainApdu;
 	}
@@ -66,14 +65,23 @@ public class Apdu {
 	}
 
 	public String toAscii() {
-		// TODO Auto-generated method stub
-		return "";
+		StringBuffer sb = new StringBuffer("");
+		String ascii = new String(plainApdu);
+		String[] strArr = ascii.split(" ");
+
+		for (String a : strArr) {
+			int c = Integer.parseInt(a, 16);
+			char chr = (char) c;
+			sb.append(chr);
+		}
+
+		return sb.toString();
 	}
 
 	public void setPreamble(byte[] preamble) {
 		this.preamble = preamble;
 	}
-	
+
 	public byte[] getPreamble() {
 		return preamble;
 	}
@@ -81,7 +89,7 @@ public class Apdu {
 	public void setSize(int size) {
 		this.size = size;
 	}
-	
+
 	public int getSize() {
 		return size;
 	}
@@ -93,7 +101,7 @@ public class Apdu {
 	public void setTrailer(byte[] trailer) {
 		this.trailer = trailer;
 	}
-	
+
 	public byte[] getTrailer() {
 		return trailer;
 	}

@@ -18,7 +18,7 @@ public class ApduStreamHandler {
 	}
 
 	public Queue<Apdu> readApdu(InputStream inputStream) throws IOException {
-		LibNfcApduExtractor extractor = new LibNfcApduExtractor();
+		ApduExtractor extractor = new LibNfcApduExtractor();
 		byte[] buffer = new byte[BUFFER_SIZE];
 		Queue<Apdu> apduQueue = new LinkedList<Apdu>();
 
@@ -45,7 +45,7 @@ public class ApduStreamHandler {
 	}
 
 	public void sendApdu(OutputStream outputStream, Apdu apdu) {
-		LibNfcApduWrapper wrapper = new LibNfcApduWrapper();
+		ApduWrapper wrapper = new LibNfcApduWrapper();
 		
 		byte[] buffer = wrapper.wrap(apdu);
 		try {
