@@ -46,8 +46,8 @@ public class Forwarder implements Runnable {
 			configureStreamHandler();
 		} catch (UnexpectedException e) {
 			e.printStackTrace();
-		} finally {
 			closeSockets();
+		} finally {
 		}
 	}
 
@@ -123,6 +123,7 @@ public class Forwarder implements Runnable {
 
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
 			// TODO: status update sessionModel -> connection lost
 		} finally {
 			closeSockets();

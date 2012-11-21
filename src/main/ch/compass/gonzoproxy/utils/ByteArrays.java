@@ -29,6 +29,12 @@ public class ByteArrays {
 		System.arraycopy(array, 0, newArray, 0, array.length);
 		return newArray;
 	}
+	
+	public static byte[] enlarge(byte[] array, int size){
+		byte[] newArray = new byte[size];
+		System.arraycopy(array, 0, newArray, 0, array.length);
+		return newArray;
+	}
 
 	public static byte[] merge(byte[] tmpFinalApdu, byte[] missingBytes) {
 		return null;

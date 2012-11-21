@@ -15,7 +15,7 @@ public class ApduStreamHandler {
 	private ApduExtractor extractor;
 	private ApduWrapper wrapper;
 
-	public ApduStreamHandler(LibNfcApduExtractor extractor, ApduWrapper wrapper) {
+	public ApduStreamHandler(ApduExtractor extractor, ApduWrapper wrapper) {
 		this.extractor = extractor;
 		this.wrapper = wrapper;
 
@@ -27,31 +27,32 @@ public class ApduStreamHandler {
 
 		int length = 0;
 		int readBytes = 0;
-		if ((readBytes = inputStream.read(buffer, length, buffer.length)) != -1) {
+		
+		boolean readCompleted = false;
+		
+		while(!readCompleted){
 			
-			length += readBytes;
-			
-			int missingBytes = extractor.extractApdusToQueue(buffer, apduQueue, length);
-			
-			if ((length + missingBytes) > buffer.length) {
-				buffer = ByteArrays.enlarge(buffer);
+			if(length == buffer.length){
+				ByteArrays.enlarge(buffer);
 			}
 			
-			if((readBytes = inputStream.read(buffer, length, missingBytes)) != 0) {
-				int startIndex = length;
+			if((readBytes = inputStream.read(buffer, length, buffer.length)) != -1){
 				length += readBytes;
-				//TODO: add apdu to queue
+				buffer = extractor.extractApdusToQueue(buffer, apduQueue, readBytes);
+			}else {
+				throw new IOException();
 			}
-			return apduQueue;
+			readCompleted = buffer.length == 0;
 		}
-		throw new IOException();
+			return apduQueue;
 	}
 
-	public void sendApdu(OutputStream outputStream, Apdu apdu) throws IOException {
-		
+	public void sendApdu(OutputStream outputStream, Apdu apdu)
+			throws IOException {
+
 		byte[] buffer = wrapper.wrap(apdu);
-			outputStream.write(buffer);
-			outputStream.flush();
+		outputStream.write(buffer);
+		outputStream.flush();
 	}
-	
+
 }

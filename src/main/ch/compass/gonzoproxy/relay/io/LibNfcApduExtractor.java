@@ -6,20 +6,17 @@ import java.util.Queue;
 import ch.compass.gonzoproxy.mvc.model.Apdu;
 import ch.compass.gonzoproxy.utils.ByteArrays;
 
-public class LibNfcApduExtractor implements ApduExtractor{
+public class LibNfcApduExtractor implements ApduExtractor {
+
+	private static final char EOC = '\n';
 
 	private static final char DELIMITER = '#';
 
-	private byte[] tmpApdu;
 
-	/**
-	 * 
-	 * @return Number of missing Bytes from last Apdu in Buffer
-	 */
-
-	public int extractApdusToQueue(byte[] buffer, Queue<Apdu> apduQueue,
+	public byte[] extractApdusToQueue(byte[] buffer, Queue<Apdu> apduQueue,
 			int readBytes) {
-		ArrayList<Integer> indices = ByteArrays.getDelimiterIndices(buffer, DELIMITER);
+		ArrayList<Integer> indices = ByteArrays.getDelimiterIndices(buffer,
+				DELIMITER);
 
 		int startIndex = 0;
 		int endIndex = 0;
@@ -33,20 +30,22 @@ public class LibNfcApduExtractor implements ApduExtractor{
 			apduQueue.add(apdu);
 		}
 
-		byte[] finalApdu = ByteArrays.trim(buffer, endIndex, readBytes);
+		byte[] singleApdu = ByteArrays.trim(buffer, endIndex, readBytes);
 
-		int missingBytes;
-		if ((missingBytes = getMissingBytes(finalApdu)) == 0) {
-			Apdu apdu = splitApdu(finalApdu);
+		if (apduIsComplete(singleApdu)) {
+			Apdu apdu = splitApdu(singleApdu);
 			apduQueue.add(apdu);
-			return 0;
+			return new byte[0];
+		} else {
+			return ByteArrays.enlarge(singleApdu, 1024);
 		}
-		tmpApdu = finalApdu;
-		return missingBytes;
+	}
+
+	private boolean apduIsComplete(byte[] singleApdu) {
+		return singleApdu[singleApdu.length - 1] == EOC;
 	}
 
 	private Apdu splitApdu(byte[] rawApdu) {
-		// TODO Auto-generated method stub
 		int size = getApduSize(rawApdu);
 		byte[] preamble = getApduPreamble(rawApdu, size);
 		byte[] plainApdu = getPlainApdu(rawApdu, size);
@@ -59,12 +58,12 @@ public class LibNfcApduExtractor implements ApduExtractor{
 		return newApdu;
 	}
 
-
 	private byte[] getApduTrailer(byte[] rawApdu, int size) {
 		for (int i = 0; i < rawApdu.length; i++) {
-			if(rawApdu[i] == ':'){
-				int endOfPlainApdu = i+3*size+1;
-				return ByteArrays.trim(rawApdu, endOfPlainApdu, rawApdu.length - endOfPlainApdu);
+			if (rawApdu[i] == ':') {
+				int endOfPlainApdu = i + 3 * size + 1;
+				return ByteArrays.trim(rawApdu, endOfPlainApdu, rawApdu.length
+						- endOfPlainApdu);
 			}
 		}
 		return null;
@@ -72,16 +71,17 @@ public class LibNfcApduExtractor implements ApduExtractor{
 
 	private byte[] getPlainApdu(byte[] rawApdu, int size) {
 		for (int i = 0; i < rawApdu.length; i++) {
-			if(rawApdu[i] == ':'){
-				return ByteArrays.trim(rawApdu, i+2, size*3-1);		}
+			if (rawApdu[i] == ':') {
+				return ByteArrays.trim(rawApdu, i + 2, size * 3 - 1);
+			}
 		}
 		return rawApdu;
 	}
 
 	private byte[] getApduPreamble(byte[] rawApdu, int size) {
 		for (int i = 0; i < rawApdu.length; i++) {
-			if(rawApdu[i] == ':'){
-				return ByteArrays.trim(rawApdu, 0, i+2);
+			if (rawApdu[i] == ':') {
+				return ByteArrays.trim(rawApdu, 0, i + 2);
 			}
 		}
 		return rawApdu;
@@ -91,26 +91,16 @@ public class LibNfcApduExtractor implements ApduExtractor{
 		int value = 0;
 		byte[] size = new byte[4];
 		for (int i = 0; i < rawApdu.length; i++) {
-			if(rawApdu[i] == ' '){
-				size[0] = rawApdu[i+1];
-				size[1] = rawApdu[i+2];
-				size[2] = rawApdu[i+3];
-				size[3] = rawApdu[i+4];
-				value = Integer.parseInt(new String(size),16);
+			if (rawApdu[i] == ' ') {
+				size[0] = rawApdu[i + 1];
+				size[1] = rawApdu[i + 2];
+				size[2] = rawApdu[i + 3];
+				size[3] = rawApdu[i + 4];
+				value = Integer.parseInt(new String(size), 16);
 				System.out.println("Size: " + value);
 				return value;
 			}
 		}
 		return value;
 	}
-
-	private int getMissingBytes(byte[] trailerApdu) {
-		return 0;
-	}
-
-	public byte[] buildFinalApdu(byte[] missingBytes) {
-		// TODO: trim missingBytes
-		return ByteArrays.merge(tmpApdu, missingBytes);
-	}
-
 }
