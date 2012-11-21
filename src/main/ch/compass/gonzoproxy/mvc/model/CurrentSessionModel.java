@@ -94,4 +94,9 @@ public class CurrentSessionModel {
 	public Boolean getSendOneRes() {
 		return sendOneRes;
 	}
+
+
+	public void addApdu(Apdu apdu) {
+		apduData.addApdu(apdu);
+	}
 }

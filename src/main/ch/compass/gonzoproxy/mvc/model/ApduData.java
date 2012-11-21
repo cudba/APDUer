@@ -12,11 +12,15 @@ public class ApduData {
 	private ArrayList<Apdu> apdu = new ArrayList<Apdu>();
 	private Semaphore lock = new Semaphore(1);
 
-	public void addApdu(Apdu data) throws InterruptedException {
-		lock.acquire();
-		apdu.add(data);
-		lock.release();
-		notifyApduReceived(data);
+	public void addApdu(Apdu data) {
+		try {
+			lock.acquire();
+			apdu.add(data);
+			lock.release();
+			notifyApduReceived(data);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public ArrayList<Apdu> getApduList() {
