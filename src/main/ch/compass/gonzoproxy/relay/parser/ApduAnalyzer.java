@@ -5,65 +5,67 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 
 import org.yaml.snakeyaml.Yaml;
 
 import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.ForwardingType;
 import ch.compass.gonzoproxy.mvc.model.SessionFormat;
 
 public class ApduAnalyzer {
 
 	private static final String TEMPLATE_FOLDER = "templates/";
 
-	private File[] templateFiles;
 	private ArrayList<ApduTemplate> templates = new ArrayList<ApduTemplate>();
 
-	private CommandParser commandParser = new CommandParser();
-	private ResponseParser responseParser = new ResponseParser();
 	private Parser selectedParser;
-	
-	private SessionFormat sessionFormat;
 
-	public ApduAnalyzer(SessionFormat sessionFormat) {
-		this.sessionFormat = sessionFormat;
-		locateTemplateFiles();
+	public ApduAnalyzer(SessionFormat sessionFormat,
+			ForwardingType forwardingType) {
 		loadTemplates();
+		setUpParser(forwardingType, sessionFormat);
 	}
 
-	private void locateTemplateFiles() {
-		File folder = new File(TEMPLATE_FOLDER);
-		templateFiles = folder.listFiles(new FilenameFilter() {
-
-			@Override
-			public boolean accept(File dir, String filename) {
-				return filename.endsWith(".apdu");
-			}
-		});
+	public void processApdu(Apdu apdu) {
+		selectedParser.setProcessingApdu(apdu);
+		if (!parseByTemplate(apdu))
+			parseByDefault(apdu);
 	}
 
 	private void loadTemplates() {
+		File[] templateFiles = locateTemplateFiles();
 		for (int i = 0; i < templateFiles.length; i++) {
-			try(InputStream fileInput = new FileInputStream(templateFiles[i])) {
+			try (InputStream fileInput = new FileInputStream(templateFiles[i])) {
 				Yaml beanLoader = new Yaml();
-				ApduTemplate template = beanLoader.loadAs(fileInput, ApduTemplate.class);
+				ApduTemplate template = beanLoader.loadAs(fileInput,
+						ApduTemplate.class);
 				templates.add(template);
-				System.out.println("template " + template.getApduDescription() + " added");
-				
+				System.out.println("template " + template.getApduDescription()
+						+ " added");
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public void processApdu(Apdu apdu) {
-		findMatchingParser(apdu);
-		if (!parseByTemplate(apdu))
-			parseByDefault(apdu);
+	private File[] locateTemplateFiles() {
+		File folder = new File(TEMPLATE_FOLDER);
+		File[] templateFiles = folder.listFiles(new FilenameFilter() {
+
+			@Override
+			public boolean accept(File dir, String filename) {
+				return filename.endsWith(".apdu");
+			}
+		});
+
+		return templateFiles;
 	}
 
 	private void parseByDefault(Apdu apdu) {
-		//TODO: implement
+		// TODO: implement
 	}
 
 	private boolean parseByTemplate(Apdu apdu) {
@@ -76,30 +78,32 @@ public class ApduAnalyzer {
 	}
 
 	// TODO: fix
-	private void findMatchingParser(Apdu apdu) {
-		switch (apdu.getType()) {
-		case COMMAND: 
-			selectedParser = commandParser;
-			setParserSettings();
+	private void setUpParser(ForwardingType apduType,
+			SessionFormat sessionFormat) {
+		switch (apduType) {
+		case COMMAND:
+			selectedParser = new CommandParser();
+			setParserSettings(sessionFormat);
 			break;
-			//TODO: response parser not implemented yet
+		// TODO: response parser not implemented yet, exception
 		case RESPONSE:
-			selectedParser = commandParser;
-			setParserSettings();
+			selectedParser = new CommandParser();
+			setParserSettings(sessionFormat);
+			break;
 
 		default:
+			try {
+				throw new UnexpectedException("No Parser found");
+			} catch (UnexpectedException e) {
+				e.printStackTrace();
+			}
 			break;
 		}
-		commandParser.setProcessingApdu(apdu);
-		selectedParser = commandParser;
 	}
 
-	private void setParserSettings() {
-		selectedParser.setEncodingSettings(sessionFormat.getEncodingOffset(), sessionFormat.getWhitespaceOffset());
+	private void setParserSettings(SessionFormat sessionFormat) {
+		selectedParser.setEncodingSettings(sessionFormat.getEncodingOffset(),
+				sessionFormat.getWhitespaceOffset());
 	}
-	
-	
-	
-	
 
 }

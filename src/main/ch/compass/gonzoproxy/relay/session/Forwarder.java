@@ -9,24 +9,28 @@ import java.net.Socket;
 import java.util.Queue;
 
 import ch.compass.gonzoproxy.mvc.model.Apdu;
-import ch.compass.gonzoproxy.mvc.model.ApduType;
+import ch.compass.gonzoproxy.mvc.model.ForwardingType;
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.relay.io.ApduStreamHandler;
+import ch.compass.gonzoproxy.relay.io.LibNfcApduExtractor;
+import ch.compass.gonzoproxy.relay.io.LibNfcApduWrapper;
 import ch.compass.gonzoproxy.relay.parser.ApduAnalyzer;
 
 public class Forwarder implements Runnable {
 
 	private boolean sessionIsAlive = true;
+	
 	private ApduAnalyzer parsingHandler;
 	private ApduStreamHandler streamHandler;
 
 	private Socket sourceSocket;
 	private Socket forwardingSocket;
-	private ApduType type;
+	private ForwardingType type;
+
 	private CurrentSessionModel sessionModel;
 
 	public Forwarder(Socket sourceSocket, Socket forwardingSocket,
-			CurrentSessionModel sessionModel, ApduType type) {
+			CurrentSessionModel sessionModel, ForwardingType type) {
 		this.sourceSocket = sourceSocket;
 		this.forwardingSocket = forwardingSocket;
 		this.sessionModel = sessionModel;
@@ -35,8 +39,21 @@ public class Forwarder implements Runnable {
 	}
 
 	private void initForwardingComponents() {
-		parsingHandler = new ApduAnalyzer(sessionModel.getSessionMode());
-		streamHandler = new ApduStreamHandler();
+		parsingHandler = new ApduAnalyzer(sessionModel.getSessionMode(), type);
+		configureStreamHandler();
+	}
+
+	private void configureStreamHandler() {
+		switch (sessionModel.getSessionMode()) {
+		case LibNFC:	
+			LibNfcApduExtractor extractor = new LibNfcApduExtractor();
+			LibNfcApduWrapper wrapper = new LibNfcApduWrapper();
+			streamHandler = new ApduStreamHandler(extractor, wrapper);
+			break;
+			// TODO: no helpers found exception
+		default:
+			break;
+		}
 	}
 
 	@Override
@@ -61,21 +78,23 @@ public class Forwarder implements Runnable {
 					Apdu apdu = receivedApdus.poll();
 					apdu.setType(type);
 					parsingHandler.processApdu(apdu);
-					apdu.setType(type);
 					sessionModel.addApdu(apdu);
 					// apdu needs new isModified field for type column in table
 					// if isTrapped -> yield
-					if(type.equals(ApduType.COMMAND)){
+					
+					switch (type) {
+					case COMMAND:
 						while(sessionModel.isCommandTrapped() && !sessionModel.getSendOneCmd()){
 							Thread.yield();
 						}
+						break;
 						
-					}else{
+					case RESPONSE:
 						while(sessionModel.isResponseTrapped() && !sessionModel.getSendOneRes()){
 							Thread.yield();
 						}
-						
 					}
+
 					// if apdu is manually modified, apduData.getSendApdu is
 					// overwritten by modified apdu and
 					// modified apdu is added in apduData list

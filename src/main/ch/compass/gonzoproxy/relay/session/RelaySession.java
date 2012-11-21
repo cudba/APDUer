@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import ch.compass.gonzoproxy.mvc.model.ApduType;
+import ch.compass.gonzoproxy.mvc.model.ForwardingType;
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 
 /**
@@ -57,9 +57,9 @@ public class RelaySession implements Runnable {
 
 	private void initForwarder() {
 		commandForwarder = new Forwarder(initiatorSocket, target,
-				sessionModel, ApduType.COMMAND);
+				sessionModel, ForwardingType.COMMAND);
 		responseForwarder = new Forwarder(target, initiatorSocket,
-				sessionModel, ApduType.RESPONSE);
+				sessionModel, ForwardingType.RESPONSE);
 	}
 
 	private void establishConnection() {

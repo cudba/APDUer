@@ -12,13 +12,16 @@ import ch.compass.gonzoproxy.utils.ByteArrays;
 public class ApduStreamHandler {
 
 	private static final int BUFFER_SIZE = 1024;
+	private ApduExtractor extractor;
+	private ApduWrapper wrapper;
 
-	public ApduStreamHandler() {
+	public ApduStreamHandler(LibNfcApduExtractor extractor, ApduWrapper wrapper) {
+		this.extractor = extractor;
+		this.wrapper = wrapper;
 
 	}
 
 	public Queue<Apdu> readApdu(InputStream inputStream) throws IOException {
-		ApduExtractor extractor = new LibNfcApduExtractor();
 		byte[] buffer = new byte[BUFFER_SIZE];
 		Queue<Apdu> apduQueue = new LinkedList<Apdu>();
 
@@ -45,7 +48,6 @@ public class ApduStreamHandler {
 	}
 
 	public void sendApdu(OutputStream outputStream, Apdu apdu) {
-		ApduWrapper wrapper = new LibNfcApduWrapper();
 		
 		byte[] buffer = wrapper.wrap(apdu);
 		try {

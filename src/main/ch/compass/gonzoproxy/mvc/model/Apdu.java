@@ -9,7 +9,7 @@ public class Apdu {
 	private byte[] preamble;
 	private byte[] trailer;
 	private String description;
-	private ApduType type;
+	private ForwardingType type;
 	private int size;
 	private ArrayList<Field> fields = new ArrayList<Field>();
 
@@ -51,11 +51,11 @@ public class Apdu {
 		this.fields = fields;
 	}
 
-	public ApduType getType() {
+	public ForwardingType getType() {
 		return type;
 	}
 
-	public void setType(ApduType type) {
+	public void setType(ForwardingType type) {
 		this.type = type;
 	}
 
