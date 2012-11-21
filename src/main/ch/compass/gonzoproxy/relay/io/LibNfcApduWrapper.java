@@ -13,6 +13,7 @@ public class LibNfcApduWrapper {
 	public byte[] wrap(Apdu apdu) {
 		this.trailer = apdu.getTrailer();
 		this.plainApdu = apdu.getPlainApdu();
+		this.preamble = computePreamle(apdu);
 		this.preamble = apdu.getPreamble();
 		
 		int newSize = preamble.length + plainApdu.length + trailer.length;
@@ -23,6 +24,17 @@ public class LibNfcApduWrapper {
 		
 		
 		return wrappedApdu;
+	}
+
+	private byte[] computePreamle(Apdu apdu) {
+		byte[] origPreamble = apdu.getPreamble();
+		byte[] newPreamble = new byte[origPreamble.length];
+		
+		int apduSize = apdu.getSize();
+		byte[] sizeBytes = new byte[4];
+		
+		
+		return newPreamble;
 	}
 
 }
