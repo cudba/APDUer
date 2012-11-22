@@ -10,11 +10,11 @@ import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.mvc.model.ForwardingType;
 import ch.compass.gonzoproxy.mvc.model.SessionFormat;
 
-public class ApduAnalyzerTest {
+public class ParsingHandlerTest {
 
 	@Test
 	public void testProcessKnownLibNfcApdu() {
-		ApduAnalyzer parserHanlder = new ApduAnalyzer(SessionFormat.LibNFC, ForwardingType.COMMAND);
+		ParsingHandler parserHanlder = new ParsingHandler(SessionFormat.LibNFC, ForwardingType.COMMAND);
 
 		String fakePlainApdu = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
@@ -39,7 +39,7 @@ public class ApduAnalyzerTest {
 	
 	@Test
 	public void testProcessKnownLibNfcApduCustomLength() {
-		ApduAnalyzer parserHanlder = new ApduAnalyzer(SessionFormat.LibNFC, ForwardingType.COMMAND);
+		ParsingHandler parserHanlder = new ParsingHandler(SessionFormat.LibNFC, ForwardingType.COMMAND);
 		
 		String fakePlainApdu = "00 a4 04 00 07 d2 76 00 00 85 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 00";
@@ -64,7 +64,7 @@ public class ApduAnalyzerTest {
 
 	@Test
 	public void testProcessUnknownLibNfcApdu() {
-		ApduAnalyzer parserHanlder = new ApduAnalyzer(SessionFormat.LibNFC, ForwardingType.COMMAND);
+		ParsingHandler parserHanlder = new ParsingHandler(SessionFormat.LibNFC, ForwardingType.COMMAND);
 		
 		String fakePlainApdu = "ff ff ff ff";
 		String libnfcInput = "C-APDU 0004: ff ff ff ff";

@@ -14,31 +14,22 @@ public class CommandParser extends AbstractParser {
 
 		int fieldLength = DEFAULT_FIELDLENGTH;
 		int offset = 0;
+		
 		for (int i = 0; i < templateFields.size(); i++) {
-			if (apduContainsMoreFields(plainApdu, fieldLength, offset)) {
+			if (!apduContainsMoreFields(plainApdu, fieldLength, offset)) {
 				return false;
 			}
 
 			Field processingField = template.getFields().get(i);
 			if (isIdentifierField(processingField)) {
-				byte[] idByte;
-				if (hasCustomLenght(fieldLength)) {
-					idByte = ByteArrays.trim(plainApdu, offset, fieldLength
-							* (encodingOffset + whitespaceOffset)
-							- whitespaceOffset);
-				} else {
-					idByte = ByteArrays.trim(plainApdu, offset, fieldLength
-							* encodingOffset);
-				}
-				if (!valueMatches(idByte, templateFields.get(i))) {
+				if(!fieldIsVerified(plainApdu, fieldLength, offset, processingField)) {
 					return false;
 				}
-				System.out.println("Field matched");
 			}
 
-			// TODO: Refactor
 			int currentFieldOffset = offset;
-			offset += fieldLength * (encodingOffset + whitespaceOffset);
+			offset += encodedSingleFieldLength(fieldLength);
+			
 			if (isContentLengthField(processingField)) {
 				byte[] length = ByteArrays.trim(plainApdu, currentFieldOffset,
 						fieldLength * encodingOffset);
@@ -47,9 +38,7 @@ public class CommandParser extends AbstractParser {
 				fieldLength = DEFAULT_FIELDLENGTH;
 			}
 		}
-		System.out
-				.println("template accepted " + template.getApduDescription());
-		return true;
+		return offset - whitespaceOffset  == plainApdu.length;
 	}
 
 	@Override
@@ -60,19 +49,16 @@ public class CommandParser extends AbstractParser {
 
 		int fieldLength = DEFAULT_FIELDLENGTH;
 		int offset = 0;
+		
 		for (int i = 0; i < templateFields.size(); i++) {
+			if (!apduContainsMoreFields(plainApdu, fieldLength, offset)) {
+				return false;
+			}
 			Field processingField = getCopyOf(templateFields.get(i));
 
-			if (hasCustomLenght(fieldLength)) {
-				parseValueToField(plainApdu, offset, fieldLength
-						* (encodingOffset + whitespaceOffset)
-						- whitespaceOffset, processingField);
-			} else {
-				parseValueToField(plainApdu, offset, fieldLength
-						* encodingOffset, processingField);
-			}
+			parseField(plainApdu, fieldLength, offset, processingField);
 
-			offset += fieldLength * (encodingOffset + whitespaceOffset);
+			offset += encodedSingleFieldLength(fieldLength);
 
 			if (isContentLengthField(processingField)) {
 				fieldLength = Integer.parseInt(processingField.getValue(), 16);

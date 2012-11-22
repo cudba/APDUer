@@ -15,13 +15,13 @@ import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.relay.io.ApduStreamHandler;
 import ch.compass.gonzoproxy.relay.io.LibNfcApduExtractor;
 import ch.compass.gonzoproxy.relay.io.LibNfcApduWrapper;
-import ch.compass.gonzoproxy.relay.parser.ApduAnalyzer;
+import ch.compass.gonzoproxy.relay.parser.ParsingHandler;
 
 public class Forwarder implements Runnable {
 
 	private boolean sessionIsAlive = true;
 
-	private ApduAnalyzer parsingHandler;
+	private ParsingHandler parsingHandler;
 	private ApduStreamHandler streamHandler;
 
 	private Socket sourceSocket;
@@ -41,7 +41,7 @@ public class Forwarder implements Runnable {
 
 	private void initForwardingComponents() {
 		try {
-			parsingHandler = new ApduAnalyzer(sessionModel.getSessionFormat(),
+			parsingHandler = new ParsingHandler(sessionModel.getSessionFormat(),
 					type);
 			configureStreamHandler();
 		} catch (UnexpectedException e) {

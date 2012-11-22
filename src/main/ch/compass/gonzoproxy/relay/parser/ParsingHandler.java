@@ -14,7 +14,7 @@ import ch.compass.gonzoproxy.mvc.model.Apdu;
 import ch.compass.gonzoproxy.mvc.model.ForwardingType;
 import ch.compass.gonzoproxy.mvc.model.SessionFormat;
 
-public class ApduAnalyzer {
+public class ParsingHandler {
 
 	private static final String TEMPLATE_FOLDER = "templates/";
 
@@ -22,7 +22,7 @@ public class ApduAnalyzer {
 
 	private AbstractParser selectedParser;
 
-	public ApduAnalyzer(SessionFormat sessionFormat,
+	public ParsingHandler(SessionFormat sessionFormat,
 			ForwardingType forwardingType) {
 		loadTemplates();
 		setUpParser(forwardingType, sessionFormat);
@@ -71,7 +71,9 @@ public class ApduAnalyzer {
 	private boolean parseByTemplate(Apdu apdu) {
 		for (ApduTemplate template : templates) {
 			if (selectedParser.templateIsAccepted(template)) {
-				return selectedParser.tryParse(template);
+				selectedParser.tryParse(template);
+				System.out.println("accepted");
+				return true;
 			}
 		}
 		return false;
@@ -87,7 +89,7 @@ public class ApduAnalyzer {
 			break;
 		// TODO: response parser not implemented yet, exception
 		case RESPONSE:
-			selectedParser = new CommandParser();
+			selectedParser = new ResponseParser();
 			setParserSettings(sessionFormat);
 			break;
 
