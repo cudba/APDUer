@@ -38,7 +38,7 @@ public class RelayController {
 		sessionModel.setSession(Integer.parseInt(portListen), remoteHost, Integer.parseInt(remotePort));
 		apduData.clear();
 		sessionModel.addSessionData(apduData);
-		sessionModel.setSessionMode(SessionFormat.LibNFC);
+		sessionModel.setSessionFormat(SessionFormat.LibNFC);
 	}
 	
 	public void clearSession(){
@@ -62,25 +62,25 @@ public class RelayController {
 
 	public void changeCommandTrap() {
 		if(sessionModel.isCommandTrapped()){
-			sessionModel.setCmdTrap(false);
+			sessionModel.setCommandTrapped(false);
 		}else{
-			sessionModel.setCmdTrap(true);
+			sessionModel.setCommandTrapped(true);
 		}
 	}
 
 	public void changeResponseTrap() {
 		if(sessionModel.isResponseTrapped()){
-			sessionModel.setResTrap(false);
+			sessionModel.setResponseTrapped(false);
 		}else{
-			sessionModel.setResTrap(true);
+			sessionModel.setResponseTrapped(true);
 		}
 	}
 
 	public void sendOneCmd() {
-		sessionModel.sendOneCmd(true);
+		sessionModel.sendOneCommand(true);
 	}
 
 	public void sendOneRes() {
-		sessionModel.sendOneRes(true);
+		sessionModel.sendOneResponse(true);
 	}
 }

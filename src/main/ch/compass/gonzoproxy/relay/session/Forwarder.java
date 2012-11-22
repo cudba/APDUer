@@ -41,7 +41,7 @@ public class Forwarder implements Runnable {
 
 	private void initForwardingComponents() {
 		try {
-			parsingHandler = new ApduAnalyzer(sessionModel.getSessionMode(),
+			parsingHandler = new ApduAnalyzer(sessionModel.getSessionFormat(),
 					type);
 			configureStreamHandler();
 		} catch (UnexpectedException e) {
@@ -52,7 +52,7 @@ public class Forwarder implements Runnable {
 	}
 
 	private void configureStreamHandler() throws UnexpectedException {
-		switch (sessionModel.getSessionMode()) {
+		switch (sessionModel.getSessionFormat()) {
 		case LibNFC:
 			LibNfcApduExtractor extractor = new LibNfcApduExtractor();
 			LibNfcApduWrapper wrapper = new LibNfcApduWrapper();
@@ -88,21 +88,18 @@ public class Forwarder implements Runnable {
 					Apdu apdu = receivedApdus.poll();
 					apdu.setType(type);
 					parsingHandler.processApdu(apdu);
-					sessionModel.addApdu(apdu);
+					sessionModel.addSessionData(apdu);
 					// apdu needs new isModified field for type column in table
 					// if isTrapped -> yield
 
-					switch (type) {
-					case COMMAND:
+					if(type == ForwardingType.COMMAND){
 						while (sessionModel.isCommandTrapped()
-								&& !sessionModel.getSendOneCmd()) {
+								&& !sessionModel.shouldSendOneCommand()) {
 							Thread.yield();
 						}
-						break;
-
-					case RESPONSE:
+					}else {
 						while (sessionModel.isResponseTrapped()
-								&& !sessionModel.getSendOneRes()) {
+								&& !sessionModel.shouldSendOneResponse()) {
 							Thread.yield();
 						}
 					}
@@ -117,8 +114,8 @@ public class Forwarder implements Runnable {
 					// data.getSendApdu());
 
 					streamHandler.sendApdu(outStream, apdu);
-					sessionModel.sendOneCmd(false);
-					sessionModel.sendOneRes(false);
+					sessionModel.sendOneCommand(false);
+					sessionModel.sendOneResponse(false);
 				}
 
 			}

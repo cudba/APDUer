@@ -10,12 +10,12 @@ public class CurrentSessionModel {
 	
 	private Preferences sessionPrefs;
 	private ArrayList<SessionListener> listeners = new ArrayList<SessionListener>();
-	private ApduData apduData;
-	private SessionFormat sessionMode = SessionFormat.LibNFC;
-	private Boolean cmdTrap = false;
-	private Boolean resTrap = false;
-	private Boolean sendOneCmd;
-	private Boolean sendOneRes;
+	private ApduData sessionData;
+	private SessionFormat sessionFormat = SessionFormat.LibNFC;
+	private Boolean commandTrapped = false;
+	private Boolean responseTrapped = false;
+	private Boolean sendOneCommand;
+	private Boolean sendOneResponse;
 	
 	public CurrentSessionModel(){
 		this.sessionPrefs = Preferences.userRoot().node(this.getClass().getName());
@@ -54,58 +54,58 @@ public class CurrentSessionModel {
 
 
 	public void addSessionData(ApduData apduData) {
-		this.apduData = apduData;
+		this.sessionData = apduData;
 		
 	}
 	
 	public ApduData getSessionData() {
-		return apduData;
+		return sessionData;
 	}
 	
 	public Boolean isResponseTrapped() {
-		return resTrap;
+		return responseTrapped;
 	}
 	
 	public Boolean isCommandTrapped() {
-		return cmdTrap;
+		return commandTrapped;
 	}
 	
-	public void setCmdTrap(Boolean cmdTrap) {
-		this.cmdTrap = cmdTrap;
+	public void setCommandTrapped(Boolean cmdTrap) {
+		this.commandTrapped = cmdTrap;
 	}
 	
-	public void setResTrap(Boolean resTrap) {
-		this.resTrap = resTrap;
+	public void setResponseTrapped(Boolean resTrap) {
+		this.responseTrapped = resTrap;
 	}
 
 
-	public void sendOneCmd(boolean b) {
-		this.sendOneCmd = b;
+	public void sendOneCommand(boolean send) {
+		this.sendOneCommand = send;
 	}
 
 
-	public void sendOneRes(boolean b) {
-		this.sendOneRes = b;
+	public void sendOneResponse(boolean send) {
+		this.sendOneResponse = send;
 	}
 	
-	public Boolean getSendOneCmd() {
-		return sendOneCmd;
+	public Boolean shouldSendOneCommand() {
+		return sendOneCommand;
 	}
 	
-	public Boolean getSendOneRes() {
-		return sendOneRes;
+	public Boolean shouldSendOneResponse() {
+		return sendOneResponse;
 	}
 
 
-	public void addApdu(Apdu apdu) {
-		apduData.addApdu(apdu);
+	public void addSessionData(Apdu apdu) {
+		sessionData.addApdu(apdu);
 	}
 	
-	public SessionFormat getSessionMode() {
-		return sessionMode;
+	public SessionFormat getSessionFormat() {
+		return sessionFormat;
 	}
 	
-	public void setSessionMode(SessionFormat sessionMode) {
-		this.sessionMode = sessionMode;
+	public void setSessionFormat(SessionFormat sessionMode) {
+		this.sessionFormat = sessionMode;
 	}
 }

@@ -20,7 +20,7 @@ public class ApduAnalyzer {
 
 	private ArrayList<ApduTemplate> templates = new ArrayList<ApduTemplate>();
 
-	private Parser selectedParser;
+	private AbstractParser selectedParser;
 
 	public ApduAnalyzer(SessionFormat sessionFormat,
 			ForwardingType forwardingType) {

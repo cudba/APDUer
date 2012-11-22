@@ -12,7 +12,6 @@ import ch.compass.gonzoproxy.mvc.model.SessionFormat;
 
 public class ApduAnalyzerTest {
 
-
 	@Test
 	public void testProcessKnownLibNfcApdu() {
 		ApduAnalyzer parserHanlder = new ApduAnalyzer(SessionFormat.LibNFC, ForwardingType.COMMAND);
