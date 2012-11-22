@@ -42,9 +42,6 @@ public class ParsingHandler {
 				ApduTemplate template = beanLoader.loadAs(fileInput,
 						ApduTemplate.class);
 				templates.add(template);
-				System.out.println("template " + template.getApduDescription()
-						+ " added");
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -72,7 +69,6 @@ public class ParsingHandler {
 		for (ApduTemplate template : templates) {
 			if (selectedParser.templateIsAccepted(template)) {
 				selectedParser.tryParse(template);
-				System.out.println("accepted");
 				return true;
 			}
 		}
@@ -87,18 +83,9 @@ public class ParsingHandler {
 			selectedParser = new CommandParser();
 			setParserSettings(sessionFormat);
 			break;
-		// TODO: response parser not implemented yet, exception
 		case RESPONSE:
 			selectedParser = new ResponseParser();
 			setParserSettings(sessionFormat);
-			break;
-
-		default:
-			try {
-				throw new UnexpectedException("No Parser found");
-			} catch (UnexpectedException e) {
-				e.printStackTrace();
-			}
 			break;
 		}
 	}

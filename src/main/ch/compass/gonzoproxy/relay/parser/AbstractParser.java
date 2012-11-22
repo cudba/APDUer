@@ -93,7 +93,8 @@ public abstract class AbstractParser {
 	}
 
 	protected boolean isContentLengthField(Field processingField) {
-		return processingField.getName().equals(CONTENT_LENGTH_FIELD);
+		return processingField.getName() != null
+				&& processingField.getName().equals(CONTENT_LENGTH_FIELD);
 	}
 
 	public void setProcessingApdu(Apdu apdu) {

@@ -9,7 +9,6 @@ public class ResponseParser extends AbstractParser {
 
 	private static final String IDENTIFIER_LENGTH_FIELD = "Ci";
 	private static final int NEXT_IDENTIFIER_OFFSET = 2;
-	
 
 	public boolean templateIsAccepted(ApduTemplate template) {
 		byte[] plainApdu = processingApdu.getPlainApdu();
@@ -20,7 +19,7 @@ public class ResponseParser extends AbstractParser {
 
 		int fieldLength = DEFAULT_FIELDLENGTH;
 		int offset = 0;
-		
+
 		for (int i = 0; i < templateFields.size(); i++) {
 			if (!apduContainsMoreFields(plainApdu, fieldLength, offset)) {
 				return false;
@@ -52,7 +51,8 @@ public class ResponseParser extends AbstractParser {
 				}
 
 				if (nextIdentifier > 0) {
-					fieldLength = nextIdentifier;
+					fieldLength = calculateSubContentLength(offset,
+							nextIdentifier);
 				} else {
 					fieldLength = getRemainingContentSize(contentStartIndex,
 							contentLength, offset);
@@ -61,8 +61,11 @@ public class ResponseParser extends AbstractParser {
 				fieldLength = DEFAULT_FIELDLENGTH;
 			}
 		}
-		System.out.println(template.getApduDescription() + " accepted");
-		return true;
+		return offset - whitespaceOffset  == plainApdu.length;
+	}
+
+	private int calculateSubContentLength(int offset, int nextIdentifier) {
+		return (nextIdentifier - offset) / (encodingOffset + whitespaceOffset);
 	}
 
 	@Override
@@ -70,13 +73,13 @@ public class ResponseParser extends AbstractParser {
 		setApduDescription(template);
 		List<Field> templateFields = template.getFields();
 		byte[] plainApdu = processingApdu.getPlainApdu();
-		
+
 		int contentStartIndex = 0;
 		int contentLength = DEFAULT_FIELDLENGTH;
 
 		int fieldLength = DEFAULT_FIELDLENGTH;
 		int offset = 0;
-		
+
 		for (int i = 0; i < templateFields.size(); i++) {
 			Field processingField = getCopyOf(templateFields.get(i));
 			parseField(plainApdu, fieldLength, offset, processingField);
@@ -85,7 +88,8 @@ public class ResponseParser extends AbstractParser {
 			offset += encodedSingleFieldLength(fieldLength);
 
 			if (isContentLengthField(processingField)) {
-				contentLength = Integer.parseInt(processingField.getValue(), 16);
+				contentLength = Integer
+						.parseInt(processingField.getValue(), 16);
 				contentStartIndex = offset;
 			} else if (isContentIdentifierField(processingField)) {
 
@@ -97,12 +101,13 @@ public class ResponseParser extends AbstractParser {
 				}
 
 				if (nextIdentifier > 0) {
-					fieldLength = nextIdentifier;
-				}else {
+					fieldLength = calculateSubContentLength(offset,
+							nextIdentifier);
+				} else {
 					fieldLength = getRemainingContentSize(contentStartIndex,
 							contentLength, offset);
 				}
-				
+
 			} else {
 				fieldLength = DEFAULT_FIELDLENGTH;
 			}
@@ -112,8 +117,7 @@ public class ResponseParser extends AbstractParser {
 
 	private int getRemainingContentSize(int contentStartIndex,
 			int contentLength, int offset) {
-		return contentLength - (offset - contentStartIndex)
-				/ (encodingOffset + whitespaceOffset);
+		return contentLength - ((offset - contentStartIndex) / (encodingOffset + whitespaceOffset));
 	}
 
 	private int findNextIdentifier(byte[] plainApdu, int offset, Field field) {
