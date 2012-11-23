@@ -20,16 +20,16 @@ public class ParsingHandler {
 
 	private ArrayList<ApduTemplate> templates = new ArrayList<ApduTemplate>();
 
-	private AbstractParser selectedParser;
-
+	private ParsingUnit parsingUnit;
+	
 	public ParsingHandler(SessionFormat sessionFormat,
 			ForwardingType forwardingType) {
 		loadTemplates();
-		setUpParser(forwardingType, sessionFormat);
+		prepareParsingUnits(forwardingType, sessionFormat);
 	}
 
 	public void processApdu(Apdu apdu) {
-		selectedParser.setProcessingApdu(apdu);
+		parsingUnit.setProcessingApdu(apdu);
 		if (!parseByTemplate(apdu))
 			parseByDefault(apdu);
 	}
@@ -66,33 +66,18 @@ public class ParsingHandler {
 	}
 
 	private boolean parseByTemplate(Apdu apdu) {
+		
 		for (ApduTemplate template : templates) {
-			if (selectedParser.templateIsAccepted(template)) {
-				selectedParser.tryParse(template);
+			if (parsingUnit.templateIsAccepted(template)) {
+				parsingUnit.tryParse(template);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	// TODO: fix
-	private void setUpParser(ForwardingType apduType,
+	private void prepareParsingUnits(ForwardingType apduType,
 			SessionFormat sessionFormat) {
-		switch (apduType) {
-		case COMMAND:
-			selectedParser = new CommandParser();
-			setParserSettings(sessionFormat);
-			break;
-		case RESPONSE:
-			selectedParser = new ResponseParser();
-			setParserSettings(sessionFormat);
-			break;
-		}
+			parsingUnit = new ParsingUnit(sessionFormat.getEncodingOffset(), sessionFormat.getWhitespaceOffset());
 	}
-
-	private void setParserSettings(SessionFormat sessionFormat) {
-		selectedParser.setEncodingSettings(sessionFormat.getEncodingOffset(),
-				sessionFormat.getWhitespaceOffset());
-	}
-
 }

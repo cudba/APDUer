@@ -11,7 +11,7 @@ public class ResponseParserTest {
 
 	@Test
 	public void testSingleIdentifierTemplateAccepted() {
-		ResponseParser parser = new ResponseParser();
+		ParsingUnit parser = new ParsingUnit(2, 1);
 		
 		String processingApduFake = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
@@ -28,7 +28,7 @@ public class ResponseParserTest {
 	@Test
 	public void testSingleContentIdentifierAccepted(){
 		
-		ResponseParser parser = new ResponseParser();
+		ParsingUnit parser = new ParsingUnit(2, 1);
 		
 		String processingApduFake = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
