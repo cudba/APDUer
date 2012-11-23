@@ -28,7 +28,6 @@ public class ParsingHandler {
 	}
 
 	public void tryParse(Apdu apdu) {
-		parsingUnit.setProcessingApdu(apdu);
 		if (!parseByTemplate(apdu))
 			parseByDefault(apdu);
 	}

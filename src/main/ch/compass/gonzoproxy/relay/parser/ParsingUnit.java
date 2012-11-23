@@ -8,10 +8,6 @@ import ch.compass.gonzoproxy.utils.ParsingHelper;
 
 public class ParsingUnit {
 
-	
-	public void setProcessingApdu(Apdu apdu) {
-	}
-
 	public boolean parseBy(ApduTemplate template, Apdu processingApdu) {
 		processingApdu.setDescription(template.getApduDescription());
 		List<Field> templateFields = template.getFields();
