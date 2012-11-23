@@ -8,9 +8,6 @@ import ch.compass.gonzoproxy.utils.ParsingHelper;
 
 public class TemplateValidator {
 
-	public TemplateValidator() {
-
-	}
 
 	public boolean accept(ApduTemplate template, Apdu processingApdu) {
 		byte[] plainApdu = processingApdu.getPlainApdu();

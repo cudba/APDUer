@@ -68,7 +68,7 @@ public class ParsingHandler {
 
 		for (ApduTemplate template : templates) {
 			if (templateValidator.accept(template, processingApdu)) {
-				parsingUnit.parseBy(template);
+				parsingUnit.parseBy(template, processingApdu);
 				return true;
 			}
 		}

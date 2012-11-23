@@ -8,19 +8,12 @@ import ch.compass.gonzoproxy.utils.ParsingHelper;
 
 public class ParsingUnit {
 
-	private Apdu processingApdu;
-
-
-	public ParsingUnit() {
-
-	}
-
+	
 	public void setProcessingApdu(Apdu apdu) {
-		this.processingApdu = apdu;
 	}
 
-	public boolean parseBy(ApduTemplate template) {
-		setApduDescription(template);
+	public boolean parseBy(ApduTemplate template, Apdu processingApdu) {
+		processingApdu.setDescription(template.getApduDescription());
 		List<Field> templateFields = template.getFields();
 		byte[] plainApdu = processingApdu.getPlainApdu();
 
@@ -33,6 +26,7 @@ public class ParsingUnit {
 		for (int i = 0; i < templateFields.size(); i++) {
 			Field processingField = getCopyOf(templateFields.get(i));
 			parseField(plainApdu, fieldLength, offset, processingField);
+			processingApdu.addField(processingField);
 
 			int currentFieldOffset = offset;
 			offset += ParsingHelper.getEncodedFieldLength(fieldLength, true);
@@ -82,7 +76,8 @@ public class ParsingUnit {
 					ParsingHelper.getEncodedFieldLength(fieldLength, false),
 					processingField);
 		} else {
-			int encodedFieldLength = ParsingHelper.getEncodedFieldLength(fieldLength, false);
+			int encodedFieldLength = ParsingHelper.getEncodedFieldLength(
+					fieldLength, false);
 			parseValueToField(plainApdu, offset, encodedFieldLength,
 					processingField);
 		}
@@ -94,7 +89,6 @@ public class ParsingUnit {
 			byte[] value = ParsingHelper.extractFieldFromBuffer(plainApdu,
 					fieldLength, offset);
 			setFieldValue(field, value);
-			processingApdu.addField(field);
 		}
 	}
 
@@ -105,9 +99,5 @@ public class ParsingUnit {
 	private Field getCopyOf(Field field) {
 		return new Field(field.getName(), field.getValue(),
 				field.getDescription());
-	}
-
-	private void setApduDescription(ApduTemplate template) {
-		processingApdu.setDescription(template.getApduDescription());
 	}
 }
