@@ -8,6 +8,8 @@ import ch.compass.gonzoproxy.mvc.model.Apdu;
 import ch.compass.gonzoproxy.mvc.model.Field;
 
 public class TemplateValidatorTest {
+	
+	//TODO: Fix: all fields are now essential for accepting templates
 
 	@Test
 	public void testSingleIdentifierTemplateAccepted() {

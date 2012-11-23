@@ -81,7 +81,7 @@ public class ParsingHandlerTest {
 	public void testProcessKnownLibNfcApduCustomLengthResponse() {
 		ParsingHandler parserHanlder = new ParsingHandler(SessionFormat.LibNFC);
 		
-		String fakePlainApdu = "77 07 82 00 07 94 76 00 03 85";
+		String fakePlainApdu = "77 07 82 00 07 94 76 00 0a 85";
 		String libnfcInput = "#R-APDU 000a: 77 07 82 00 07 94 76 00 03 85";
 		Apdu apdu = new Apdu(libnfcInput.getBytes());
 		apdu.setPlainApdu(fakePlainApdu.getBytes());
@@ -95,7 +95,7 @@ public class ParsingHandlerTest {
 		}
 		
 		String atsDescription = "Get Processing Options Response";
-		String trimmedApdu = "77078200 079476 00 0385";
+		String trimmedApdu = "77078200 079476 00 0a85";
 		assertEquals(atsDescription, apdu.getDescription());
 		assertArrayEquals(fakePlainApdu.getBytes(), apdu.getPlainApdu());
 		assertEquals(trimmedApdu, mergedFields.toString());
