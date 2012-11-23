@@ -41,8 +41,7 @@ public class Forwarder implements Runnable {
 
 	private void initForwardingComponents() {
 		try {
-			parsingHandler = new ParsingHandler(sessionModel.getSessionFormat(),
-					type);
+			parsingHandler = new ParsingHandler(sessionModel.getSessionFormat());
 			configureStreamHandler();
 		} catch (UnexpectedException e) {
 			e.printStackTrace();
@@ -87,7 +86,7 @@ public class Forwarder implements Runnable {
 				while (!receivedApdus.isEmpty()) {
 					Apdu apdu = receivedApdus.poll();
 					apdu.setType(type);
-					parsingHandler.processApdu(apdu);
+					parsingHandler.tryParse(apdu);
 					sessionModel.addSessionData(apdu);
 					// apdu needs new isModified field for type column in table
 					// if isTrapped -> yield

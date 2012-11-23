@@ -5,14 +5,13 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 
 import org.yaml.snakeyaml.Yaml;
 
 import ch.compass.gonzoproxy.mvc.model.Apdu;
-import ch.compass.gonzoproxy.mvc.model.ForwardingType;
 import ch.compass.gonzoproxy.mvc.model.SessionFormat;
+import ch.compass.gonzoproxy.utils.ParsingHelper;
 
 public class ParsingHandler {
 
@@ -21,14 +20,14 @@ public class ParsingHandler {
 	private ArrayList<ApduTemplate> templates = new ArrayList<ApduTemplate>();
 
 	private ParsingUnit parsingUnit;
-	
-	public ParsingHandler(SessionFormat sessionFormat,
-			ForwardingType forwardingType) {
+	private TemplateValidator templateValidator;
+
+	public ParsingHandler(SessionFormat sessionFormat) {
 		loadTemplates();
-		prepareParsingUnits(forwardingType, sessionFormat);
+		prepareParsingUnits(sessionFormat);
 	}
 
-	public void processApdu(Apdu apdu) {
+	public void tryParse(Apdu apdu) {
 		parsingUnit.setProcessingApdu(apdu);
 		if (!parseByTemplate(apdu))
 			parseByDefault(apdu);
@@ -65,19 +64,22 @@ public class ParsingHandler {
 		// TODO: implement
 	}
 
-	private boolean parseByTemplate(Apdu apdu) {
-		
+	private boolean parseByTemplate(Apdu processingApdu) {
+
 		for (ApduTemplate template : templates) {
-			if (parsingUnit.templateIsAccepted(template)) {
-				parsingUnit.tryParse(template);
+			if (templateValidator.accept(template, processingApdu)) {
+				parsingUnit.parseBy(template);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private void prepareParsingUnits(ForwardingType apduType,
-			SessionFormat sessionFormat) {
-			parsingUnit = new ParsingUnit(sessionFormat.getEncodingOffset(), sessionFormat.getWhitespaceOffset());
+	private void prepareParsingUnits(SessionFormat sessionFormat) {
+		parsingUnit = new ParsingUnit();
+		templateValidator = new TemplateValidator();
+		ParsingHelper.encodingOffset = sessionFormat.getEncodingOffset();
+		ParsingHelper.whitespaceOffset = sessionFormat.getWhitespaceOffset();
+		
 	}
 }

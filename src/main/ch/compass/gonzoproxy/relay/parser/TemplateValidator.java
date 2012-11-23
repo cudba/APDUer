@@ -4,20 +4,12 @@ import java.util.ArrayList;
 
 import ch.compass.gonzoproxy.mvc.model.Apdu;
 import ch.compass.gonzoproxy.mvc.model.Field;
-import ch.compass.gonzoproxy.utils.ByteArrays;
 import ch.compass.gonzoproxy.utils.ParsingHelper;
 
-public class TemplateVerifier {
+public class TemplateValidator {
 
-	
-	
-	private int encodingOffset;
-	private int whitespaceOffset;
+	public TemplateValidator() {
 
-	public TemplateVerifier(int encodingOffset, int whitespaceOffset){
-		this.encodingOffset = encodingOffset;
-		this.whitespaceOffset = whitespaceOffset;
-		
 	}
 
 	public boolean accept(ApduTemplate template, Apdu processingApdu) {
@@ -25,9 +17,9 @@ public class TemplateVerifier {
 		ArrayList<Field> templateFields = template.getFields();
 
 		int contentStartIndex = 0;
-		int contentLength = ParsingUnit.DEFAULT_FIELDLENGTH;
+		int contentLength = ParsingHelper.DEFAULT_FIELDLENGTH;
 
-		int fieldLength = ParsingUnit.DEFAULT_FIELDLENGTH;
+		int fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
 		int offset = 0;
 
 		for (int i = 0; i < templateFields.size(); i++) {
@@ -44,12 +36,14 @@ public class TemplateVerifier {
 			}
 
 			int currentOffset = offset;
-			offset += ParsingHelper.getEncodedFieldLength(fieldLength,
-					encodingOffset);
+			offset += ParsingHelper.getEncodedFieldLength(fieldLength, true);
 			if (ParsingHelper.isContentLengthField(processingField)) {
-				byte[] length = extractFieldFromBuffer(plainApdu, fieldLength
-						* encodingOffset, currentOffset);
-				if (ParsingHelper.isContentIdentifierField(templateFields.get(i + 1))) {
+				int encodedFieldLength = ParsingHelper.getEncodedFieldLength(
+						fieldLength, false);
+				byte[] length = ParsingHelper.extractFieldFromBuffer(plainApdu,
+						encodedFieldLength, currentOffset);
+				if (ParsingHelper.isContentIdentifierField(templateFields
+						.get(i + 1))) {
 					contentLength = hexToInt(length);
 					contentStartIndex = offset;
 				} else {
@@ -59,30 +53,32 @@ public class TemplateVerifier {
 
 			else if (ParsingHelper.isContentIdentifierField(processingField)) {
 				int nextIdentifier = 0;
-				if (templateFields.size() > i + ParsingUnit.NEXT_IDENTIFIER_OFFSET) {
-					nextIdentifier = ParsingHelper.findNextContentIdentifier(plainApdu,
+				if (templateFields.size() > i
+						+ ParsingHelper.NEXT_IDENTIFIER_OFFSET) {
+					nextIdentifier = ParsingHelper.findNextContentIdentifier(
+							plainApdu,
 							currentOffset,
-							templateFields.get(i + ParsingUnit.NEXT_IDENTIFIER_OFFSET));
+							templateFields.get(i
+									+ ParsingHelper.NEXT_IDENTIFIER_OFFSET));
 				}
 
 				if (nextIdentifier > 0) {
-					fieldLength = ParsingHelper.calculateSubContentLength(offset,
-							nextIdentifier, encodingOffset + whitespaceOffset);
+					fieldLength = ParsingHelper.calculateSubContentLength(
+							offset, nextIdentifier);
 				} else {
-					fieldLength = ParsingHelper.getRemainingContentSize(contentStartIndex,
-							contentLength, offset, encodingOffset);
+					fieldLength = ParsingHelper.getRemainingContentSize(
+							contentStartIndex, contentLength, offset);
 				}
 			} else {
-				fieldLength = ParsingUnit.DEFAULT_FIELDLENGTH;
+				fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
 			}
 		}
-		System.out.println("blubbb");
-		return offset - whitespaceOffset == plainApdu.length;
+		return offset - ParsingHelper.whitespaceOffset == plainApdu.length;
 	}
 
 	private boolean apduContainsMoreFields(byte[] plainApdu, int fieldLength,
 			int offset) {
-		return (offset + fieldLength * encodingOffset) <= plainApdu.length;
+		return (offset + fieldLength * ParsingHelper.encodingOffset) <= plainApdu.length;
 	}
 
 	private boolean isIdentifierField(Field processingField) {
@@ -92,12 +88,14 @@ public class TemplateVerifier {
 	private boolean fieldIsVerified(byte[] plainApdu, int fieldLength,
 			int offset, Field processingField) {
 		byte[] idByte;
-		if (fieldLength > ParsingUnit.DEFAULT_FIELDLENGTH) {
-			int encodedFieldLength = ParsingHelper.getMultipleEncodedFieldsLength(
-					fieldLength, encodingOffset, whitespaceOffset);
-			idByte = extractFieldFromBuffer(plainApdu, encodedFieldLength, offset);
+		int encodedFieldLength = ParsingHelper.getEncodedFieldLength(
+				fieldLength, false);
+		if (fieldLength > ParsingHelper.DEFAULT_FIELDLENGTH) {
+			idByte = ParsingHelper.extractFieldFromBuffer(plainApdu,
+					encodedFieldLength, offset);
 		} else {
-			idByte = extractFieldFromBuffer(plainApdu, fieldLength * encodingOffset, offset);
+			idByte = ParsingHelper.extractFieldFromBuffer(plainApdu,
+					encodedFieldLength, offset);
 		}
 		if (!valueMatches(idByte, processingField)) {
 			return false;
@@ -113,11 +111,6 @@ public class TemplateVerifier {
 
 	protected int hexToInt(byte[] hexValue) {
 		return Integer.parseInt(new String(hexValue), 16);
-	}
-
-	protected byte[] extractFieldFromBuffer(byte[] plainApdu, int fieldLength,
-			int currentOffset) {
-		return ByteArrays.trim(plainApdu, currentOffset, fieldLength);
 	}
 
 }

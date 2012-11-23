@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Queue;
 
 import ch.compass.gonzoproxy.mvc.model.Apdu;
-import ch.compass.gonzoproxy.utils.ByteArrays;
+import ch.compass.gonzoproxy.utils.ByteArraysUtils;
 
 public class LibNfcApduExtractor implements ApduExtractor {
 
@@ -15,7 +15,7 @@ public class LibNfcApduExtractor implements ApduExtractor {
 
 	public byte[] extractApdusToQueue(byte[] buffer, Queue<Apdu> apduQueue,
 			int readBytes) {
-		ArrayList<Integer> indices = ByteArrays.getDelimiterIndices(buffer,
+		ArrayList<Integer> indices = ByteArraysUtils.getDelimiterIndices(buffer,
 				DELIMITER);
 
 		int startIndex = 0;
@@ -25,12 +25,12 @@ public class LibNfcApduExtractor implements ApduExtractor {
 			startIndex = indices.get(i);
 			endIndex = indices.get(i + 1);
 			int size = endIndex - startIndex;
-			byte[] rawApdu = ByteArrays.trim(buffer, startIndex, size);
+			byte[] rawApdu = ByteArraysUtils.trim(buffer, startIndex, size);
 			Apdu apdu = splitApdu(rawApdu);
 			apduQueue.add(apdu);
 		}
 
-		byte[] singleApdu = ByteArrays.trim(buffer, endIndex, readBytes - endIndex);
+		byte[] singleApdu = ByteArraysUtils.trim(buffer, endIndex, readBytes - endIndex);
 
 		if (apduIsComplete(singleApdu)) {
 			Apdu apdu = splitApdu(singleApdu);
@@ -62,7 +62,7 @@ public class LibNfcApduExtractor implements ApduExtractor {
 		for (int i = 0; i < rawApdu.length; i++) {
 			if (rawApdu[i] == ':') {
 				int endOfPlainApdu = i + 3 * size + 1;
-				return ByteArrays.trim(rawApdu, endOfPlainApdu, rawApdu.length
+				return ByteArraysUtils.trim(rawApdu, endOfPlainApdu, rawApdu.length
 						- endOfPlainApdu);
 			}
 		}
@@ -72,7 +72,7 @@ public class LibNfcApduExtractor implements ApduExtractor {
 	private byte[] getPlainApdu(byte[] rawApdu, int size) {
 		for (int i = 0; i < rawApdu.length; i++) {
 			if (rawApdu[i] == ':') {
-				return ByteArrays.trim(rawApdu, i + 2, size * 3 - 1);
+				return ByteArraysUtils.trim(rawApdu, i + 2, size * 3 - 1);
 			}
 		}
 		return rawApdu;
@@ -81,7 +81,7 @@ public class LibNfcApduExtractor implements ApduExtractor {
 	private byte[] getApduPreamble(byte[] rawApdu, int size) {
 		for (int i = 0; i < rawApdu.length; i++) {
 			if (rawApdu[i] == ':') {
-				return ByteArrays.trim(rawApdu, 0, i + 2);
+				return ByteArraysUtils.trim(rawApdu, 0, i + 2);
 			}
 		}
 		return rawApdu;

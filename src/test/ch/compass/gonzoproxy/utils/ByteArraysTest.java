@@ -15,7 +15,7 @@ public class ByteArraysTest {
 		
 		int fromIndex = 0;
 		int length = 2;
-		assertArrayEquals(expectedArray, ByteArrays.trim(testArray, fromIndex, length));
+		assertArrayEquals(expectedArray, ByteArraysUtils.trim(testArray, fromIndex, length));
 		
 	}
 	
@@ -25,7 +25,7 @@ public class ByteArraysTest {
 		
 		int fromIndex = 0;
 		int length = testArray.length + 1;
-		assertArrayEquals(testArray, ByteArrays.trim(testArray, fromIndex, length));
+		assertArrayEquals(testArray, ByteArraysUtils.trim(testArray, fromIndex, length));
 		
 	}
 	
@@ -35,7 +35,7 @@ public class ByteArraysTest {
 		
 		int fromIndex = 0;
 		int length = -1;
-		assertArrayEquals(testArray, ByteArrays.trim(testArray, fromIndex, length));
+		assertArrayEquals(testArray, ByteArraysUtils.trim(testArray, fromIndex, length));
 	}
 	
 	@Test
@@ -48,7 +48,7 @@ public class ByteArraysTest {
 		char delimiter = '#';
 		
 		byte[] testArray = new byte[]{'#', 'A', '#', 'B', '#', 'C'};
-		ArrayList<Integer> indices = ByteArrays.getDelimiterIndices(testArray, delimiter);
+		ArrayList<Integer> indices = ByteArraysUtils.getDelimiterIndices(testArray, delimiter);
 		assertEquals(expectedIndices.get(0), indices.get(0));
 	}
 	
@@ -57,7 +57,7 @@ public class ByteArraysTest {
 		int initSize = 10;
 		int enlargedSize = 20;
 		byte[] testArray = new byte[initSize];
-		testArray = ByteArrays.enlarge(testArray, enlargedSize);
+		testArray = ByteArraysUtils.enlarge(testArray, enlargedSize);
 		assertEquals(enlargedSize, testArray.length);
 	}
 }

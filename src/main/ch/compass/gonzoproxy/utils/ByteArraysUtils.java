@@ -2,7 +2,7 @@ package ch.compass.gonzoproxy.utils;
 
 import java.util.ArrayList;
 
-public class ByteArrays {
+public class ByteArraysUtils {
 
 	public static byte[] trim(byte[] array, int fromIndex, int length) {
 		if (validInput(array, fromIndex, length)) {
