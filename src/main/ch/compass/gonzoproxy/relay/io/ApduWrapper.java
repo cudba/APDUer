@@ -1,9 +1,9 @@
 package ch.compass.gonzoproxy.relay.io;
 
-import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.Package;
 
 public interface ApduWrapper {
 
-	public byte[] wrap(Apdu apdu);
+	public byte[] wrap(Package apdu);
 
 }

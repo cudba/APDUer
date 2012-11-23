@@ -2,7 +2,7 @@ package ch.compass.gonzoproxy.mvc.model;
 
 import javax.swing.table.AbstractTableModel;
 
-import ch.compass.gonzoproxy.mvc.listener.ApduListener;
+import ch.compass.gonzoproxy.mvc.listener.PackageListener;
 
 public class DetailTableModel extends AbstractTableModel {
 
@@ -10,27 +10,27 @@ public class DetailTableModel extends AbstractTableModel {
 	 * 
 	 */
 	private static final long serialVersionUID = -1437358812481945385L;
-	private Apdu apdu;
-	private ApduData data;
+	private Package apdu;
+	private PackageModel data;
 	private String[] columnNames = { "Field", "Value", "Description" };
 	  
-	public DetailTableModel(Apdu apdu, ApduData data) {
+	public DetailTableModel(Package apdu, PackageModel data) {
 		this.apdu = apdu;
 		this.data = data;
-		this.data.addApduListener(createApduListener());
+		this.data.addPackageListener(createApduListener());
 	}
 
-	private ApduListener createApduListener() {
-		return new ApduListener() {
+	private PackageListener createApduListener() {
+		return new PackageListener() {
 			
 			@Override
-			public void apduReceived(Apdu apdu) {
+			public void packageReceived(Package apdu) {
 //				DetailTableModel.this.setApdu(apdu);
 			}
 			
 			@Override
 			public void apduCleared() {
-				DetailTableModel.this.setApdu(new Apdu(new byte[0]));
+				DetailTableModel.this.setApdu(new Package(new byte[0]));
 			}
 		};
 	}
@@ -65,7 +65,7 @@ public class DetailTableModel extends AbstractTableModel {
 
 	}
 
-	public void setApdu(Apdu editApdu) {
+	public void setApdu(Package editApdu) {
 		this.apdu = editApdu;
 		fireTableDataChanged();
 	}

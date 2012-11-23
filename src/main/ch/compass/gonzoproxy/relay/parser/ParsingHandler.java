@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import org.yaml.snakeyaml.Yaml;
 
-import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.Package;
 import ch.compass.gonzoproxy.mvc.model.SessionFormat;
 import ch.compass.gonzoproxy.utils.ParsingHelper;
 
@@ -27,7 +27,7 @@ public class ParsingHandler {
 		prepareParsingUnits(sessionFormat);
 	}
 
-	public void tryParse(Apdu apdu) {
+	public void tryParse(Package apdu) {
 		if (!parseByTemplate(apdu))
 			parseByDefault(apdu);
 	}
@@ -59,11 +59,11 @@ public class ParsingHandler {
 		return templateFiles;
 	}
 
-	private void parseByDefault(Apdu apdu) {
+	private void parseByDefault(Package apdu) {
 		// TODO: implement
 	}
 
-	private boolean parseByTemplate(Apdu processingApdu) {
+	private boolean parseByTemplate(Package processingApdu) {
 
 		for (ApduTemplate template : templates) {
 			if (templateValidator.accept(template, processingApdu)) {

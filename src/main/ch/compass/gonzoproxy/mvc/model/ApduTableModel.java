@@ -2,7 +2,7 @@ package ch.compass.gonzoproxy.mvc.model;
 
 import javax.swing.table.AbstractTableModel;
 
-import ch.compass.gonzoproxy.mvc.listener.ApduListener;
+import ch.compass.gonzoproxy.mvc.listener.PackageListener;
 
 public class ApduTableModel extends AbstractTableModel {
 
@@ -10,20 +10,20 @@ public class ApduTableModel extends AbstractTableModel {
 	 * 
 	 */
 	private static final long serialVersionUID = -1437358812481945385L;
-	private ApduData data;
+	private PackageModel data;
 	String[] columnNames;;
 
-	public ApduTableModel(ApduData data, String[] columnNames) {
+	public ApduTableModel(PackageModel data, String[] columnNames) {
 		this.data = data;
 		this.columnNames = columnNames;
-		this.data.addApduListener(createApduListener());
+		this.data.addPackageListener(createApduListener());
 	}
 
-	private ApduListener createApduListener() {
-		return new ApduListener() {
+	private PackageListener createApduListener() {
+		return new PackageListener() {
 
 			@Override
-			public void apduReceived(Apdu apdu) {
+			public void packageReceived(Package apdu) {
 				updateTable();
 			}
 
@@ -50,12 +50,12 @@ public class ApduTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return data.getApduList().size();
+		return data.getPackageList().size();
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Apdu apdu = data.getApduList().get(rowIndex);
+		Package apdu = data.getPackageList().get(rowIndex);
 
 		switch (columnIndex) {
 		case 0:
@@ -63,7 +63,7 @@ public class ApduTableModel extends AbstractTableModel {
 		case 1:
 			return apdu.getType().getId();
 		case 2:
-			return new String(apdu.getPlainApdu());
+			return new String(apdu.getPlainPackage());
 		case 3:
 			return apdu.toAscii();
 		case 4:

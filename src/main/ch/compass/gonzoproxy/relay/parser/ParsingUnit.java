@@ -2,16 +2,16 @@ package ch.compass.gonzoproxy.relay.parser;
 
 import java.util.List;
 
-import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.Package;
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.utils.ParsingHelper;
 
 public class ParsingUnit {
 
-	public boolean parseBy(ApduTemplate template, Apdu processingApdu) {
+	public boolean parseBy(ApduTemplate template, Package processingApdu) {
 		processingApdu.setDescription(template.getApduDescription());
 		List<Field> templateFields = template.getFields();
-		byte[] plainApdu = processingApdu.getPlainApdu();
+		byte[] plainApdu = processingApdu.getPlainPackage();
 
 		int contentStartIndex = 0;
 		int contentLength = ParsingHelper.DEFAULT_FIELDLENGTH;

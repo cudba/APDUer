@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.rmi.UnexpectedException;
 import java.util.Queue;
 
-import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.Package;
 import ch.compass.gonzoproxy.mvc.model.ForwardingType;
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.relay.io.ApduStreamHandler;
@@ -82,9 +82,9 @@ public class Forwarder implements Runnable {
 				OutputStream outStream = new BufferedOutputStream(
 						forwardingSocket.getOutputStream())) {
 			while (sessionIsAlive) {
-				Queue<Apdu> receivedApdus = streamHandler.readApdu(inputStream);
+				Queue<Package> receivedApdus = streamHandler.readApdu(inputStream);
 				while (!receivedApdus.isEmpty()) {
-					Apdu apdu = receivedApdus.poll();
+					Package apdu = receivedApdus.poll();
 					apdu.setType(type);
 					parsingHandler.tryParse(apdu);
 					sessionModel.addSessionData(apdu);

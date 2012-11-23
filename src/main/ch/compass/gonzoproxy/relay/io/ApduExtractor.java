@@ -2,7 +2,7 @@ package ch.compass.gonzoproxy.relay.io;
 
 import java.util.Queue;
 
-import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.Package;
 
 public interface ApduExtractor {
 
@@ -17,7 +17,7 @@ public interface ApduExtractor {
 	 * 					
 	 */
 	
-	public byte[] extractApdusToQueue(byte[] buffer, Queue<Apdu> apduQueue,
+	public byte[] extractApdusToQueue(byte[] buffer, Queue<Package> apduQueue,
 			int readBytes);
 
 }

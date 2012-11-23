@@ -20,7 +20,7 @@ import javax.swing.table.TableColumn;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
 import ch.compass.gonzoproxy.mvc.listener.SessionListener;
-import ch.compass.gonzoproxy.mvc.model.ApduData;
+import ch.compass.gonzoproxy.mvc.model.PackageModel;
 import ch.compass.gonzoproxy.mvc.model.ApduTableModel;
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import javax.swing.JToggleButton;
@@ -36,7 +36,7 @@ public class ApduListPanel extends JPanel {
 	private JToggleButton btnTrapCmd;
 	private JToggleButton btnTrapRes;
 
-	private ApduData apduData;
+	private PackageModel apduData;
 	private CurrentSessionModel currentSession;
 	private RelayController controller;
 	private JPanel panel_table;

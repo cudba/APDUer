@@ -2,10 +2,10 @@ package ch.compass.gonzoproxy.mvc.model;
 
 import java.util.ArrayList;
 
-public class Apdu {
+public class Package {
 
-	private byte[] plainApdu;
-	private byte[] modifiedApdu;
+	private byte[] plainPackage;
+	private byte[] modifiedPackage;
 	private byte[] preamble;
 	private byte[] trailer;
 	private String description;
@@ -13,26 +13,26 @@ public class Apdu {
 	private int size;
 	private ArrayList<Field> fields = new ArrayList<Field>();
 
-	private byte[] originalApdu;
+	private byte[] streamInput;
 
-	public Apdu(byte[] originalApdu) {
-		this.originalApdu = originalApdu;
+	public Package(byte[] streamInput) {
+		this.streamInput = streamInput;
 	}
 
-	public byte[] getPlainApdu() {
-		return plainApdu;
+	public byte[] getPlainPackage() {
+		return plainPackage;
 	}
 
-	public byte[] getModifiedApdu() {
-		return modifiedApdu;
+	public byte[] getModifiedPackage() {
+		return modifiedPackage;
 	}
 
-	public void setPlainApdu(byte[] plainApdu) {
-		this.plainApdu = plainApdu;
+	public void setPlainPackage(byte[] plainApdu) {
+		this.plainPackage = plainApdu;
 	}
 
-	public void setModifiedApdu(byte[] modifiedApdu) {
-		this.modifiedApdu = modifiedApdu;
+	public void setModifiedPackage(byte[] modifiedApdu) {
+		this.modifiedPackage = modifiedApdu;
 	}
 
 	public String getDescription() {
@@ -61,12 +61,12 @@ public class Apdu {
 
 	@Override
 	public String toString() {
-		return new String(plainApdu);
+		return new String(plainPackage);
 	}
 
 	public String toAscii() {
 		StringBuffer sb = new StringBuffer("");
-		String ascii = new String(plainApdu);
+		String ascii = new String(plainPackage);
 		String[] strArr = ascii.split(" ");
 
 		for (String a : strArr) {
@@ -94,8 +94,8 @@ public class Apdu {
 		return size;
 	}
 
-	public byte[] getOriginalApdu() {
-		return originalApdu;
+	public byte[] getStreamInput() {
+		return streamInput;
 	}
 
 	public void setTrailer(byte[] trailer) {

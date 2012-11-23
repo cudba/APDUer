@@ -3,7 +3,7 @@ package ch.compass.gonzoproxy.relay.io;
 import java.util.ArrayList;
 import java.util.Queue;
 
-import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.Package;
 import ch.compass.gonzoproxy.utils.ByteArraysUtils;
 
 public class LibNfcApduExtractor implements ApduExtractor {
@@ -13,7 +13,7 @@ public class LibNfcApduExtractor implements ApduExtractor {
 	private static final char DELIMITER = '#';
 
 
-	public byte[] extractApdusToQueue(byte[] buffer, Queue<Apdu> apduQueue,
+	public byte[] extractApdusToQueue(byte[] buffer, Queue<Package> apduQueue,
 			int readBytes) {
 		ArrayList<Integer> indices = ByteArraysUtils.getDelimiterIndices(buffer,
 				DELIMITER);
@@ -26,14 +26,14 @@ public class LibNfcApduExtractor implements ApduExtractor {
 			endIndex = indices.get(i + 1);
 			int size = endIndex - startIndex;
 			byte[] rawApdu = ByteArraysUtils.trim(buffer, startIndex, size);
-			Apdu apdu = splitApdu(rawApdu);
+			Package apdu = splitApdu(rawApdu);
 			apduQueue.add(apdu);
 		}
 
 		byte[] singleApdu = ByteArraysUtils.trim(buffer, endIndex, readBytes - endIndex);
 
 		if (apduIsComplete(singleApdu)) {
-			Apdu apdu = splitApdu(singleApdu);
+			Package apdu = splitApdu(singleApdu);
 			apduQueue.add(apdu);
 			return new byte[0];
 		} else {
@@ -45,14 +45,14 @@ public class LibNfcApduExtractor implements ApduExtractor {
 		return singleApdu[singleApdu.length - 1] == EOC;
 	}
 
-	private Apdu splitApdu(byte[] rawApdu) {
+	private Package splitApdu(byte[] rawApdu) {
 		int size = getApduSize(rawApdu);
 		byte[] preamble = getApduPreamble(rawApdu, size);
 		byte[] plainApdu = getPlainApdu(rawApdu, size);
 		byte[] trailer = getApduTrailer(rawApdu, size);
-		Apdu newApdu = new Apdu(rawApdu);
+		Package newApdu = new Package(rawApdu);
 		newApdu.setPreamble(preamble);
-		newApdu.setPlainApdu(plainApdu);
+		newApdu.setPlainPackage(plainApdu);
 		newApdu.setTrailer(trailer);
 		newApdu.setSize(size);
 		return newApdu;

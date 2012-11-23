@@ -1,6 +1,6 @@
 package ch.compass.gonzoproxy.mvc.controller;
 
-import ch.compass.gonzoproxy.mvc.model.ApduData;
+import ch.compass.gonzoproxy.mvc.model.PackageModel;
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.mvc.model.SessionFormat;
 import ch.compass.gonzoproxy.relay.session.RelaySession;
@@ -10,7 +10,7 @@ import ch.compass.gonzoproxy.relay.session.RelaySession;
 public class RelayController {
 	
 	private RelaySession relaySession;
-	private ApduData apduData;
+	private PackageModel apduData;
 	private CurrentSessionModel sessionModel;
 	
 	public RelayController(){
@@ -21,7 +21,7 @@ public class RelayController {
 		new Thread(relaySession).start();
 	}
 
-	public void addModel(ApduData apduData, CurrentSessionModel sessionModel) {
+	public void addModel(PackageModel apduData, CurrentSessionModel sessionModel) {
 		this.apduData = apduData;
 		this.sessionModel = sessionModel;
 	}
@@ -52,7 +52,7 @@ public class RelayController {
 		relaySession.stopForwarder();
 	}
 
-	public ApduData getApduData() {
+	public PackageModel getApduData() {
 		return apduData;
 	}
 	

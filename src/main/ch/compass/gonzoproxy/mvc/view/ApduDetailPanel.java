@@ -14,7 +14,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.TableColumn;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
-import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.Package;
 import ch.compass.gonzoproxy.mvc.model.DetailTableModel;
 
 public class ApduDetailPanel extends JPanel {
@@ -24,14 +24,14 @@ public class ApduDetailPanel extends JPanel {
 
 	private JTextPane textPane_ascii;
 	private JTextPane textPane_hex;
-	private Apdu editApdu;
+	private Package editApdu;
 //	private RelayController controller;
 
 	private DetailTableModel detailTableModel;
 
 	public ApduDetailPanel(RelayController controller) {
 //		this.controller = controller;
-		this.editApdu = new Apdu(new byte[0]);
+		this.editApdu = new Package(new byte[0]);
 		this.detailTableModel = new DetailTableModel(editApdu, controller.getApduData());
 		initGui();
 
@@ -119,7 +119,7 @@ public class ApduDetailPanel extends JPanel {
 		textPane_hex.setText("");
 	}
 
-	public void setApdu(Apdu editApdu) {
+	public void setApdu(Package editApdu) {
 		this.editApdu = editApdu;
 		this.detailTableModel.setApdu(editApdu);
 		updateFields();
@@ -127,7 +127,7 @@ public class ApduDetailPanel extends JPanel {
 
 	private void updateFields() {
 		textPane_ascii.setText(editApdu.toAscii());
-		textPane_hex.setText(new String(editApdu.getPlainApdu()));
+		textPane_hex.setText(new String(editApdu.getPlainPackage()));
 	}
 	
 	private void configureTable(JTable table) {

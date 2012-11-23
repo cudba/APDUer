@@ -2,15 +2,15 @@ package ch.compass.gonzoproxy.relay.parser;
 
 import java.util.ArrayList;
 
-import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.Package;
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.utils.ParsingHelper;
 
 public class TemplateValidator {
 
 
-	public boolean accept(ApduTemplate template, Apdu processingApdu) {
-		byte[] plainApdu = processingApdu.getPlainApdu();
+	public boolean accept(ApduTemplate template, Package processingApdu) {
+		byte[] plainApdu = processingApdu.getPlainPackage();
 		ArrayList<Field> templateFields = template.getFields();
 
 		int contentStartIndex = 0;

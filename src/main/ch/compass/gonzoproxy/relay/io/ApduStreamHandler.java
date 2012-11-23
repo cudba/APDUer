@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.Package;
 import ch.compass.gonzoproxy.utils.ByteArraysUtils;
 
 public class ApduStreamHandler {
@@ -21,9 +21,9 @@ public class ApduStreamHandler {
 
 	}
 
-	public Queue<Apdu> readApdu(InputStream inputStream) throws IOException {
+	public Queue<Package> readApdu(InputStream inputStream) throws IOException {
 		byte[] buffer = new byte[BUFFER_SIZE];
-		Queue<Apdu> apduQueue = new LinkedList<Apdu>();
+		Queue<Package> apduQueue = new LinkedList<Package>();
 
 		int length = 0;
 		int readBytes = 0;
@@ -52,7 +52,7 @@ public class ApduStreamHandler {
 		return apduQueue;
 	}
 
-	public void sendApdu(OutputStream outputStream, Apdu apdu)
+	public void sendApdu(OutputStream outputStream, Package apdu)
 			throws IOException {
 
 		byte[] buffer = wrapper.wrap(apdu);

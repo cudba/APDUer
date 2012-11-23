@@ -18,8 +18,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
-import ch.compass.gonzoproxy.mvc.model.Apdu;
-import ch.compass.gonzoproxy.mvc.model.ApduData;
+import ch.compass.gonzoproxy.mvc.model.Package;
+import ch.compass.gonzoproxy.mvc.model.PackageModel;
 
 public class GonzoProxyFrame extends JFrame {
 
@@ -42,8 +42,8 @@ public class GonzoProxyFrame extends JFrame {
 	private JSplitPane splitPane;
 	private ApduListPanel panelList;
 	private ApduDetailPanel panelDetail;
-	private Apdu editApdu;
-	private ApduData data;
+	private Package editApdu;
+	private PackageModel data;
 
 	public GonzoProxyFrame(RelayController controller) {
 		data = controller.getApduData();
@@ -127,8 +127,8 @@ public class GonzoProxyFrame extends JFrame {
 				if (index == -1) {
 					GonzoProxyFrame.this.panelDetail.clearAllFields();
 				} else {
-					GonzoProxyFrame.this.editApdu = ((Apdu) GonzoProxyFrame.this.data
-							.getApduList().get(index));
+					GonzoProxyFrame.this.editApdu = ((Package) GonzoProxyFrame.this.data
+							.getPackageList().get(index));
 					GonzoProxyFrame.this.panelDetail
 							.setApdu(GonzoProxyFrame.this.editApdu);
 				}

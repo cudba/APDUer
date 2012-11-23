@@ -6,7 +6,7 @@ import java.util.Queue;
 
 import org.junit.Test;
 
-import ch.compass.gonzoproxy.mvc.model.Apdu;
+import ch.compass.gonzoproxy.mvc.model.Package;
 import static org.junit.Assert.*;
 
 public class ApduStreamHandlerTest {
@@ -23,10 +23,10 @@ public class ApduStreamHandlerTest {
 		
 		InputStream in = new ByteArrayInputStream(inputStream);
 		
-		Queue<Apdu> queue = streamHandler.readApdu(in);
-		Apdu apdu = queue.poll();
-		assertArrayEquals(originalApduFake, apdu.getOriginalApdu());
-		assertArrayEquals(plainApduFake, apdu.getPlainApdu());
+		Queue<Package> queue = streamHandler.readApdu(in);
+		Package apdu = queue.poll();
+		assertArrayEquals(originalApduFake, apdu.getStreamInput());
+		assertArrayEquals(plainApduFake, apdu.getPlainPackage());
 		assertArrayEquals(preamleFake, apdu.getPreamble());
 		assertArrayEquals(trailerFake, apdu.getTrailer());
 		
