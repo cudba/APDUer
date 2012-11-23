@@ -1,4 +1,4 @@
-apduDescription: Read Command
+packetDescription: Read Command
 fields:
 - name: CLA
   value: 00

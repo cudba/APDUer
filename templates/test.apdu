@@ -1,9 +1,0 @@
-fields:
-- name: Fred
-  value: creator
-  description: desc
-- name: John
-  value: committer
-  description: desc2
-apduDescription: apdudesc
-

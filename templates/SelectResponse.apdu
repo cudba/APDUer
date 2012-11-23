@@ -1,4 +1,4 @@
-apduDescription: Select Response
+packetDescription: Select Response
 fields:
 - name: FCI
   value: 6f

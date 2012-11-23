@@ -1,4 +1,4 @@
-apduDescription: Generate Application Cryptogram
+packetDescription: Generate Application Cryptogram
 fields:
 - name: CLA
   value: 80

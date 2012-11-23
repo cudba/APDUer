@@ -2,15 +2,15 @@ package ch.compass.gonzoproxy.relay.parser;
 
 import java.util.ArrayList;
 
-import ch.compass.gonzoproxy.mvc.model.Package;
+import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.utils.ParsingHelper;
 
 public class TemplateValidator {
 
 
-	public boolean accept(ApduTemplate template, Package processingApdu) {
-		byte[] plainApdu = processingApdu.getPlainPackage();
+	public boolean accept(PacketTemplate template, Packet processingPacket) {
+		byte[] packet = processingPacket.getPlainPacket();
 		ArrayList<Field> templateFields = template.getFields();
 
 		int contentStartIndex = 0;
@@ -20,13 +20,13 @@ public class TemplateValidator {
 		int offset = 0;
 
 		for (int i = 0; i < templateFields.size(); i++) {
-			if (!apduContainsMoreFields(plainApdu, fieldLength, offset)) {
+			if (!packetContainsMoreFields(packet, fieldLength, offset)) {
 				return false;
 			}
 
 			Field processingField = templateFields.get(i);
 			if (isIdentifierField(processingField)) {
-				if (!fieldIsVerified(plainApdu, fieldLength, offset,
+				if (!fieldIsVerified(packet, fieldLength, offset,
 						processingField)) {
 					return false;
 				}
@@ -37,7 +37,7 @@ public class TemplateValidator {
 			if (ParsingHelper.isContentLengthField(processingField)) {
 				int encodedFieldLength = ParsingHelper.getEncodedFieldLength(
 						fieldLength, false);
-				byte[] length = ParsingHelper.extractFieldFromBuffer(plainApdu,
+				byte[] length = ParsingHelper.extractFieldFromBuffer(packet,
 						encodedFieldLength, currentOffset);
 				if (ParsingHelper.isContentIdentifierField(templateFields
 						.get(i + 1))) {
@@ -53,7 +53,7 @@ public class TemplateValidator {
 				if (templateFields.size() > i
 						+ ParsingHelper.NEXT_IDENTIFIER_OFFSET) {
 					nextIdentifier = ParsingHelper.findNextContentIdentifier(
-							plainApdu,
+							packet,
 							currentOffset,
 							templateFields.get(i
 									+ ParsingHelper.NEXT_IDENTIFIER_OFFSET));
@@ -70,28 +70,28 @@ public class TemplateValidator {
 				fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
 			}
 		}
-		return offset - ParsingHelper.whitespaceOffset == plainApdu.length;
+		return offset - ParsingHelper.whitespaceOffset == packet.length;
 	}
 
-	private boolean apduContainsMoreFields(byte[] plainApdu, int fieldLength,
+	private boolean packetContainsMoreFields(byte[] packet, int fieldLength,
 			int offset) {
-		return (offset + fieldLength * ParsingHelper.encodingOffset) <= plainApdu.length;
+		return (offset + fieldLength * ParsingHelper.encodingOffset) <= packet.length;
 	}
 
 	private boolean isIdentifierField(Field processingField) {
 		return processingField.getValue() != null;
 	}
 
-	private boolean fieldIsVerified(byte[] plainApdu, int fieldLength,
+	private boolean fieldIsVerified(byte[] packet, int fieldLength,
 			int offset, Field processingField) {
 		byte[] idByte;
 		int encodedFieldLength = ParsingHelper.getEncodedFieldLength(
 				fieldLength, false);
 		if (fieldLength > ParsingHelper.DEFAULT_FIELDLENGTH) {
-			idByte = ParsingHelper.extractFieldFromBuffer(plainApdu,
+			idByte = ParsingHelper.extractFieldFromBuffer(packet,
 					encodedFieldLength, offset);
 		} else {
-			idByte = ParsingHelper.extractFieldFromBuffer(plainApdu,
+			idByte = ParsingHelper.extractFieldFromBuffer(packet,
 					encodedFieldLength, offset);
 		}
 		if (!valueMatches(idByte, processingField)) {
@@ -101,9 +101,9 @@ public class TemplateValidator {
 	}
 
 	private boolean valueMatches(byte[] idByte, Field field) {
-		String apduValue = new String(idByte);
+		String packetValue = new String(idByte);
 		String templateValue = field.getValue();
-		return apduValue.equals(templateValue);
+		return packetValue.equals(templateValue);
 	}
 
 	protected int hexToInt(byte[] hexValue) {

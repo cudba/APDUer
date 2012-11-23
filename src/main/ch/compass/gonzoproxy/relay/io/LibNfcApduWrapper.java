@@ -2,7 +2,7 @@ package ch.compass.gonzoproxy.relay.io;
 
 import java.util.Arrays;
 
-import ch.compass.gonzoproxy.mvc.model.Package;
+import ch.compass.gonzoproxy.mvc.model.Packet;
 
 public class LibNfcApduWrapper implements ApduWrapper{
 
@@ -10,9 +10,9 @@ public class LibNfcApduWrapper implements ApduWrapper{
 	private byte[] plainApdu;
 	private byte[] preamble;
 
-	public byte[] wrap(Package apdu) {
+	public byte[] wrap(Packet apdu) {
 		this.trailer = apdu.getTrailer();
-		this.plainApdu = apdu.getPlainPackage();
+		this.plainApdu = apdu.getPlainPacket();
 		this.preamble = computePreamble(apdu);
 
 		int newSize = preamble.length + plainApdu.length + trailer.length;
@@ -26,7 +26,7 @@ public class LibNfcApduWrapper implements ApduWrapper{
 		return wrappedApdu;
 	}
 
-	private byte[] computePreamble(Package apdu) {
+	private byte[] computePreamble(Packet apdu) {
 		byte[] newPreamble = apdu.getPreamble();
 		int lastSizeIndex = newPreamble.length - 1 - 2;
 

@@ -4,18 +4,18 @@ import java.util.ArrayList;
 
 import ch.compass.gonzoproxy.mvc.model.Field;
 
-public class ApduTemplate {
+public class PacketTemplate {
 
-	private String apduDescription = "";
+	private String packetDescription = "";
 	private ArrayList<Field> fields = new ArrayList<Field>();
 	
 	
-	public String getApduDescription() {
-		return apduDescription;
+	public String getPacketDescription() {
+		return packetDescription;
 	}
 	
-	public void setApduDescription(String apduDescription) {
-		this.apduDescription = apduDescription;
+	public void setPacketDescription(String packetDescription) {
+		this.packetDescription = packetDescription;
 	}
 
 	public ArrayList<Field> getFields() {

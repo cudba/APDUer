@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import ch.compass.gonzoproxy.mvc.model.Package;
+import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.mvc.model.Field;
 
 public class TemplateValidatorTest {
@@ -17,10 +17,10 @@ public class TemplateValidatorTest {
 		
 		String processingApduFake = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
-		Package apdu = new Package(libnfcInput.getBytes());
-		apdu.setPlainPackage(processingApduFake.getBytes());
+		Packet apdu = new Packet(libnfcInput.getBytes());
+		apdu.setPlainPacket(processingApduFake.getBytes());
 		
-		ApduTemplate templateFake = new ApduTemplate();
+		PacketTemplate templateFake = new PacketTemplate();
 		templateFake.getFields().add(new Field("testFieldName", "00", "testDescription"));
 		
 		assertTrue(templateValidator.accept(templateFake, apdu));
@@ -33,10 +33,10 @@ public class TemplateValidatorTest {
 		
 		String processingApduFake = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
-		Package apdu = new Package(libnfcInput.getBytes());
-		apdu.setPlainPackage(processingApduFake.getBytes());
+		Packet apdu = new Packet(libnfcInput.getBytes());
+		apdu.setPlainPacket(processingApduFake.getBytes());
 		
-		ApduTemplate templateFake = new ApduTemplate();
+		PacketTemplate templateFake = new PacketTemplate();
 		templateFake.getFields().add(new Field("idField2", "00", "testDescription"));
 		templateFake.getFields().add(new Field("idField 2", "a4", "idfield 2"));
 		templateFake.getFields().add(new Field("Lc", "04", "Content Length"));

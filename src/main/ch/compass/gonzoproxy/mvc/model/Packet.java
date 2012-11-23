@@ -2,10 +2,10 @@ package ch.compass.gonzoproxy.mvc.model;
 
 import java.util.ArrayList;
 
-public class Package {
+public class Packet {
 
-	private byte[] plainPackage;
-	private byte[] modifiedPackage;
+	private byte[] plainPacket;
+	private byte[] modifiedPacket;
 	private byte[] preamble;
 	private byte[] trailer;
 	private String description;
@@ -15,24 +15,24 @@ public class Package {
 
 	private byte[] streamInput;
 
-	public Package(byte[] streamInput) {
+	public Packet(byte[] streamInput) {
 		this.streamInput = streamInput;
 	}
 
-	public byte[] getPlainPackage() {
-		return plainPackage;
+	public byte[] getPlainPacket() {
+		return plainPacket;
 	}
 
-	public byte[] getModifiedPackage() {
-		return modifiedPackage;
+	public byte[] getModifiedPacket() {
+		return modifiedPacket;
 	}
 
-	public void setPlainPackage(byte[] plainApdu) {
-		this.plainPackage = plainApdu;
+	public void setPlainPacket(byte[] packet) {
+		this.plainPacket = packet;
 	}
 
-	public void setModifiedPackage(byte[] modifiedApdu) {
-		this.modifiedPackage = modifiedApdu;
+	public void setModifiedPacket(byte[] modifiedPacket) {
+		this.modifiedPacket = modifiedPacket;
 	}
 
 	public String getDescription() {
@@ -61,12 +61,12 @@ public class Package {
 
 	@Override
 	public String toString() {
-		return new String(plainPackage);
+		return new String(plainPacket);
 	}
 
 	public String toAscii() {
 		StringBuffer sb = new StringBuffer("");
-		String ascii = new String(plainPackage);
+		String ascii = new String(plainPacket);
 		String[] strArr = ascii.split(" ");
 
 		for (String a : strArr) {

@@ -1,4 +1,4 @@
-apduDescription: Get Processing Options Response
+packetDescription: Get Processing Options Response
 fields:
 - name: BER-TLV 
   value: 77

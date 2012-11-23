@@ -1,4 +1,4 @@
-apduDescription: Select Response - File not found
+packetDescription: Select Response - File not found
 fields:
 - name: S1
   value: 6a

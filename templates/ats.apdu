@@ -1,4 +1,4 @@
-apduDescription: Answer To Select
+packetDescription: Answer To Select
 fields:
 - name: T1
   value: 78

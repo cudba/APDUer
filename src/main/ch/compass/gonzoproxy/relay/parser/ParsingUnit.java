@@ -2,16 +2,16 @@ package ch.compass.gonzoproxy.relay.parser;
 
 import java.util.List;
 
-import ch.compass.gonzoproxy.mvc.model.Package;
+import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.utils.ParsingHelper;
 
 public class ParsingUnit {
 
-	public boolean parseBy(ApduTemplate template, Package processingApdu) {
-		processingApdu.setDescription(template.getApduDescription());
+	public boolean parseBy(PacketTemplate template, Packet processingPacket) {
+		processingPacket.setDescription(template.getPacketDescription());
 		List<Field> templateFields = template.getFields();
-		byte[] plainApdu = processingApdu.getPlainPackage();
+		byte[] packet = processingPacket.getPlainPacket();
 
 		int contentStartIndex = 0;
 		int contentLength = ParsingHelper.DEFAULT_FIELDLENGTH;
@@ -21,8 +21,8 @@ public class ParsingUnit {
 
 		for (int i = 0; i < templateFields.size(); i++) {
 			Field processingField = getCopyOf(templateFields.get(i));
-			parseField(plainApdu, fieldLength, offset, processingField);
-			processingApdu.addField(processingField);
+			parseField(packet, fieldLength, offset, processingField);
+			processingPacket.addField(processingField);
 
 			int currentFieldOffset = offset;
 			offset += ParsingHelper.getEncodedFieldLength(fieldLength, true);
@@ -44,7 +44,7 @@ public class ParsingUnit {
 				if (templateFields.size() > i
 						+ ParsingHelper.NEXT_IDENTIFIER_OFFSET) {
 					nextIdentifier = ParsingHelper.findNextContentIdentifier(
-							plainApdu,
+							packet,
 							currentFieldOffset,
 							templateFields.get(i
 									+ ParsingHelper.NEXT_IDENTIFIER_OFFSET));
@@ -65,24 +65,24 @@ public class ParsingUnit {
 		return true;
 	}
 
-	private void parseField(byte[] plainApdu, int fieldLength, int offset,
+	private void parseField(byte[] payload, int fieldLength, int offset,
 			Field processingField) {
 		if (ParsingHelper.hasCustomLenght(fieldLength)) {
-			parseValueToField(plainApdu, offset,
+			parseValueToField(payload, offset,
 					ParsingHelper.getEncodedFieldLength(fieldLength, false),
 					processingField);
 		} else {
 			int encodedFieldLength = ParsingHelper.getEncodedFieldLength(
 					fieldLength, false);
-			parseValueToField(plainApdu, offset, encodedFieldLength,
+			parseValueToField(payload, offset, encodedFieldLength,
 					processingField);
 		}
 	}
 
-	private void parseValueToField(byte[] plainApdu, int offset,
+	private void parseValueToField(byte[] payload, int offset,
 			int fieldLength, Field field) {
-		if ((offset + fieldLength) <= plainApdu.length) {
-			byte[] value = ParsingHelper.extractFieldFromBuffer(plainApdu,
+		if ((offset + fieldLength) <= payload.length) {
+			byte[] value = ParsingHelper.extractFieldFromBuffer(payload,
 					fieldLength, offset);
 			setFieldValue(field, value);
 		}

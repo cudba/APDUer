@@ -1,4 +1,4 @@
-apduDescription: Get Processing Options
+packetDescription: Get Processing Options
 fields:
 - name: CLA
   value: 80

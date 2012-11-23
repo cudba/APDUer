@@ -1,4 +1,4 @@
-apduDescription: Case 4 Select Command
+packetDescription: Case 4 Select Command
 fields:
 - name: CLA
   value: 00

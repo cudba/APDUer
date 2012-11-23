@@ -1,7 +1,7 @@
 package ch.compass.gonzoproxy;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
-import ch.compass.gonzoproxy.mvc.model.PackageModel;
+import ch.compass.gonzoproxy.mvc.model.PacketModel;
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.mvc.view.GonzoProxyFrame;
 
@@ -11,7 +11,7 @@ public class GonzoProxy {
 		
 		//TODO inizialize models and view in controller and just start controller?
 		
-		PackageModel apduData = new PackageModel();
+		PacketModel apduData = new PacketModel();
 		CurrentSessionModel sessionModel = new CurrentSessionModel();
 		
 		RelayController controller = new RelayController();

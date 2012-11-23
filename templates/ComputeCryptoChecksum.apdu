@@ -1,4 +1,4 @@
-apduDescription: Compute Cryptographic Checksum
+packetDescription: Compute Cryptographic Checksum
 fields:
 - name: CLA
   value: 80

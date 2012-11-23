@@ -9,7 +9,7 @@ public class CurrentSessionModel {
 
 	private Preferences sessionPrefs;
 	private ArrayList<SessionListener> listeners = new ArrayList<SessionListener>();
-	private PackageModel sessionData;
+	private PacketModel sessionData;
 	private SessionFormat sessionFormat = SessionFormat.LibNFC;
 	private Boolean commandTrapped = false;
 	private Boolean responseTrapped = false;
@@ -51,12 +51,12 @@ public class CurrentSessionModel {
 		}
 	}
 
-	public void addSessionData(PackageModel apduData) {
+	public void addSessionData(PacketModel apduData) {
 		this.sessionData = apduData;
 
 	}
 
-	public PackageModel getSessionData() {
+	public PacketModel getSessionData() {
 		return sessionData;
 	}
 
@@ -92,8 +92,8 @@ public class CurrentSessionModel {
 		return sendOneResponse;
 	}
 
-	public void addSessionData(Package apdu) {
-		sessionData.addPackage(apdu);
+	public void addSessionData(Packet apdu) {
+		sessionData.addPacket(apdu);
 	}
 
 	public SessionFormat getSessionFormat() {

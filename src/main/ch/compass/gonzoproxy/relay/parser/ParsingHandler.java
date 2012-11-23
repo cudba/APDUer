@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import org.yaml.snakeyaml.Yaml;
 
-import ch.compass.gonzoproxy.mvc.model.Package;
+import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.mvc.model.SessionFormat;
 import ch.compass.gonzoproxy.utils.ParsingHelper;
 
@@ -17,7 +17,7 @@ public class ParsingHandler {
 
 	private static final String TEMPLATE_FOLDER = "templates/";
 
-	private ArrayList<ApduTemplate> templates = new ArrayList<ApduTemplate>();
+	private ArrayList<PacketTemplate> templates = new ArrayList<PacketTemplate>();
 
 	private ParsingUnit parsingUnit;
 	private TemplateValidator templateValidator;
@@ -27,9 +27,9 @@ public class ParsingHandler {
 		prepareParsingUnits(sessionFormat);
 	}
 
-	public void tryParse(Package apdu) {
-		if (!parseByTemplate(apdu))
-			parseByDefault(apdu);
+	public void tryParse(Packet processingPacket) {
+		if (!parseByTemplate(processingPacket))
+			parseByDefault(processingPacket);
 	}
 
 	private void loadTemplates() {
@@ -37,8 +37,8 @@ public class ParsingHandler {
 		for (int i = 0; i < templateFiles.length; i++) {
 			try (InputStream fileInput = new FileInputStream(templateFiles[i])) {
 				Yaml beanLoader = new Yaml();
-				ApduTemplate template = beanLoader.loadAs(fileInput,
-						ApduTemplate.class);
+				PacketTemplate template = beanLoader.loadAs(fileInput,
+						PacketTemplate.class);
 				templates.add(template);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -59,15 +59,15 @@ public class ParsingHandler {
 		return templateFiles;
 	}
 
-	private void parseByDefault(Package apdu) {
+	private void parseByDefault(Packet processingPacket) {
 		// TODO: implement
 	}
 
-	private boolean parseByTemplate(Package processingApdu) {
+	private boolean parseByTemplate(Packet processingPacket) {
 
-		for (ApduTemplate template : templates) {
-			if (templateValidator.accept(template, processingApdu)) {
-				parsingUnit.parseBy(template, processingApdu);
+		for (PacketTemplate template : templates) {
+			if (templateValidator.accept(template, processingPacket)) {
+				parsingUnit.parseBy(template, processingPacket);
 				return true;
 			}
 		}

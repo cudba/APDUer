@@ -19,7 +19,7 @@ public class YamlTemplatesTest extends TestCase {
 	public void testLoadAtsTemplate() throws FileNotFoundException {
 		InputStream input = new FileInputStream("templates/ats.apdu");
 			Yaml beanLoader = new Yaml();
-			ApduTemplate parsed = beanLoader.loadAs(input, ApduTemplate.class);
+			PacketTemplate parsed = beanLoader.loadAs(input, PacketTemplate.class);
 			
 			assertNotNull(parsed);
 			
