@@ -12,7 +12,7 @@ public class CurrentSessionModel {
 	private Preferences sessionPrefs;
 	private ArrayList<SessionListener> listeners = new ArrayList<SessionListener>();
 	private PacketModel sessionData;
-	private SessionFormat sessionFormat = SessionFormat.LibNFC;
+	private ParserSettings sessionFormat = ParserSettings.LibNFC;
 	private Boolean commandTrapped = false;
 	private Boolean responseTrapped = false;
 	private Boolean sendOneCommand;
@@ -101,11 +101,11 @@ public class CurrentSessionModel {
 		sessionData.addPacket(apdu);
 	}
 
-	public SessionFormat getSessionFormat() {
+	public ParserSettings getSessionFormat() {
 		return sessionFormat;
 	}
 
-	public void setSessionFormat(SessionFormat sessionMode) {
+	public void setSessionFormat(ParserSettings sessionMode) {
 		this.sessionFormat = sessionMode;
 	}
 	

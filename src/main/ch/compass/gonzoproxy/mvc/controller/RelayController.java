@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.mvc.model.PacketModel;
-import ch.compass.gonzoproxy.mvc.model.SessionFormat;
+import ch.compass.gonzoproxy.mvc.model.ParserSettings;
 import ch.compass.gonzoproxy.relay.session.RelaySession;
 
 
@@ -43,7 +43,7 @@ public class RelayController {
 		apduData.clear();
 		sessionModel.addSessionData(apduData);
 		sessionModel.setMode(mode);
-		sessionModel.setSessionFormat(SessionFormat.LibNFC);
+		sessionModel.setSessionFormat(ParserSettings.LibNFC);
 	}
 	
 	public void clearSession(){

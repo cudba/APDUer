@@ -7,10 +7,10 @@ import org.junit.Test;
 
 import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.mvc.model.Field;
-import ch.compass.gonzoproxy.mvc.model.SessionFormat;
+import ch.compass.gonzoproxy.mvc.model.ParserSettings;
 
 public class ParsingHandlerTest {
-	ParsingHandler parserHanlder = new ParsingHandler(SessionFormat.LibNFC);
+	ParsingHandler parserHanlder = new ParsingHandler(ParserSettings.LibNFC);
 
 	@Test
 	public void testProcessKnownLibNfcApdu() {

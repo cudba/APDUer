@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import org.yaml.snakeyaml.Yaml;
 
 import ch.compass.gonzoproxy.mvc.model.Packet;
-import ch.compass.gonzoproxy.mvc.model.SessionFormat;
+import ch.compass.gonzoproxy.mvc.model.ParserSettings;
 import ch.compass.gonzoproxy.utils.ParsingHelper;
 
 public class ParsingHandler {
@@ -22,7 +22,7 @@ public class ParsingHandler {
 	private ParsingUnit parsingUnit;
 	private TemplateValidator templateValidator;
 
-	public ParsingHandler(SessionFormat sessionFormat) {
+	public ParsingHandler(ParserSettings sessionFormat) {
 		loadTemplates();
 		prepareParsingUnits(sessionFormat);
 	}
@@ -74,7 +74,7 @@ public class ParsingHandler {
 		return false;
 	}
 
-	private void prepareParsingUnits(SessionFormat sessionFormat) {
+	private void prepareParsingUnits(ParserSettings sessionFormat) {
 		parsingUnit = new ParsingUnit();
 		templateValidator = new TemplateValidator();
 		ParsingHelper.encodingOffset = sessionFormat.getEncodingOffset();
