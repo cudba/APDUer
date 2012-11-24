@@ -38,53 +38,46 @@ public class ParsingUnit {
 							16);
 				}
 
-			} 
-				else if (ParsingHelper.isIdentifiedContent(templateFields, i, processingField)) {
-					int nextIdentifierIndex = 0;
+			} else if (ParsingHelper.isIdentifiedContent(templateFields, i,
+					processingField)) {
+				int nextContentIdentifierField = ParsingHelper
+						.findNextContentIdentifierField(i + 1, templateFields);
 
-						int nextContentIdentifierField = ParsingHelper
-								.findNextContentIdentifierField(i + 1, templateFields);
+				switch (nextContentIdentifierField) {
+				case 0:
+					fieldLength = ParsingHelper.getRemainingContentSize(
+							contentStartIndex, contentLength, offset);
+					break;
+				case 1:
+					fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
+					break;
+				default:
+					int nextIdentifierIndex = ParsingHelper.findFieldInPacket(
+							packet, currentFieldOffset,
+							templateFields.get(i + nextContentIdentifierField));
+					fieldLength = ParsingHelper.calculateSubContentLength(
+							offset, nextIdentifierIndex);
+					break;
+				}
 
-						if(nextContentIdentifierField > 0) {
-							nextIdentifierIndex = ParsingHelper.findFieldInPacket(
-									packet,
-									currentFieldOffset,
-									templateFields.get(i
-											+ ParsingHelper.NEXT_IDENTIFIER_OFFSET));
-						}
-						
-						switch (nextContentIdentifierField) {
-						case 0:
-							fieldLength = ParsingHelper.getRemainingContentSize(
-									contentStartIndex, contentLength, offset);
-							break;
-						case 1:
-							fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
-						default:
-							fieldLength = ParsingHelper.calculateSubContentLength(
-									offset, nextIdentifierIndex);
-							break;
-						}
-				
-				
-//				
-//				int nextIdentifier = 0;
-//				if (templateFields.size() > i
-//						+ ParsingHelper.NEXT_IDENTIFIER_OFFSET) {
-//					nextIdentifier = ParsingHelper.findFieldInPacket(
-//							packet,
-//							currentFieldOffset,
-//							templateFields.get(i
-//									+ ParsingHelper.NEXT_IDENTIFIER_OFFSET));
-//				}
-//
-//				if (nextIdentifier > 0) {
-//					fieldLength = ParsingHelper.calculateSubContentLength(
-//							offset, nextIdentifier);
-//				} else {
-//					fieldLength = ParsingHelper.getRemainingContentSize(
-//							contentStartIndex, contentLength, offset);
-//				}
+				//
+				// int nextIdentifier = 0;
+				// if (templateFields.size() > i
+				// + ParsingHelper.NEXT_IDENTIFIER_OFFSET) {
+				// nextIdentifier = ParsingHelper.findFieldInPacket(
+				// packet,
+				// currentFieldOffset,
+				// templateFields.get(i
+				// + ParsingHelper.NEXT_IDENTIFIER_OFFSET));
+				// }
+				//
+				// if (nextIdentifier > 0) {
+				// fieldLength = ParsingHelper.calculateSubContentLength(
+				// offset, nextIdentifier);
+				// } else {
+				// fieldLength = ParsingHelper.getRemainingContentSize(
+				// contentStartIndex, contentLength, offset);
+				// }
 
 			} else {
 				fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
@@ -107,8 +100,8 @@ public class ParsingUnit {
 		}
 	}
 
-	private void parseValueToField(byte[] payload, int offset,
-			int fieldLength, Field field) {
+	private void parseValueToField(byte[] payload, int offset, int fieldLength,
+			Field field) {
 		if ((offset + fieldLength) <= payload.length) {
 			byte[] value = ParsingHelper.extractFieldFromBuffer(payload,
 					fieldLength, offset);

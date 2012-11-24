@@ -47,32 +47,30 @@ public class TemplateValidator {
 				}
 			}
 
-			else if (ParsingHelper.isIdentifiedContent(templateFields, i, processingField)) {
-				int nextIdentifierIndex = 0;
+			else if (ParsingHelper.isIdentifiedContent(templateFields, i,
+					processingField)) {
 
-					int nextContentIdentifierField = ParsingHelper
-							.findNextContentIdentifierField(i + 1, templateFields);
+				int nextContentIdentifierField = ParsingHelper
+						.findNextContentIdentifierField(i + 1, templateFields);
 
-					if(nextContentIdentifierField > 0) {
-						nextIdentifierIndex = ParsingHelper.findFieldInPacket(
-								packet,
-								currentFieldOffset,
-								templateFields.get(i
-										+ ParsingHelper.NEXT_IDENTIFIER_OFFSET));
-					}
-					
-					switch (nextContentIdentifierField) {
-					case 0:
-						fieldLength = ParsingHelper.getRemainingContentSize(
-								contentStartIndex, contentLength, offset);
-						break;
-					case 1:
-						fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
-					default:
-						fieldLength = ParsingHelper.calculateSubContentLength(
-								offset, nextIdentifierIndex);
-						break;
-					}
+				switch (nextContentIdentifierField) {
+				case 0:
+					fieldLength = ParsingHelper.getRemainingContentSize(
+							contentStartIndex, contentLength, offset);
+					break;
+				case 1:
+					fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
+					break;
+				default:
+					int nextIdentifierIndex = ParsingHelper.findFieldInPacket(
+							packet,
+							currentFieldOffset,
+							templateFields.get(i
+									+ ParsingHelper.NEXT_IDENTIFIER_OFFSET));
+					fieldLength = ParsingHelper.calculateSubContentLength(
+							offset, nextIdentifierIndex);
+					break;
+				}
 			} else {
 				fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
 			}

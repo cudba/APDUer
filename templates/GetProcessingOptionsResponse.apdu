@@ -8,7 +8,10 @@ fields:
 - name: Ci
   value: 82
   description: Application Interchange Profile (Command Identifier)
-- name: AIP Content
+- name: Ci
+  value: 00
+- name: Ci
+  value: 07
 - name: Ci
   value: 94
   description: Application File Locator (Command Identifier)
