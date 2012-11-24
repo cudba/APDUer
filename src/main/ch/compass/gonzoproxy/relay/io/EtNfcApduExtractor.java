@@ -13,7 +13,7 @@ public class EtNfcApduExtractor implements ApduExtractor {
 	private static final char DELIMITER = '#';
 
 
-	public byte[] extractApdusToQueue(byte[] buffer, Queue<Packet> apduQueue,
+	public byte[] extractPacketsToQueue(byte[] buffer, Queue<Packet> apduQueue,
 			int readBytes) {
 		ArrayList<Integer> indices = ByteArraysUtils.getDelimiterIndices(buffer,
 				DELIMITER);

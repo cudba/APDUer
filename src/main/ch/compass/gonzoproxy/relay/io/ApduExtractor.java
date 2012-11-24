@@ -17,7 +17,7 @@ public interface ApduExtractor {
 	 * 					
 	 */
 	
-	public byte[] extractApdusToQueue(byte[] buffer, Queue<Packet> apduQueue,
+	public byte[] extractPacketsToQueue(byte[] buffer, Queue<Packet> apduQueue,
 			int readBytes);
 
 	public String getName();

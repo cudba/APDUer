@@ -123,6 +123,7 @@ public class ParsingHandlerTest {
 		assertEquals(trimmedApdu, mergedFields.toString());
 
 	}
+	
 
 //	@Test
 //	public void testTest() {

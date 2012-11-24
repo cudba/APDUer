@@ -13,7 +13,7 @@ public class LibNfcApduExtractor implements ApduExtractor {
 	private static final char DELIMITER = '#';
 
 
-	public byte[] extractApdusToQueue(byte[] buffer, Queue<Packet> apduQueue,
+	public byte[] extractPacketsToQueue(byte[] buffer, Queue<Packet> packetQueue,
 			int readBytes) {
 		ArrayList<Integer> indices = ByteArraysUtils.getDelimiterIndices(buffer,
 				DELIMITER);
@@ -25,31 +25,31 @@ public class LibNfcApduExtractor implements ApduExtractor {
 			startIndex = indices.get(i);
 			endIndex = indices.get(i + 1);
 			int size = endIndex - startIndex;
-			byte[] rawApdu = ByteArraysUtils.trim(buffer, startIndex, size);
-			Packet apdu = splitApdu(rawApdu);
-			apduQueue.add(apdu);
+			byte[] plainpacket = ByteArraysUtils.trim(buffer, startIndex, size);
+			Packet packet = splitPacket(plainpacket);
+			packetQueue.add(packet);
 		}
 
-		byte[] singleApdu = ByteArraysUtils.trim(buffer, endIndex, readBytes - endIndex);
+		byte[] singlePacket = ByteArraysUtils.trim(buffer, endIndex, readBytes - endIndex);
 
-		if (apduIsComplete(singleApdu)) {
-			Packet apdu = splitApdu(singleApdu);
-			apduQueue.add(apdu);
+		if (packetIsComplete(singlePacket)) {
+			Packet apdu = splitPacket(singlePacket);
+			packetQueue.add(apdu);
 			return new byte[0];
 		} else {
-			return singleApdu;
+			return singlePacket;
 		}
 	}
 
-	private boolean apduIsComplete(byte[] singleApdu) {
-		return singleApdu[singleApdu.length - 1] == EOC;
+	private boolean packetIsComplete(byte[] singlePacket) {
+		return singlePacket[singlePacket.length - 1] == EOC;
 	}
 
-	private Packet splitApdu(byte[] rawApdu) {
-		int size = getApduSize(rawApdu);
+	private Packet splitPacket(byte[] rawApdu) {
+		int size = getPacketSize(rawApdu);
 		byte[] preamble = getApduPreamble(rawApdu, size);
-		byte[] plainApdu = getPlainApdu(rawApdu, size);
-		byte[] trailer = getApduTrailer(rawApdu, size);
+		byte[] plainApdu = getPlainPacket(rawApdu, size);
+		byte[] trailer = getPacketTrailer(rawApdu, size);
 		Packet newApdu = new Packet(rawApdu);
 		newApdu.setPreamble(preamble);
 		newApdu.setPlainPacket(plainApdu);
@@ -58,44 +58,44 @@ public class LibNfcApduExtractor implements ApduExtractor {
 		return newApdu;
 	}
 
-	private byte[] getApduTrailer(byte[] rawApdu, int size) {
-		for (int i = 0; i < rawApdu.length; i++) {
-			if (rawApdu[i] == ':') {
-				int endOfPlainApdu = i + 3 * size + 1;
-				return ByteArraysUtils.trim(rawApdu, endOfPlainApdu, rawApdu.length
-						- endOfPlainApdu);
+	private byte[] getPacketTrailer(byte[] plainPacket, int size) {
+		for (int i = 0; i < plainPacket.length; i++) {
+			if (plainPacket[i] == ':') {
+				int endOfPlainPacket = i + 3 * size + 1;
+				return ByteArraysUtils.trim(plainPacket, endOfPlainPacket, plainPacket.length
+						- endOfPlainPacket);
 			}
 		}
 		return null;
 	}
 
-	private byte[] getPlainApdu(byte[] rawApdu, int size) {
-		for (int i = 0; i < rawApdu.length; i++) {
-			if (rawApdu[i] == ':') {
-				return ByteArraysUtils.trim(rawApdu, i + 2, size * 3 - 1);
+	private byte[] getPlainPacket(byte[] plainPacket, int size) {
+		for (int i = 0; i < plainPacket.length; i++) {
+			if (plainPacket[i] == ':') {
+				return ByteArraysUtils.trim(plainPacket, i + 2, size * 3 - 1);
 			}
 		}
-		return rawApdu;
+		return plainPacket;
 	}
 
-	private byte[] getApduPreamble(byte[] rawApdu, int size) {
-		for (int i = 0; i < rawApdu.length; i++) {
-			if (rawApdu[i] == ':') {
-				return ByteArraysUtils.trim(rawApdu, 0, i + 2);
+	private byte[] getApduPreamble(byte[] plainPacket, int size) {
+		for (int i = 0; i < plainPacket.length; i++) {
+			if (plainPacket[i] == ':') {
+				return ByteArraysUtils.trim(plainPacket, 0, i + 2);
 			}
 		}
-		return rawApdu;
+		return plainPacket;
 	}
 
-	private int getApduSize(byte[] rawApdu) {
+	private int getPacketSize(byte[] plainPacket) {
 		int value = 0;
 		byte[] size = new byte[4];
-		for (int i = 0; i < rawApdu.length; i++) {
-			if (rawApdu[i] == ' ') {
-				size[0] = rawApdu[i + 1];
-				size[1] = rawApdu[i + 2];
-				size[2] = rawApdu[i + 3];
-				size[3] = rawApdu[i + 4];
+		for (int i = 0; i < plainPacket.length; i++) {
+			if (plainPacket[i] == ' ') {
+				size[0] = plainPacket[i + 1];
+				size[1] = plainPacket[i + 2];
+				size[2] = plainPacket[i + 3];
+				size[3] = plainPacket[i + 4];
 				value = Integer.parseInt(new String(size), 16);
 				System.out.println("Size: " + value);
 				return value;

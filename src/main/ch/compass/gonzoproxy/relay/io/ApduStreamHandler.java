@@ -38,7 +38,7 @@ public class ApduStreamHandler {
 
 			if ((readBytes = inputStream.read(buffer, length, buffer.length - length)) != -1) {
 				length += readBytes;
-				buffer = extractor.extractApdusToQueue(buffer, apduQueue,
+				buffer = extractor.extractPacketsToQueue(buffer, apduQueue,
 						length);
 			} 
 
