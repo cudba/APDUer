@@ -9,10 +9,8 @@ fields:
   value: 82
   description: Application Interchange Profile (Command Identifier)
 - name: AIP Content
-  value: 00 07
 - name: Ci
   value: 94
   description: Application File Locator (Command Identifier)
 - name: AFL Content
-  value: 76 00 0A
 - name: trailer

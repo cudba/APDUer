@@ -1,15 +1,17 @@
 packetDescription: Select Response
 fields:
-- name: FCI
+- name: FCI 
   value: 6f
-  description: File Control Information Template
+  description: A BER-TLV coded constructed object
 - name: Lc
-  description: Length
+  description: Content Length
 - name: Ci
   value: 84
   description: DF Name AID
-- name: DF Name Content
+- name: DF Content
 - name: Ci
   value: a5
   description: FCI Proprietary Template
 - name: FCI Content
+- name: Status Bytes
+- name: Status Bytes
