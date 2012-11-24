@@ -6,13 +6,16 @@ fields:
 - name: Lc
   description: Content Length
 - name: Ci
-  value: 82
+  value: 84
   description: Application Interchange Profile (Command Identifier)
+- name: Ci
+  value: 00
+  descripion: Second Byte Identifier
 - name: AIP Content
-  value: 00 07
+  value: 07
 - name: Ci
   value: 94
   description: Application File Locator (Command Identifier)
 - name: AFL Content
-  value: 76 00 0A
+  value: 76 00 0a
 - name: trailer

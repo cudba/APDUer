@@ -1,16 +1,16 @@
 package ch.compass.gonzoproxy.relay.parser;
 
-import java.util.List;
+import java.util.ArrayList;
 
-import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.mvc.model.Field;
+import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.utils.ParsingHelper;
 
 public class ParsingUnit {
 
 	public boolean parseBy(PacketTemplate template, Packet processingPacket) {
 		processingPacket.setDescription(template.getPacketDescription());
-		List<Field> templateFields = template.getFields();
+		ArrayList<Field> templateFields = template.getFields();
 		byte[] packet = processingPacket.getPlainPacket();
 
 		int contentStartIndex = 0;
@@ -38,25 +38,53 @@ public class ParsingUnit {
 							16);
 				}
 
-			} else if (ParsingHelper.isContentIdentifierField(processingField)) {
+			} 
+				else if (ParsingHelper.isIdentifiedContent(templateFields, i, processingField)) {
+					int nextIdentifierIndex = 0;
 
-				int nextIdentifier = 0;
-				if (templateFields.size() > i
-						+ ParsingHelper.NEXT_IDENTIFIER_OFFSET) {
-					nextIdentifier = ParsingHelper.findNextContentIdentifier(
-							packet,
-							currentFieldOffset,
-							templateFields.get(i
-									+ ParsingHelper.NEXT_IDENTIFIER_OFFSET));
-				}
+						int nextContentIdentifierField = ParsingHelper
+								.findNextContentIdentifierField(i + 1, templateFields);
 
-				if (nextIdentifier > 0) {
-					fieldLength = ParsingHelper.calculateSubContentLength(
-							offset, nextIdentifier);
-				} else {
-					fieldLength = ParsingHelper.getRemainingContentSize(
-							contentStartIndex, contentLength, offset);
-				}
+						if(nextContentIdentifierField > 0) {
+							nextIdentifierIndex = ParsingHelper.findFieldInPacket(
+									packet,
+									currentFieldOffset,
+									templateFields.get(i
+											+ ParsingHelper.NEXT_IDENTIFIER_OFFSET));
+						}
+						
+						switch (nextContentIdentifierField) {
+						case 0:
+							fieldLength = ParsingHelper.getRemainingContentSize(
+									contentStartIndex, contentLength, offset);
+							break;
+						case 1:
+							fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
+						default:
+							fieldLength = ParsingHelper.calculateSubContentLength(
+									offset, nextIdentifierIndex);
+							break;
+						}
+				
+				
+//				
+//				int nextIdentifier = 0;
+//				if (templateFields.size() > i
+//						+ ParsingHelper.NEXT_IDENTIFIER_OFFSET) {
+//					nextIdentifier = ParsingHelper.findFieldInPacket(
+//							packet,
+//							currentFieldOffset,
+//							templateFields.get(i
+//									+ ParsingHelper.NEXT_IDENTIFIER_OFFSET));
+//				}
+//
+//				if (nextIdentifier > 0) {
+//					fieldLength = ParsingHelper.calculateSubContentLength(
+//							offset, nextIdentifier);
+//				} else {
+//					fieldLength = ParsingHelper.getRemainingContentSize(
+//							contentStartIndex, contentLength, offset);
+//				}
 
 			} else {
 				fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;

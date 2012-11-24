@@ -1,5 +1,7 @@
 package ch.compass.gonzoproxy.utils;
 
+import java.util.ArrayList;
+
 import ch.compass.gonzoproxy.mvc.model.Field;
 
 public class ParsingHelper {
@@ -23,13 +25,13 @@ public class ParsingHelper {
 	}
 
 
-	public static int findNextContentIdentifier(byte[] plainApdu, int offset,
+	public static int findFieldInPacket(byte[] plainPacket, int offset,
 			Field field) {
 		String nextIdentifier = field.getValue();
 		byte[] byteField = new byte[2];
-		for (int i = offset; i < plainApdu.length - 1; i++) {
-			byteField[0] = plainApdu[i];
-			byteField[1] = plainApdu[i + 1];
+		for (int i = offset; i < plainPacket.length - 1; i++) {
+			byteField[0] = plainPacket[i];
+			byteField[1] = plainPacket[i + 1];
 			if (new String(byteField).equals(nextIdentifier)) {
 				return i;
 			}
@@ -63,6 +65,25 @@ public class ParsingHelper {
 	public static byte[] extractFieldFromBuffer(byte[] plainApdu,
 			int fieldLength, int currentOffset) {
 		return ByteArraysUtils.trim(plainApdu, currentOffset, fieldLength);
+	}
+
+
+	public static int findNextContentIdentifierField(int offset,
+			ArrayList<Field> templateFields) {
+		
+		int fieldIndex = 1;
+		for (int i = offset; i < templateFields.size(); i++) {
+			if(isContentIdentifierField(templateFields.get(i))){
+				return fieldIndex;
+			}
+			fieldIndex ++;
+		}
+		return 0;
+	}
+	
+	public static boolean isIdentifiedContent(ArrayList<Field> templateFields, int i,
+			Field processingField) {
+		return ParsingHelper.isContentIdentifierField(processingField) && templateFields.size() > i + 1;
 	}
 
 }
