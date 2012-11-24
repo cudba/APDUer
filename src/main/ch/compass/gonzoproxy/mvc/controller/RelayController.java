@@ -1,7 +1,9 @@
 package ch.compass.gonzoproxy.mvc.controller;
 
-import ch.compass.gonzoproxy.mvc.model.PacketModel;
+import java.util.ArrayList;
+
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
+import ch.compass.gonzoproxy.mvc.model.PacketModel;
 import ch.compass.gonzoproxy.mvc.model.SessionFormat;
 import ch.compass.gonzoproxy.relay.session.RelaySession;
 
@@ -12,8 +14,10 @@ public class RelayController {
 	private RelaySession relaySession;
 	private PacketModel apduData;
 	private CurrentSessionModel sessionModel;
+	private String[] modes;
 	
-	public RelayController(){
+	public RelayController(String[] modesArr){
+		this.modes = modesArr;
 	}
 
 	public void startRelaySession() {
@@ -27,17 +31,18 @@ public class RelayController {
 	}
 
 	public void newSession(String portListen, String remoteHost,
-			String remotePort) {
-		generateNewSessionDescription(portListen, remoteHost, remotePort);
+			String remotePort, String mode) {
+		generateNewSessionDescription(portListen, remoteHost, remotePort, mode);
 		startRelaySession();
 		
 	}
 
 	private void generateNewSessionDescription(String portListen,
-			String remoteHost, String remotePort) {
+			String remoteHost, String remotePort, String mode) {
 		sessionModel.setSession(Integer.parseInt(portListen), remoteHost, Integer.parseInt(remotePort));
 		apduData.clear();
 		sessionModel.addSessionData(apduData);
+		sessionModel.setMode(mode);
 		sessionModel.setSessionFormat(SessionFormat.LibNFC);
 	}
 	
@@ -82,5 +87,9 @@ public class RelayController {
 
 	public void sendOneRes() {
 		sessionModel.sendOneResponse(true);
+	}
+	
+	public String[] getModes() {
+		return modes;
 	}
 }

@@ -3,8 +3,13 @@ fields:
 - name: FCI
   value: 6f
   description: File Control Information Template
-- name: LEN
+- name: Lc
   description: Length
-- name: AID
+- name: Ci
   value: 84
-- name: Data
+  description: DF Name AID
+- name: DF Name Content
+- name: Ci
+  value: a5
+  description: FCI Proprietary Template
+- name: FCI Content

@@ -9,10 +9,12 @@ import java.net.Socket;
 import java.rmi.UnexpectedException;
 import java.util.Queue;
 
-import ch.compass.gonzoproxy.mvc.model.Packet;
-import ch.compass.gonzoproxy.mvc.model.ForwardingType;
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
+import ch.compass.gonzoproxy.mvc.model.ForwardingType;
+import ch.compass.gonzoproxy.mvc.model.Packet;
+import ch.compass.gonzoproxy.relay.io.ApduExtractor;
 import ch.compass.gonzoproxy.relay.io.ApduStreamHandler;
+import ch.compass.gonzoproxy.relay.io.ApduWrapper;
 import ch.compass.gonzoproxy.relay.io.LibNfcApduExtractor;
 import ch.compass.gonzoproxy.relay.io.LibNfcApduWrapper;
 import ch.compass.gonzoproxy.relay.parser.ParsingHandler;
@@ -53,9 +55,12 @@ public class Forwarder implements Runnable {
 	private void configureStreamHandler() throws UnexpectedException {
 		switch (sessionModel.getSessionFormat()) {
 		case LibNFC:
-			LibNfcApduExtractor extractor = new LibNfcApduExtractor();
-			LibNfcApduWrapper wrapper = new LibNfcApduWrapper();
-			streamHandler = new ApduStreamHandler(extractor, wrapper);
+			ApduExtractor extractor = sessionModel.getExtractor();
+			ApduWrapper wrapper = sessionModel.getWrapper();
+			System.out.println("Extractor: " + extractor.getName());
+			System.out.println("Wrapper: " + wrapper.getName());
+			
+			streamHandler = new ApduStreamHandler(sessionModel.getExtractor(), sessionModel.getWrapper());
 			break;
 		// TODO: no helpers found exception
 		default:

@@ -6,7 +6,7 @@ import java.util.Queue;
 import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.utils.ByteArraysUtils;
 
-public class LibNfcApduExtractor implements ApduExtractor {
+public class EtNfcApduExtractor implements ApduExtractor {
 
 	private static final char EOC = '\n';
 
@@ -106,6 +106,7 @@ public class LibNfcApduExtractor implements ApduExtractor {
 
 	@Override
 	public String getName() {
-		return "libnfc";
+		// TODO Auto-generated method stub
+		return "etnfc";
 	}
 }

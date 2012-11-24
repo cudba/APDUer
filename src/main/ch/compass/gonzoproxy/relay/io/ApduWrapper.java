@@ -6,4 +6,6 @@ public interface ApduWrapper {
 
 	public byte[] wrap(Packet apdu);
 
+	public String getName();
+
 }

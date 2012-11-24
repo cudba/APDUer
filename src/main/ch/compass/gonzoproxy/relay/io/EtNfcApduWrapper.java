@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import ch.compass.gonzoproxy.mvc.model.Packet;
 
-public class LibNfcApduWrapper implements ApduWrapper{
+public class EtNfcApduWrapper implements ApduWrapper{
 
 	private byte[] trailer;
 	private byte[] plainApdu;
@@ -47,7 +47,7 @@ public class LibNfcApduWrapper implements ApduWrapper{
 
 	@Override
 	public String getName() {
-		return "libnfc";
+		return "etnfc";
 	}
 
 }

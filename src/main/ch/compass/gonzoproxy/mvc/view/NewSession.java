@@ -29,6 +29,7 @@ public class NewSession extends JDialog {
 	private JTextField textFieldPortListen;
 	private JTextField textFieldForwardIP;
 	private JTextField textFieldForwardPort;
+	private JComboBox<String> comboBoxMode;
 
 	private RelayController controller;
 
@@ -69,15 +70,14 @@ public class NewSession extends JDialog {
 		gbc_lblSelectInputMethod.gridy = 0;
 		contentPane.add(lblSelectInputMethod, gbc_lblSelectInputMethod);
 
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {
-				"nfc-relay-picc", "pureAPDU" }));
+		comboBoxMode = new JComboBox<String>();
+		comboBoxMode.setModel(new DefaultComboBoxModel<String>(controller.getModes()));
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox.gridx = 1;
 		gbc_comboBox.gridy = 0;
-		contentPane.add(comboBox, gbc_comboBox);
+		contentPane.add(comboBoxMode, gbc_comboBox);
 
 		JLabel lblListen = new JLabel("Listen on port:");
 		lblListen.setHorizontalAlignment(SwingConstants.LEFT);
@@ -144,7 +144,8 @@ public class NewSession extends JDialog {
 				String portListen = textFieldPortListen.getText();
 				String remoteHost = textFieldForwardIP.getText();
 				String remotePort = textFieldForwardPort.getText();
-				controller.newSession(portListen, remoteHost, remotePort);
+				String mode = (String) comboBoxMode.getSelectedItem();
+				controller.newSession(portListen, remoteHost, remotePort, mode);
 			}
 		});
 		GridBagConstraints gbc_btnStart = new GridBagConstraints();
