@@ -40,7 +40,7 @@ public class ParsingHandlerTest {
 	public void testProcessKnownLibNfcApduCustomLength() {
 		
 		String fakePlainApdu = "00 a4 04 00 07 d2 76 00 00 85 01 00";
-		String libnfcInput = "C-APDU 000b: 00 a4 04 00 07 d2 76 00 00 85 01 00";
+		String libnfcInput = "C-APDU 000c: 00 a4 04 00 07 d2 76 00 00 85 01 00";
 		Packet apdu = new Packet(libnfcInput.getBytes());
 		apdu.setPlainPacket(fakePlainApdu.getBytes());
 
@@ -79,7 +79,7 @@ public class ParsingHandlerTest {
 	public void testProcessKnownLibNfcApduCustomLengthResponse() {
 		
 		String fakePlainApdu = "77 07 82 00 07 94 76 00 0a 85";
-		String libnfcInput = "#R-APDU 000a: 77 07 82 00 07 94 76 00 03 85";
+		String libnfcInput = "#R-APDU 000a: 77 07 82 00 07 94 76 00 0a 85";
 		Packet apdu = new Packet(libnfcInput.getBytes());
 		apdu.setPlainPacket(fakePlainApdu.getBytes());
 
