@@ -1,7 +1,5 @@
 package ch.compass.gonzoproxy.mvc.controller;
 
-import java.util.ArrayList;
-
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.mvc.model.PacketModel;
 import ch.compass.gonzoproxy.mvc.model.ParserSettings;
