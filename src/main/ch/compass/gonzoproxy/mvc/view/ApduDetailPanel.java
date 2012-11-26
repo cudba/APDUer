@@ -3,6 +3,8 @@ package ch.compass.gonzoproxy.mvc.view;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 
 import javax.swing.JLabel;
@@ -14,8 +16,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.TableColumn;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
-import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.mvc.model.DetailTableModel;
+import ch.compass.gonzoproxy.mvc.model.Packet;
 
 public class ApduDetailPanel extends JPanel {
 	private JTable table_detail;
@@ -55,6 +57,16 @@ public class ApduDetailPanel extends JPanel {
 
 		table_detail = new JTable();
 		table_detail.setModel(detailTableModel);
+		table_detail.addMouseListener(new MouseAdapter() {
+			  public void mouseClicked(MouseEvent e) {
+			    if (e.getClickCount() == 2) {
+			      JTable target = (JTable)e.getSource();
+			      int row = target.getSelectedRow();
+			      AddNewModifierDialog ns = new AddNewModifierDialog(editApdu, row);
+					ns.setVisible(true);
+			    }
+			  }
+			});
 		configureTable(table_detail);
 		scrollPane.setViewportView(table_detail);
 

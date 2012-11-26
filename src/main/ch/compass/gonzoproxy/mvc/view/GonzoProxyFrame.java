@@ -7,8 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -84,6 +82,7 @@ public class GonzoProxyFrame extends JFrame {
 		mnFile.add(mntmNew);
 
 		mntmOpen = new JMenuItem("Open");
+		mntmOpen.setMnemonic(KeyEvent.VK_O);
 		mntmOpen.addActionListener(new ActionListener() {
 
 			@Override
@@ -107,6 +106,7 @@ public class GonzoProxyFrame extends JFrame {
 		mnFile.add(mntmOpen);
 
 		mntmSave = new JMenuItem("Save");
+		mntmSave.setMnemonic(KeyEvent.VK_S);
 		mntmSave.addActionListener(new ActionListener() {
 			
 			@Override
@@ -131,6 +131,14 @@ public class GonzoProxyFrame extends JFrame {
 		mnFile.add(mntmSave);
 
 		mntmExit = new JMenuItem("Exit");
+		mntmExit.setMnemonic(KeyEvent.VK_E);
+		mntmExit.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GonzoProxyFrame.this.dispose();
+			}
+		});
 		mnFile.add(mntmExit);
 
 		mnTools = new JMenu("Tools");
