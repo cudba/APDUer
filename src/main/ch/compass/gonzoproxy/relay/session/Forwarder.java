@@ -7,8 +7,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.rmi.UnexpectedException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Queue;
+import java.util.ResourceBundle;
 
+import ch.compass.gonzoproxy.GonzoProxy;
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.mvc.model.ForwardingType;
 import ch.compass.gonzoproxy.mvc.model.Packet;
@@ -51,19 +55,34 @@ public class Forwarder implements Runnable {
 	}
 
 	private void configureStreamHandler() throws UnexpectedException {
-		switch (sessionModel.getSessionFormat()) {
-		case LibNFC:
-			ApduExtractor extractor = sessionModel.getExtractor();
-			ApduWrapper wrapper = sessionModel.getWrapper();
-			System.out.println("Extractor: " + extractor.getName());
-			System.out.println("Wrapper: " + wrapper.getName());
-			
-			streamHandler = new ApduStreamHandler(sessionModel.getExtractor(), sessionModel.getWrapper());
-			break;
-		// TODO: no helpers found exception
-		default:
-			throw new UnexpectedException("No Matching StreamHelpers found");
+		ClassLoader cl = GonzoProxy.class.getClassLoader();
+		ApduExtractor extractor = (ApduExtractor) selectMode(cl,"extractor");
+		ApduWrapper wrapper = (ApduWrapper) selectMode(cl,"wrapper");
+		
+		System.out.println("Extractor: " + extractor.getName());
+		System.out.println("Wrapper: " + wrapper.getName());
+
+		streamHandler = new ApduStreamHandler(extractor, wrapper);
+	}
+
+	private Object selectMode(ClassLoader cl, String helper) {
+		
+		ResourceBundle bundle = ResourceBundle.getBundle("plugin");
+		
+		Enumeration<String> keys = bundle.getKeys();
+		while(keys.hasMoreElements()){
+			String element = keys.nextElement();
+			if(element.contains(helper) && element.contains(sessionModel.getMode())){
+				try {
+					return cl.loadClass(bundle.getString(element)).newInstance();
+				} catch (InstantiationException | IllegalAccessException
+						| ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
+		return null;
 	}
 
 	@Override
@@ -85,7 +104,8 @@ public class Forwarder implements Runnable {
 				OutputStream outStream = new BufferedOutputStream(
 						forwardingSocket.getOutputStream())) {
 			while (sessionIsAlive) {
-				Queue<Packet> receivedApdus = streamHandler.readApdu(inputStream);
+				Queue<Packet> receivedApdus = streamHandler
+						.readApdu(inputStream);
 				while (!receivedApdus.isEmpty()) {
 					Packet apdu = receivedApdus.poll();
 					apdu.setType(type);
@@ -94,12 +114,12 @@ public class Forwarder implements Runnable {
 					// apdu needs new isModified field for type column in table
 					// if isTrapped -> yield
 
-					if(type == ForwardingType.COMMAND){
+					if (type == ForwardingType.COMMAND) {
 						while (sessionModel.isCommandTrapped()
 								&& !sessionModel.shouldSendOneCommand()) {
 							Thread.yield();
 						}
-					}else {
+					} else {
 						while (sessionModel.isResponseTrapped()
 								&& !sessionModel.shouldSendOneResponse()) {
 							Thread.yield();

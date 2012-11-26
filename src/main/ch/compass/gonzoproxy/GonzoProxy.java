@@ -20,35 +20,12 @@ public class GonzoProxy {
 
 		// TODO inizialize models and view in controller and just start
 		// controller?
-
-		ClassLoader cl = GonzoProxy.class.getClassLoader();
 		
-		ArrayList<String> inputModes = new ArrayList<>();
-		ArrayList<ApduWrapper> wrapperList = new ArrayList<>();
-		ArrayList<ApduExtractor> extractorList = new ArrayList<>();
-
-		ResourceBundle bundle = ResourceBundle.getBundle("plugin");
-		
-		Enumeration<String> keys = bundle.getKeys();
-		while(keys.hasMoreElements()){
-			String element = keys.nextElement();
-			if(element.contains("name")){
-				inputModes.add(bundle.getString(element));
-			}else if(element.contains("wrapper")){
-				wrapperList.add((ApduWrapper) cl.loadClass(bundle.getString(element)).newInstance());
-			}else if (element.contains("extractor")) {
-				extractorList.add((ApduExtractor) cl.loadClass(bundle.getString(element)).newInstance());
-			}
-		}
-		
-		String[] modesArr = inputModes.toArray(new String[2]);
 
 		PacketModel apduData = new PacketModel();
 		CurrentSessionModel sessionModel = new CurrentSessionModel();
-		sessionModel.addExtractor(extractorList);
-		sessionModel.addWrapper(wrapperList);
 
-		RelayController controller = new RelayController(modesArr);
+		RelayController controller = new RelayController();
 		controller.addModel(apduData, sessionModel);
 		// ApduListFrame view = new ApduListFrame(controller);
 		// view.setVisible(true);

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.prefs.Preferences;
 
 import ch.compass.gonzoproxy.mvc.listener.SessionListener;
-import ch.compass.gonzoproxy.relay.io.ApduExtractor;
-import ch.compass.gonzoproxy.relay.io.ApduWrapper;
 
 public class CurrentSessionModel {
 
@@ -18,8 +16,6 @@ public class CurrentSessionModel {
 	private Boolean sendOneCommand;
 	private Boolean sendOneResponse;
 	private String mode;
-	private ArrayList<ApduExtractor> extractorList;
-	private ArrayList<ApduWrapper> wrapperList;
 
 	public CurrentSessionModel() {
 		this.sessionPrefs = Preferences.userRoot().node(
@@ -109,37 +105,13 @@ public class CurrentSessionModel {
 		this.sessionFormat = sessionMode;
 	}
 	
-	public ApduExtractor getExtractor() {
-		
-		for(int i = 0; i < extractorList.size(); i++){
-			if(mode.equals(extractorList.get(i).getName())){
-				return extractorList.get(i);
-			}
-		}
-		
-		return null;
-	}
-	
-	public ApduWrapper getWrapper() {
-		
-		for(int i = 0; i < wrapperList.size(); i++){
-			if(mode.equals(wrapperList.get(i).getName())){
-				return wrapperList.get(i);
-			}
-		}
-		
-		return null;
-	}
 
 	public void setMode(String mode) {
 		this.mode = mode;
 	}
-
-	public void addExtractor(ArrayList<ApduExtractor> extractorList) {
-		this.extractorList = extractorList;
+	
+	public String getMode() {
+		return mode;
 	}
 
-	public void addWrapper(ArrayList<ApduWrapper> wrapperList) {
-		this.wrapperList = wrapperList;
-	}
 }
