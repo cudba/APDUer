@@ -36,14 +36,14 @@ public class ApduStreamHandlerTest {
 		ApduStreamHandler streamHandler = new ApduStreamHandler(new ByteExtractor(), new LibNfcApduWrapper());
 		
 		byte[] inputStream = new byte[]{'#', 0x00,(byte)0xa4, 0x04, 0x00, 0x07, (byte)0xd2, 0x76, 0x00, 0x00, (byte)0x85, 0x01, 0x01, 0x00, '$'};
-		byte[] originalApduFake = "#00a4040007d276000085010100$".getBytes();
+		byte[] originalApduFake = "2300a4040007d27600008501010024".getBytes();
 		byte[] plainApduFake = "00a4040007d276000085010100".getBytes();
 		
 		InputStream in = new ByteArrayInputStream(inputStream);
 		
 		Queue<Packet> queue = streamHandler.readApdu(in);
 		Packet apdu = queue.poll();
-//		assertArrayEquals(originalApduFake, apdu.getStreamInput());
+		assertArrayEquals(originalApduFake, apdu.getStreamInput());
 		assertArrayEquals(plainApduFake, apdu.getPlainPacket());
 	}
 }

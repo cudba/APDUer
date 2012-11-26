@@ -15,8 +15,6 @@ import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.relay.io.ApduExtractor;
 import ch.compass.gonzoproxy.relay.io.ApduStreamHandler;
 import ch.compass.gonzoproxy.relay.io.ApduWrapper;
-import ch.compass.gonzoproxy.relay.io.LibNfcApduExtractor;
-import ch.compass.gonzoproxy.relay.io.LibNfcApduWrapper;
 import ch.compass.gonzoproxy.relay.parser.ParsingHandler;
 
 public class Forwarder implements Runnable {

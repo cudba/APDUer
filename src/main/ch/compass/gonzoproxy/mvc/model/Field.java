@@ -1,7 +1,11 @@
 package ch.compass.gonzoproxy.mvc.model;
 
-public class Field {
+import java.io.Serializable;
 
+public class Field implements Serializable{
+
+
+	private static final long serialVersionUID = -6724126085297330455L;
 
 	private String name;
 	private String value;

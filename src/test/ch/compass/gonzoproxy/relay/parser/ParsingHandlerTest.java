@@ -3,14 +3,19 @@ package ch.compass.gonzoproxy.relay.parser;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.mvc.model.Field;
+import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.mvc.model.ParserSettings;
 
 public class ParsingHandlerTest {
-	ParsingHandler parserHanlder = new ParsingHandler(ParserSettings.LibNFC);
+	ParsingHandler parserHanlder;
+	
+	@Before public void initialize() {
+		parserHanlder = new ParsingHandler(ParserSettings.LibNFC);
+	    }
 
 	@Test
 	public void testProcessKnownLibNfcApdu() {
@@ -123,16 +128,5 @@ public class ParsingHandlerTest {
 		assertEquals(trimmedApdu, mergedFields.toString());
 
 	}
-	
-
-//	@Test
-//	public void testTest() {
-//		byte[] bytes = { 0x0f, (byte) 0x80, (byte) 0xa8, 0x00, 0x70 };
-//		StringBuilder sb = new StringBuilder();
-//		for (byte b : bytes) {
-//			sb.append(String.format("%02X ", b));
-//		}
-//	}
-
 	
 }

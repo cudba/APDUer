@@ -1,9 +1,13 @@
 package ch.compass.gonzoproxy.mvc.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Packet {
+public class Packet implements Serializable{
 
+	private static final long serialVersionUID = -4766720932383072042L;
+	
+	
 	private byte[] plainPacket;
 	private byte[] modifiedPacket;
 	private byte[] preamble;
