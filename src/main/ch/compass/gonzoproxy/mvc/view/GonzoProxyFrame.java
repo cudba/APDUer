@@ -18,8 +18,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
+import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.mvc.model.Packet;
-import ch.compass.gonzoproxy.mvc.model.PacketModel;
 
 public class GonzoProxyFrame extends JFrame {
 
@@ -43,10 +43,10 @@ public class GonzoProxyFrame extends JFrame {
 	private ApduListPanel panelList;
 	private ApduDetailPanel panelDetail;
 	private Packet editApdu;
-	private PacketModel data;
+	private CurrentSessionModel data;
 
 	public GonzoProxyFrame(RelayController controller) {
-		data = controller.getApduData();
+		data = controller.getSessionModel();
 		initGui(controller);
 	}
 
@@ -69,7 +69,7 @@ public class GonzoProxyFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				NewSession ns = new NewSession(controller);
+				NewSessionDialog ns = new NewSessionDialog(controller);
 				ns.setVisible(true);
 			}
 		});

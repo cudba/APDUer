@@ -8,11 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -20,11 +22,9 @@ import javax.swing.table.TableColumn;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
 import ch.compass.gonzoproxy.mvc.listener.SessionListener;
-import ch.compass.gonzoproxy.mvc.model.PacketModel;
 import ch.compass.gonzoproxy.mvc.model.ApduTableModel;
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
-import javax.swing.JToggleButton;
-import javax.swing.ImageIcon;
+import ch.compass.gonzoproxy.mvc.model.Packet;
 
 public class ApduListPanel extends JPanel {
 
@@ -36,7 +36,6 @@ public class ApduListPanel extends JPanel {
 	private JToggleButton btnTrapCmd;
 	private JToggleButton btnTrapRes;
 
-	private PacketModel apduData;
 	private CurrentSessionModel currentSession;
 	private RelayController controller;
 	private JPanel panel_table;
@@ -56,20 +55,27 @@ public class ApduListPanel extends JPanel {
 	public ApduListPanel(RelayController controller,
 			ListSelectionListener listSelectionListener) {
 		this.controller = controller;
-		apduData = controller.getApduData();
 		currentSession = controller.getSessionModel();
-		currentSession.addSessionListener(createSessionListener());
+		currentSession.addSessionListener(createListener());
 		this.lsl = listSelectionListener;
 		initUi();
 		updateSessionPrefs();
 	}
 
-	private SessionListener createSessionListener() {
+	private SessionListener createListener() {
 		return new SessionListener() {
 
 			@Override
 			public void sessionChanged() {
 				updateSessionPrefs();
+			}
+
+			@Override
+			public void packetCleared() {
+			}
+
+			@Override
+			public void packetReceived(Packet receivedPacket) {
 			}
 		};
 	}
@@ -114,7 +120,7 @@ public class ApduListPanel extends JPanel {
 		panel_table.add(scrollPane_0, gbc_scrollPane_0);
 
 		table_apduList = new JTable();
-		table_apduList.setModel(new ApduTableModel(apduData, new String[] { "#",
+		table_apduList.setModel(new ApduTableModel(currentSession, new String[] { "#",
 				"Type", "APDU", "ASCII", "Description" }));
 
 		table_apduList.getSelectionModel().addListSelectionListener(

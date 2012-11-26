@@ -2,7 +2,7 @@ package ch.compass.gonzoproxy.mvc.model;
 
 import javax.swing.table.AbstractTableModel;
 
-import ch.compass.gonzoproxy.mvc.listener.PacketListener;
+import ch.compass.gonzoproxy.mvc.listener.SessionListener;
 
 public class ApduTableModel extends AbstractTableModel {
 
@@ -10,28 +10,32 @@ public class ApduTableModel extends AbstractTableModel {
 	 * 
 	 */
 	private static final long serialVersionUID = -1437358812481945385L;
-	private PacketModel data;
+	private CurrentSessionModel session;
 	String[] columnNames;;
 
-	public ApduTableModel(PacketModel data, String[] columnNames) {
-		this.data = data;
+	public ApduTableModel(CurrentSessionModel session, String[] columnNames) {
+		this.session = session;
 		this.columnNames = columnNames;
-		this.data.addPacketListener(createApduListener());
+		this.session.addSessionListener(createListener());
 	}
 
-	private PacketListener createApduListener() {
-		return new PacketListener() {
-
+	private SessionListener createListener() {
+		return new SessionListener() {
+			
 			@Override
-			public void packetReceived(Packet apdu) {
+			public void sessionChanged() {
 				updateTable();
 			}
-
+			
+			@Override
+			public void packetReceived(Packet receivedPacket) {
+				updateTable();
+			}
+			
 			@Override
 			public void packetCleared() {
 				updateTable();
 			}
-
 		};
 	}
 
@@ -50,12 +54,12 @@ public class ApduTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return data.getPacketList().size();
+		return session.getPacketList().size();
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Packet apdu = data.getPacketList().get(rowIndex);
+		Packet apdu = session.getPacketList().get(rowIndex);
 
 		switch (columnIndex) {
 		case 0:

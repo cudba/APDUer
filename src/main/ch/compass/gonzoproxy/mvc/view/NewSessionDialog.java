@@ -19,7 +19,7 @@ import javax.swing.border.EmptyBorder;
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
 
 
-public class NewSession extends JDialog {
+public class NewSessionDialog extends JDialog {
 
 	/**
 	 * 
@@ -33,7 +33,7 @@ public class NewSession extends JDialog {
 
 	private RelayController controller;
 
-	public NewSession(RelayController controller) {
+	public NewSessionDialog(RelayController controller) {
 		this.controller = controller;
 		initGui();
 		loadFields();
@@ -140,7 +140,7 @@ public class NewSession extends JDialog {
 		JButton btnStart = new JButton("Start new session");
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				NewSession.this.dispose();
+				NewSessionDialog.this.dispose();
 				String portListen = textFieldPortListen.getText();
 				String remoteHost = textFieldForwardIP.getText();
 				String remotePort = textFieldForwardPort.getText();

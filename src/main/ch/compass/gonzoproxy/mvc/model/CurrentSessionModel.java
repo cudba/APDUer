@@ -1,6 +1,7 @@
 package ch.compass.gonzoproxy.mvc.model;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 import java.util.prefs.Preferences;
 
 import ch.compass.gonzoproxy.mvc.listener.SessionListener;
@@ -8,8 +9,7 @@ import ch.compass.gonzoproxy.mvc.listener.SessionListener;
 public class CurrentSessionModel {
 
 	private Preferences sessionPrefs;
-	private ArrayList<SessionListener> listeners = new ArrayList<SessionListener>();
-	private PacketModel sessionData;
+	private ArrayList<SessionListener> sessionListeners = new ArrayList<SessionListener>();
 	private ParserSettings sessionFormat = ParserSettings.LibNFC;
 	private Boolean commandTrapped = false;
 	private Boolean responseTrapped = false;
@@ -17,10 +17,12 @@ public class CurrentSessionModel {
 	private Boolean sendOneResponse;
 	private String mode;
 
+	private ArrayList<Packet> sessionData = new ArrayList<Packet>();
+	private Semaphore lock = new Semaphore(1);
+	
 	public CurrentSessionModel() {
 		this.sessionPrefs = Preferences.userRoot().node(
 				this.getClass().getName());
-
 	}
 
 	public void setSession(int listenPort, String remoteHost, int remotePort) {
@@ -43,22 +45,13 @@ public class CurrentSessionModel {
 	}
 
 	public void addSessionListener(SessionListener listener) {
-		listeners.add(listener);
+		sessionListeners.add(listener);
 	}
 
 	private void notifySessionChanged() {
-		for (SessionListener listener : listeners) {
+		for (SessionListener listener : sessionListeners) {
 			listener.sessionChanged();
 		}
-	}
-
-	public void addSessionData(PacketModel apduData) {
-		this.sessionData = apduData;
-
-	}
-
-	public PacketModel getSessionData() {
-		return sessionData;
 	}
 
 	public Boolean isResponseTrapped() {
@@ -93,9 +86,9 @@ public class CurrentSessionModel {
 		return sendOneResponse;
 	}
 
-	public void addSessionData(Packet apdu) {
-		sessionData.addPacket(apdu);
-	}
+//	public void addSessionData(Packet apdu) {
+//		sessionData.addPacket(apdu);
+//	}
 
 	public ParserSettings getSessionFormat() {
 		return sessionFormat;
@@ -113,5 +106,39 @@ public class CurrentSessionModel {
 	public String getMode() {
 		return mode;
 	}
+
+	public void addPacket(Packet data) {
+		try {
+			lock.acquire();
+			sessionData.add(data);
+			lock.release();
+			notifyPacketReceived(data);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public ArrayList<Packet> getPacketList() {
+		return sessionData;
+	}
+
+	public void clearData() {
+		sessionData.clear();
+		notifyClear();
+	}
+
+	private void notifyClear() {
+		for (SessionListener listener : sessionListeners) {
+			listener.packetCleared();
+		}
+	}
+
+	private void notifyPacketReceived(Packet receivedPacket) {
+		for (SessionListener listener : sessionListeners) {
+			listener.packetReceived(receivedPacket);
+		}
+	}
+	
+	
 
 }

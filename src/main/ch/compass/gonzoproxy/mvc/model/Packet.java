@@ -2,6 +2,7 @@ package ch.compass.gonzoproxy.mvc.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Packet implements Serializable{
 
@@ -70,8 +71,8 @@ public class Packet implements Serializable{
 
 	public String toAscii() {
 		StringBuffer sb = new StringBuffer("");
-		String ascii = new String(plainPacket);
-		String[] strArr = ascii.split(" ");
+		String ascii = new String(plainPacket).replaceAll("\\s","");
+		String[] strArr = ascii.split("(?<=\\G..)");
 
 		for (String a : strArr) {
 			int c = Integer.parseInt(a, 16);

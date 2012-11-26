@@ -110,7 +110,7 @@ public class Forwarder implements Runnable {
 					Packet apdu = receivedApdus.poll();
 					apdu.setType(type);
 					parsingHandler.tryParse(apdu);
-					sessionModel.addSessionData(apdu);
+					sessionModel.addPacket(apdu);
 					// apdu needs new isModified field for type column in table
 					// if isTrapped -> yield
 
@@ -129,11 +129,8 @@ public class Forwarder implements Runnable {
 					// if apdu is manually modified, apduData.getSendApdu is
 					// overwritten by modified apdu and
 					// modified apdu is added in apduData list
-					// if modifier.isActive -> modifier.modify(apdu)
-					// modified apdu is added to apduData list and
-					// apduData.getSendApdu is overwritten by modified apdu
-					// new: streamHandler.sendApdu(outStream,
-					// data.getSendApdu());
+					// if modifier.isActive -> apdu = modifier.modify(apdu)
+					// if(apdu.isModified()) -> sessionModel.addPacket(apdu)
 
 					streamHandler.sendApdu(outStream, apdu);
 					sessionModel.sendOneCommand(false);

@@ -25,14 +25,12 @@ public class ApduDetailPanel extends JPanel {
 	private JTextPane textPane_ascii;
 	private JTextPane textPane_hex;
 	private Packet editApdu;
-//	private RelayController controller;
 
 	private DetailTableModel detailTableModel;
 
 	public ApduDetailPanel(RelayController controller) {
-//		this.controller = controller;
 		this.editApdu = new Packet(new byte[0]);
-		this.detailTableModel = new DetailTableModel(editApdu, controller.getApduData());
+		this.detailTableModel = new DetailTableModel(editApdu, controller.getSessionModel());
 		initGui();
 
 	}

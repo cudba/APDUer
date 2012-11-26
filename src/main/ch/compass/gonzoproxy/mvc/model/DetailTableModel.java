@@ -2,7 +2,7 @@ package ch.compass.gonzoproxy.mvc.model;
 
 import javax.swing.table.AbstractTableModel;
 
-import ch.compass.gonzoproxy.mvc.listener.PacketListener;
+import ch.compass.gonzoproxy.mvc.listener.SessionListener;
 
 public class DetailTableModel extends AbstractTableModel {
 
@@ -11,21 +11,26 @@ public class DetailTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = -1437358812481945385L;
 	private Packet apdu;
-	private PacketModel data;
+	private CurrentSessionModel data;
 	private String[] columnNames = { "Field", "Value", "Description" };
 	  
-	public DetailTableModel(Packet apdu, PacketModel data) {
+	public DetailTableModel(Packet apdu, CurrentSessionModel data) {
 		this.apdu = apdu;
 		this.data = data;
-		this.data.addPacketListener(createApduListener());
+		this.data.addSessionListener(createListener());
 	}
 
-	private PacketListener createApduListener() {
-		return new PacketListener() {
+	private SessionListener createListener() {
+		return new SessionListener() {
 			
 			@Override
-			public void packetReceived(Packet apdu) {
-//				DetailTableModel.this.setApdu(apdu);
+			public void sessionChanged() {
+				
+			}
+			
+			@Override
+			public void packetReceived(Packet receivedPacket) {
+				
 			}
 			
 			@Override

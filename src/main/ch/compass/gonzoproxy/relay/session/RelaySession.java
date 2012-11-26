@@ -39,12 +39,12 @@ public class RelaySession implements Runnable {
 	}
 
 	public void stopForwarder() {
-		if (commandForwarder != null) {
+//		if (commandForwarder != null) {
 			commandForwarder.stop();
-		}
-		if (responseForwarder != null) {
+//		}
+//		if (responseForwarder != null) {
 			responseForwarder.stop();
-		}
+//		}
 		if (serverSocket != null) {
 			try {
 				serverSocket.close();
