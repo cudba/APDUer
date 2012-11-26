@@ -36,6 +36,11 @@ public class ApduTableModel extends AbstractTableModel {
 			public void packetCleared() {
 				updateTable();
 			}
+
+			@Override
+			public void newList() {
+				updateTable();
+			}
 		};
 	}
 

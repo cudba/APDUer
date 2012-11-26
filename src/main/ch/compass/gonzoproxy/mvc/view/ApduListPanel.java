@@ -77,6 +77,11 @@ public class ApduListPanel extends JPanel {
 			@Override
 			public void packetReceived(Packet receivedPacket) {
 			}
+
+			@Override
+			public void newList() {
+				
+			}
 		};
 	}
 

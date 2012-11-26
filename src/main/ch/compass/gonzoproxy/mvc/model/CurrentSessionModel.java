@@ -16,7 +16,6 @@ public class CurrentSessionModel {
 	private Boolean sendOneCommand;
 	private Boolean sendOneResponse;
 	private String mode;
-
 	private ArrayList<Packet> sessionData = new ArrayList<Packet>();
 	private Semaphore lock = new Semaphore(1);
 	
@@ -137,6 +136,17 @@ public class CurrentSessionModel {
 		for (SessionListener listener : sessionListeners) {
 			listener.packetReceived(receivedPacket);
 		}
+	}
+
+	public void addList(ArrayList<Packet> readObject) {
+		this.sessionData = readObject;
+		notifyNewList();
+	}
+
+	private void notifyNewList() {
+		for (SessionListener listener : sessionListeners) {
+			listener.newList();
+		}		
 	}
 	
 	

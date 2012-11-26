@@ -1,10 +1,19 @@
 package ch.compass.gonzoproxy.mvc.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 
+import javax.swing.JOptionPane;
+
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
+import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.mvc.model.ParserSettings;
 import ch.compass.gonzoproxy.relay.session.RelaySession;
 
@@ -96,5 +105,33 @@ public class RelayController {
 
 	public String[] getModes() {
 		return modes;
+	}
+
+	public void openFile(File file) {
+		FileInputStream fin;
+		try {
+			fin = new FileInputStream(file);
+			ObjectInputStream ois = new ObjectInputStream(fin);
+			sessionModel.addList((ArrayList<Packet>) ois.readObject());
+			ois.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public void saveFile(File file) {
+		// TODO Auto-generated method stub
+		FileOutputStream fout;
+		try {
+			fout = new FileOutputStream(file);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(sessionModel.getPacketList());
+			oos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
