@@ -5,6 +5,7 @@ import java.util.concurrent.Semaphore;
 import java.util.prefs.Preferences;
 
 import ch.compass.gonzoproxy.mvc.listener.SessionListener;
+import ch.compass.gonzoproxy.relay.modifier.PacketModifier;
 
 public class CurrentSessionModel {
 
@@ -18,6 +19,7 @@ public class CurrentSessionModel {
 	private String mode;
 	private ArrayList<Packet> sessionData = new ArrayList<Packet>();
 	private Semaphore lock = new Semaphore(1);
+	private PacketModifier packetModifier;
 	
 	public CurrentSessionModel() {
 		this.sessionPrefs = Preferences.userRoot().node(
@@ -147,6 +149,15 @@ public class CurrentSessionModel {
 		for (SessionListener listener : sessionListeners) {
 			listener.newList();
 		}		
+	}
+
+	public void setPacketModifier(PacketModifier packetModifier) {
+		this.packetModifier = packetModifier;
+		
+	}
+	
+	public PacketModifier getPacketModifier() {
+		return packetModifier;
 	}
 	
 	

@@ -10,15 +10,16 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.mvc.model.Packet;
 import ch.compass.gonzoproxy.mvc.model.ParserSettings;
+import ch.compass.gonzoproxy.relay.modifier.PacketModifier;
+import ch.compass.gonzoproxy.relay.modifier.Rule;
 import ch.compass.gonzoproxy.relay.session.RelaySession;
 
 public class RelayController {
 
+	private PacketModifier packetModifier;
 	private RelaySession relaySession;
 	private CurrentSessionModel sessionModel;
 	private String[] modes;
@@ -26,6 +27,15 @@ public class RelayController {
 	public RelayController() {
 		this.sessionModel = new CurrentSessionModel();
 		loadModes();
+		loadModifier();
+
+		// just for demonstration
+//		 fakeRule();
+	}
+
+	private void loadModifier() {
+		// TODO: load persited modifiers from file
+		packetModifier = new PacketModifier();
 	}
 
 	private void loadModes() {
@@ -63,6 +73,7 @@ public class RelayController {
 		sessionModel.clearData();
 		sessionModel.setMode(mode);
 		sessionModel.setSessionFormat(ParserSettings.LibNFC);
+		sessionModel.setPacketModifier(packetModifier);
 	}
 
 	public void clearSession() {
@@ -77,6 +88,12 @@ public class RelayController {
 
 	public CurrentSessionModel getSessionModel() {
 		return sessionModel;
+	}
+
+	public void addModifierRule(String packetName, String fieldName,
+			String originalValue, String replacedValue) {
+		Rule fieldRule = new Rule(fieldName, originalValue, replacedValue);
+		packetModifier.addRule(packetName, fieldRule);
 	}
 
 	public void changeCommandTrap() {
@@ -107,6 +124,7 @@ public class RelayController {
 		return modes;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void openFile(File file) {
 		FileInputStream fin;
 		try {
@@ -115,14 +133,12 @@ public class RelayController {
 			sessionModel.addList((ArrayList<Packet>) ois.readObject());
 			ois.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 
 	public void saveFile(File file) {
-		// TODO Auto-generated method stub
 		FileOutputStream fout;
 		try {
 			fout = new FileOutputStream(file);
@@ -130,8 +146,15 @@ public class RelayController {
 			oos.writeObject(sessionModel.getPacketList());
 			oos.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private void fakeRule() {
+		
+		// replace status byte 90 with FF
+		Rule statusByteRule = new Rule("Status Byte 1", "90", "FF");
+		packetModifier.addRule("Select Response", statusByteRule);
+
 	}
 }

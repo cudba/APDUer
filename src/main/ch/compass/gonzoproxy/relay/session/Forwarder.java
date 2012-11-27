@@ -19,8 +19,6 @@ import ch.compass.gonzoproxy.relay.io.ApduExtractor;
 import ch.compass.gonzoproxy.relay.io.ApduStreamHandler;
 import ch.compass.gonzoproxy.relay.io.ApduWrapper;
 import ch.compass.gonzoproxy.relay.modifier.PacketModifier;
-import ch.compass.gonzoproxy.relay.modifier.Rule;
-import ch.compass.gonzoproxy.relay.modifier.RuleSet;
 import ch.compass.gonzoproxy.relay.parser.ParsingHandler;
 
 public class Forwarder implements Runnable {
@@ -34,8 +32,6 @@ public class Forwarder implements Runnable {
 	private Socket forwardingSocket;
 	private ForwardingType type;
 
-	// TODO: NOT HERE !
-	private PacketModifier packetModifier = new PacketModifier();
 
 	private CurrentSessionModel sessionModel;
 
@@ -46,16 +42,6 @@ public class Forwarder implements Runnable {
 		this.sessionModel = sessionModel;
 		this.type = type;
 		initForwardingComponents();
-		fakeRules();
-	}
-
-	// just for demonstration -- ruleSet for Select Response Packet, 1 rule defined for Status Byte 1
-	private void fakeRules() {
-		RuleSet selectResponseRule = new RuleSet("Select Response");
-		Rule statusByteRule = new Rule("Status Byte 1", "90", "FF");
-		selectResponseRule.add(statusByteRule);
-		packetModifier.add(selectResponseRule);
-		
 	}
 
 	@Override
@@ -105,7 +91,7 @@ public class Forwarder implements Runnable {
 		packet.setType(type);
 		parsingHandler.tryParse(packet);
 		sessionModel.addPacket(packet);
-	
+		PacketModifier packetModifier = sessionModel.getPacketModifier();
 		Packet processedPacket = packetModifier.tryModify(packet);
 		if (processedPacket.isModified())
 			sessionModel.addPacket(processedPacket);

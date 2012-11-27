@@ -32,7 +32,6 @@ public class RuleSet {
 			rules.add(rule);
 		}
 		
-		rules.add(rule);
 	}
 	
 	public ArrayList<Rule> getRules() {

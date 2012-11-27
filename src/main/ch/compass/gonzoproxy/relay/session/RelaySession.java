@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import ch.compass.gonzoproxy.mvc.model.ForwardingType;
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
+import ch.compass.gonzoproxy.mvc.model.ForwardingType;
 
 /**
  * 
@@ -18,7 +18,7 @@ import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 public class RelaySession implements Runnable {
 
 	private ServerSocket serverSocket;
-	private Socket initiatorSocket;
+	private Socket initiator;
 	private Socket target;
 	private CurrentSessionModel sessionModel;
 
@@ -44,33 +44,35 @@ public class RelaySession implements Runnable {
 //		}
 //		if (responseForwarder != null) {
 			responseForwarder.stop();
+			
+			// serverSocket soett im finally nachem 'establish connection' gschlossa werda
 //		}
-		if (serverSocket != null) {
-			try {
-				serverSocket.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		if (serverSocket != null) {
+//			try {
+//				serverSocket.close();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 	}
 
 	private void initForwarder() {
-		commandForwarder = new Forwarder(initiatorSocket, target,
+		commandForwarder = new Forwarder(initiator, target,
 				sessionModel, ForwardingType.COMMAND);
-		responseForwarder = new Forwarder(target, initiatorSocket,
+		responseForwarder = new Forwarder(target, initiator,
 				sessionModel, ForwardingType.RESPONSE);
 	}
 
 	private void establishConnection() {
 		try {
 			serverSocket = new ServerSocket(sessionModel.getListenPort());
-			initiatorSocket = serverSocket.accept();
+			initiator = serverSocket.accept();
 			target = new Socket(sessionModel.getRemoteHost(),
 					sessionModel.getRemotePort());
 		} catch (IOException openSocket) {
 			try {
-				initiatorSocket.close();
+				initiator.close();
 				target.close();
 			} catch (IOException closeSocket) {
 				closeSocket.printStackTrace();

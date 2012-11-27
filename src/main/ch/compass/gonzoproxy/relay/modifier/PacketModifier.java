@@ -11,7 +11,7 @@ public class PacketModifier {
 
 	public Packet tryModify(Packet originalPacket) {
 		for (RuleSet modifier : modifierRules) {
-			if (modifierMatches(modifier, originalPacket)) {
+			if (ruleSetMatches(modifier, originalPacket)) {
 				return applyRules(modifier, originalPacket);
 			}
 		}
@@ -33,30 +33,25 @@ public class PacketModifier {
 		return modifiedPacket;
 	}
 
-	private boolean modifierMatches(RuleSet modifier, Packet originalPacket) {
-		return modifier.getCorrespondingPacket().equals(
+	private boolean ruleSetMatches(RuleSet existingRuleSet, Packet originalPacket) {
+		return existingRuleSet.getCorrespondingPacket().equals(
 				originalPacket.getDescription());
 	}
 
-	public void add(RuleSet createdModifier) {
-		RuleSet existingModifier = findModifier(createdModifier);
-		if (existingModifier != null) {
-			addRulesToExistingModifier(existingModifier, createdModifier);
+	public void addRule(String packetName, Rule fieldRule) {
+		RuleSet existingRuleSet = findRuleSet(packetName);
+		if (existingRuleSet != null) {
+			existingRuleSet.add(fieldRule);
 		} else {
-			modifierRules.add(createdModifier);
+			RuleSet createdRuleSet = new RuleSet(packetName);
+			createdRuleSet.add(fieldRule);
+			modifierRules.add(createdRuleSet);
 		}
 	}
 
-	private void addRulesToExistingModifier(RuleSet existingModifier,
-			RuleSet createdModifier) {
-		for (Rule modifierRule : createdModifier.getRules()) {
-			existingModifier.add(modifierRule);
-		}
-	}
-
-	private RuleSet findModifier(RuleSet modifier) {
+	private RuleSet findRuleSet(String packetName) {
 		for (RuleSet existingModifier : modifierRules) {
-			if (existingModifier.equals(modifier))
+			if (existingModifier.getCorrespondingPacket().equals(packetName))
 				return existingModifier;
 		}
 		return null;

@@ -13,12 +13,9 @@ public class PacketModifierTest {
 
 		PacketModifier packetModifier = new PacketModifier();
 
-		RuleSet rules = new RuleSet("Modified Packet");
 
 		Rule rule = new Rule("Modified Field", "0f", "a5");
-		rules.add(rule);
-
-		packetModifier.add(rules);
+		packetModifier.addRule("Modified Packet", rule);
 
 		assertEquals(rule, packetModifier.getRuleSets().get(0).getRules()
 				.get(0));
@@ -28,18 +25,13 @@ public class PacketModifierTest {
 	public void testOverrideExistingRule() {
 		PacketModifier packetModifier = new PacketModifier();
 
-		RuleSet rules = new RuleSet("Modified Packet");
 
 		Rule rule = new Rule("Modified Field", "0f", "a5");
-		rules.add(rule);
-
-		packetModifier.add(rules);
+		packetModifier.addRule("Modified Packet", rule);
 		
-		RuleSet existingRuleSet = new RuleSet("Modified Packet");
 		Rule overridingRule = new Rule("Modified Field", "0f", "ff");
-		existingRuleSet.add(overridingRule);
 		
-		packetModifier.add(existingRuleSet);
+		packetModifier.addRule("Modified Packet", overridingRule);
 		
 		assertEquals(1, packetModifier.getRuleSets().size());
 		assertEquals(overridingRule, packetModifier.getRuleSets().get(0).getRules().get(0));
@@ -50,12 +42,9 @@ public class PacketModifierTest {
 
 		PacketModifier packetModifier = new PacketModifier();
 
-		RuleSet rules = new RuleSet("Modified Packet");
-
 		Rule rule = new Rule("Modified Field", "0f", "a5");
-		rules.add(rule);
 
-		packetModifier.add(rules);
+		packetModifier.addRule("Modified Packet", rule);
 
 		String fakePlainApdu = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
