@@ -2,6 +2,7 @@ package ch.compass.gonzoproxy.relay.io;
 
 import java.util.Arrays;
 
+import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.mvc.model.Packet;
 
 public class LibNfcApduWrapper implements ApduWrapper{
@@ -12,12 +13,23 @@ public class LibNfcApduWrapper implements ApduWrapper{
 
 	public byte[] wrap(Packet apdu) {
 		this.trailer = apdu.getTrailer();
-		this.plainApdu = apdu.getPlainPacket();
+//		this.plainApdu = apdu.getPlainPacket();
 		this.preamble = computePreamble(apdu);
+
+		StringBuilder mergedFields = new StringBuilder();
+		
+		for (Field field : apdu.getFields()) {
+			mergedFields.append(field.getValue() + " ");
+		}
+		
+		plainApdu = mergedFields.toString().getBytes();
 
 		int newSize = preamble.length + plainApdu.length + trailer.length;
 
 		byte[] wrappedApdu = Arrays.copyOf(preamble, newSize);
+		
+		
+		
 		System.arraycopy(plainApdu, 0, wrappedApdu, preamble.length,
 				plainApdu.length);
 		System.arraycopy(trailer, 0, wrappedApdu, preamble.length

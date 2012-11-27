@@ -2,7 +2,7 @@ package ch.compass.gonzoproxy.mvc.model;
 
 import java.io.Serializable;
 
-public class Field implements Serializable{
+public class Field implements Serializable, Cloneable {
 
 
 	private static final long serialVersionUID = -6724126085297330455L;
@@ -43,6 +43,15 @@ public class Field implements Serializable{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	@Override
+	public Field clone() {
+		Field clonedField = new Field();
+		clonedField.setDescription(description);
+		clonedField.setName(name);
+		clonedField.setValue(value);
+		return clonedField;
 	}
 
 }

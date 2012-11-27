@@ -1,7 +1,8 @@
 package ch.compass.gonzoproxy.mvc.model;
 
 public enum ParserSettings {
-	LibNFC(2,1);
+	LibNFC(2,1),
+	NoWhiteSpaces(2,0);
 	
 	private int encodingOffset;
 	private int whitespaceOffset;

@@ -2,17 +2,17 @@ package ch.compass.gonzoproxy.mvc.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class Packet implements Serializable{
+public class Packet implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -4766720932383072042L;
 	
+	private boolean isModified = false;
 	
 	private byte[] plainPacket;
-	private byte[] modifiedPacket;
 	private byte[] preamble;
 	private byte[] trailer;
+	
 	private String description;
 	private ForwardingType type;
 	private int size;
@@ -28,16 +28,8 @@ public class Packet implements Serializable{
 		return plainPacket;
 	}
 
-	public byte[] getModifiedPacket() {
-		return modifiedPacket;
-	}
-
 	public void setPlainPacket(byte[] packet) {
 		this.plainPacket = packet;
-	}
-
-	public void setModifiedPacket(byte[] modifiedPacket) {
-		this.modifiedPacket = modifiedPacket;
 	}
 
 	public String getDescription() {
@@ -114,5 +106,27 @@ public class Packet implements Serializable{
 	public void addField(Field field) {
 		fields.add(field);
 	}
+	
+	@Override
+	public Packet clone()  {
+		Packet clonedPacket = new Packet(streamInput);
+		clonedPacket.setDescription(description);
+		clonedPacket.setPreamble(preamble);
+		clonedPacket.setPlainPacket(plainPacket);
+		clonedPacket.setTrailer(trailer);
+		clonedPacket.setSize(size);
+		clonedPacket.setType(type);
+		for (Field field : fields) {
+			clonedPacket.addField(field.clone());
+		}
+		return clonedPacket;
+	}
 
+	public boolean isModified() {
+		return isModified;
+	}
+	
+	public void isModified(boolean isModified){
+		this.isModified = isModified;
+	}
 }

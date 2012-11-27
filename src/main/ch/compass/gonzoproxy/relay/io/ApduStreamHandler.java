@@ -52,11 +52,11 @@ public class ApduStreamHandler {
 		return apduQueue;
 	}
 
-	public void sendApdu(OutputStream outputStream, Packet apdu)
+	public void sendPacket(OutputStream outputStream, Packet packet)
 			throws IOException {
 
-		byte[] buffer = wrapper.wrap(apdu);
-		outputStream.write(buffer);
+		byte[] wrappedPacket = wrapper.wrap(packet);
+		outputStream.write(wrappedPacket);
 		outputStream.flush();
 	}
 

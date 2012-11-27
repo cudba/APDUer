@@ -20,7 +20,7 @@ public class ParsingUnit {
 		int offset = 0;
 
 		for (int i = 0; i < templateFields.size(); i++) {
-			Field processingField = getCopyOf(templateFields.get(i));
+			Field processingField = templateFields.get(i).clone();
 			parseField(packet, fieldLength, offset, processingField);
 			processingPacket.addField(processingField);
 
@@ -59,26 +59,6 @@ public class ParsingUnit {
 							offset, nextIdentifierIndex);
 					break;
 				}
-
-				//
-				// int nextIdentifier = 0;
-				// if (templateFields.size() > i
-				// + ParsingHelper.NEXT_IDENTIFIER_OFFSET) {
-				// nextIdentifier = ParsingHelper.findFieldInPacket(
-				// packet,
-				// currentFieldOffset,
-				// templateFields.get(i
-				// + ParsingHelper.NEXT_IDENTIFIER_OFFSET));
-				// }
-				//
-				// if (nextIdentifier > 0) {
-				// fieldLength = ParsingHelper.calculateSubContentLength(
-				// offset, nextIdentifier);
-				// } else {
-				// fieldLength = ParsingHelper.getRemainingContentSize(
-				// contentStartIndex, contentLength, offset);
-				// }
-
 			} else {
 				fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
 			}
@@ -111,10 +91,5 @@ public class ParsingUnit {
 
 	private void setFieldValue(Field field, byte[] value) {
 		field.setValue(new String(value));
-	}
-
-	private Field getCopyOf(Field field) {
-		return new Field(field.getName(), field.getValue(),
-				field.getDescription());
 	}
 }
