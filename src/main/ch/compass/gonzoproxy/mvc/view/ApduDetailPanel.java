@@ -27,10 +27,12 @@ public class ApduDetailPanel extends JPanel {
 	private JTextPane textPane_ascii;
 	private JTextPane textPane_hex;
 	private Packet editApdu;
+	private RelayController controller;
 
 	private DetailTableModel detailTableModel;
 
 	public ApduDetailPanel(RelayController controller) {
+		this.controller = controller;
 		this.editApdu = new Packet(new byte[0]);
 		this.detailTableModel = new DetailTableModel(editApdu, controller.getSessionModel());
 		initGui();
@@ -62,7 +64,7 @@ public class ApduDetailPanel extends JPanel {
 			    if (e.getClickCount() == 2) {
 			      JTable target = (JTable)e.getSource();
 			      int row = target.getSelectedRow();
-			      AddNewModifierDialog ns = new AddNewModifierDialog(editApdu, row);
+			      AddNewModifierDialog ns = new AddNewModifierDialog(editApdu, row, controller);
 					ns.setVisible(true);
 			    }
 			  }

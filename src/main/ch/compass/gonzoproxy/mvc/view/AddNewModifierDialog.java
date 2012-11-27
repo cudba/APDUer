@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import ch.compass.gonzoproxy.mvc.controller.RelayController;
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.mvc.model.Packet;
 import javax.swing.border.EmptyBorder;
@@ -23,13 +24,19 @@ public class AddNewModifierDialog extends JDialog {
 	private JTextField textFieldOldValue;
 	private JTextField textFieldNewValue;
 	private JTextField textFieldFieldname;
+	private RelayController controller;
+	private Packet editApdu;
+	private int row;
 
-	public AddNewModifierDialog(Packet editApdu, int row) {
+	public AddNewModifierDialog(Packet editApdu, int row, RelayController controller) {
+		this.controller = controller;
+		this.editApdu = editApdu;
+		this.row = row;
 		initGui();
-		setFields(editApdu, row);
+		setFields(row);
 	}
 
-	private void setFields(Packet editApdu, int row) {
+	private void setFields(int row) {
 		Field field = editApdu.getFields().get(row);
 		String description = "no description";
 		if (field.getDescription() != null) {
@@ -118,6 +125,14 @@ public class AddNewModifierDialog extends JDialog {
 			contentPane.add(textFieldNewValue, gbc_textFieldNewValue);
 			textFieldNewValue.setColumns(10);
 			JButton btnSave = new JButton("Save");
+			btnSave.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					controller.addModifierRule(editApdu.getDescription(), editApdu.getFields().get(row).getName(), textFieldOldValue.getText(), textFieldNewValue.getText());
+					AddNewModifierDialog.this.dispose();
+				}
+			});
 			GridBagConstraints gbc_btnSave = new GridBagConstraints();
 			gbc_btnSave.insets = new Insets(0, 0, 0, 5);
 			gbc_btnSave.gridx = 0;

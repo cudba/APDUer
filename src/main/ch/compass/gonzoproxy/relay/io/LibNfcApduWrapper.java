@@ -5,7 +5,7 @@ import java.util.Arrays;
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.mvc.model.Packet;
 
-public class LibNfcApduWrapper implements ApduWrapper{
+public class LibNfcApduWrapper implements ApduWrapper {
 
 	private byte[] trailer;
 	private byte[] plainApdu;
@@ -13,23 +13,30 @@ public class LibNfcApduWrapper implements ApduWrapper{
 
 	public byte[] wrap(Packet apdu) {
 		this.trailer = apdu.getTrailer();
-//		this.plainApdu = apdu.getPlainPacket();
 		this.preamble = computePreamble(apdu);
 
 		StringBuilder mergedFields = new StringBuilder();
-		
-		for (Field field : apdu.getFields()) {
-			mergedFields.append(field.getValue() + " ");
+		if (apdu.getFields().size() == 0) {
+			this.plainApdu = apdu.getPlainPacket();
+
+		} else {
+
+			for (Field field : apdu.getFields()) {
+				mergedFields.append(field.getValue() + " ");
+			}
+
+			this.plainApdu = mergedFields.toString().substring(0, mergedFields.length() - 1)
+					.getBytes();
+
+			// plainApdu = mergedFields.toString().getBytes();
 		}
 		
-		plainApdu = mergedFields.toString().getBytes();
+		//TODO compute new size of APDU and put into preamble
 
 		int newSize = preamble.length + plainApdu.length + trailer.length;
 
 		byte[] wrappedApdu = Arrays.copyOf(preamble, newSize);
-		
-		
-		
+
 		System.arraycopy(plainApdu, 0, wrappedApdu, preamble.length,
 				plainApdu.length);
 		System.arraycopy(trailer, 0, wrappedApdu, preamble.length
@@ -49,7 +56,8 @@ public class LibNfcApduWrapper implements ApduWrapper{
 
 		for (int i = 0; i < newSize.length; i++) {
 			newPreamble[lastSizeIndex - i] = newSize[lastIndexNew - i];
-		};
+		}
+		;
 
 		apdu.setPreamble(newPreamble);
 
