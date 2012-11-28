@@ -6,6 +6,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -62,12 +63,17 @@ public class ParsingHandler {
 	}
 
 	private boolean parseByTemplate(Packet processingPacket) {
+		TreeMap<Integer, PacketTemplate> matchingTemplates = new TreeMap<Integer, PacketTemplate>();
 
 		for (PacketTemplate template : templates) {
 			if (templateValidator.accept(template, processingPacket)) {
-				parsingUnit.parseBy(template, processingPacket);
-				return true;
+				matchingTemplates.put(template.getFields().size(), template);
 			}
+		}
+		
+		if(matchingTemplates.size() > 0) {
+			PacketTemplate bestMatchingTemplate = matchingTemplates.lastEntry().getValue();
+			return parsingUnit.parseBy(bestMatchingTemplate, processingPacket);
 		}
 		return false;
 	}
