@@ -13,10 +13,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
 import ch.compass.gonzoproxy.mvc.model.DetailTableModel;
+import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.mvc.model.Packet;
 
 public class ApduDetailPanel extends JPanel {
@@ -31,9 +34,12 @@ public class ApduDetailPanel extends JPanel {
 
 	private DetailTableModel detailTableModel;
 
+	private Field editField;
+
 	public ApduDetailPanel(RelayController controller) {
 		this.controller = controller;
 		this.editApdu = new Packet(new byte[0]);
+		this.editField = new Field();
 		this.detailTableModel = new DetailTableModel(editApdu,
 				controller.getSessionModel());
 		initGui();
@@ -128,7 +134,7 @@ public class ApduDetailPanel extends JPanel {
 		// textPane_hex.setEnabled(false);
 	}
 
-	public void clearAllFields() {
+	public void clearFields() {
 		textPane_ascii.setText("");
 		textPane_hex.setText("");
 	}
@@ -136,25 +142,37 @@ public class ApduDetailPanel extends JPanel {
 	public void setApdu(Packet editApdu) {
 		this.editApdu = editApdu;
 		this.detailTableModel.setApdu(editApdu);
-		updateFields();
+		clearFields();
 	}
 
 	private void updateFields() {
-		textPane_ascii.setText(editApdu.toAscii());
-		textPane_hex.setText(new String(editApdu.getOriginalPacket()));
+		textPane_ascii.setText(editField.toAscii());
+		textPane_hex.setText(editField.getValue());
 	}
 
-	private void configureTable(JTable table) {
+	private void configureTable(final JTable table) {
 		table.setSelectionMode(0);
-		// table.getSelectionModel().addListSelectionListener(this.selectListController);
+		table.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+
+					@Override
+					public void valueChanged(ListSelectionEvent e) {
+						int index = table.getSelectedRow();
+						if (index == -1) {
+							ApduDetailPanel.this.clearFields();
+						} else {
+							ApduDetailPanel.this.setField(ApduDetailPanel.this.editApdu
+									.getFields().get(index));
+						}
+					}
+				});
 		table.getTableHeader().setReorderingAllowed(false);
 		Enumeration<TableColumn> a = table.getColumnModel().getColumns();
 		for (int i = 0; a.hasMoreElements(); i++) {
 			TableColumn tb = (TableColumn) a.nextElement();
 			switch (i) {
 			case 0:
-				tb.setMinWidth(45);
-				tb.setMaxWidth(45);
+				tb.setPreferredWidth(45);
 				break;
 			case 1:
 				tb.setPreferredWidth(250);
@@ -165,6 +183,11 @@ public class ApduDetailPanel extends JPanel {
 			}
 
 		}
+	}
+
+	protected void setField(Field editField) {
+		this.editField = editField;
+		updateFields();
 	}
 
 }

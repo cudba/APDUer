@@ -80,7 +80,7 @@ public class ApduListPanel extends JPanel {
 
 			@Override
 			public void newList() {
-				
+
 			}
 		};
 	}
@@ -125,25 +125,26 @@ public class ApduListPanel extends JPanel {
 		panel_table.add(scrollPane_0, gbc_scrollPane_0);
 
 		table_apduList = new JTable();
-		table_apduList.setModel(new ApduTableModel(currentSession, new String[] { "#",
-				"Type", "APDU", "ASCII", "Description" }));
+		table_apduList.setModel(new ApduTableModel(currentSession,
+				new String[] { "#", "Type", "APDU", "ASCII", "Description" }));
 
 		table_apduList.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 
 					@Override
 					public void valueChanged(ListSelectionEvent arg0) {
-						int index = ApduListPanel.this.table_apduList.getSelectedRow();
+						int index = ApduListPanel.this.table_apduList
+								.getSelectedRow();
 						if (index != -1)
-							lsl.valueChanged(new ListSelectionEvent(
-									this, ApduListPanel.this.table_apduList
+							lsl.valueChanged(new ListSelectionEvent(this,
+									ApduListPanel.this.table_apduList
 											.convertRowIndexToModel(index),
 									ApduListPanel.this.table_apduList
 											.convertRowIndexToModel(index),
 									true));
 						else
-							lsl.valueChanged(new ListSelectionEvent(this,
-											-1, -1, true));
+							lsl.valueChanged(new ListSelectionEvent(this, -1,
+									-1, true));
 
 					}
 				});
@@ -158,19 +159,22 @@ public class ApduListPanel extends JPanel {
 		gbc_panel_options.gridy = 1;
 		add(panel_options, gbc_panel_options);
 		GridBagLayout gbl_panel_options = new GridBagLayout();
-		gbl_panel_options.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0 };
+		gbl_panel_options.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0 };
 		gbl_panel_options.rowHeights = new int[] { 0, 0 };
-		gbl_panel_options.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_options.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
+				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_panel_options.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		panel_options.setLayout(gbl_panel_options);
 
 		btnTrapCmd = new JToggleButton("");
 		btnTrapCmd.setToolTipText("Trap command");
-		btnTrapCmd.setIcon(new ImageIcon(ApduListPanel.class.getResource("/ch/compass/gonzoproxy/mvc/view/icons/right.png")));
+		btnTrapCmd
+				.setIcon(new ImageIcon(
+						ApduListPanel.class
+								.getResource("/ch/compass/gonzoproxy/mvc/view/icons/right.png")));
 		btnTrapCmd.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				controller.changeCommandTrap();
@@ -184,22 +188,28 @@ public class ApduListPanel extends JPanel {
 
 		btnTrapRes = new JToggleButton("");
 		btnTrapRes.setToolTipText("Trap response");
-		btnTrapRes.setIcon(new ImageIcon(ApduListPanel.class.getResource("/ch/compass/gonzoproxy/mvc/view/icons/left.png")));
+		btnTrapRes
+				.setIcon(new ImageIcon(
+						ApduListPanel.class
+								.getResource("/ch/compass/gonzoproxy/mvc/view/icons/left.png")));
 		btnTrapRes.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				controller.changeResponseTrap();
 			}
 		});
-		
+
 		btnSendCmd = new JButton("");
 		btnSendCmd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controller.sendOneCmd();
 			}
 		});
-		btnSendCmd.setIcon(new ImageIcon(ApduListPanel.class.getResource("/ch/compass/gonzoproxy/mvc/view/icons/refresh.png")));
+		btnSendCmd
+				.setIcon(new ImageIcon(
+						ApduListPanel.class
+								.getResource("/ch/compass/gonzoproxy/mvc/view/icons/refresh.png")));
 		btnSendCmd.setToolTipText("Send trapped command");
 		GridBagConstraints gbc_btnSendCmd = new GridBagConstraints();
 		gbc_btnSendCmd.insets = new Insets(0, 0, 0, 5);
@@ -211,34 +221,38 @@ public class ApduListPanel extends JPanel {
 		gbc_btnTrapRes.gridx = 2;
 		gbc_btnTrapRes.gridy = 0;
 		panel_options.add(btnTrapRes, gbc_btnTrapRes);
-		
+
 		btnSendRes = new JButton("");
 		btnSendRes.setToolTipText("Send trapped response");
 		btnSendRes.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				controller.sendOneRes();
 			}
 		});
-		btnSendRes.setIcon(new ImageIcon(ApduListPanel.class.getResource("/ch/compass/gonzoproxy/mvc/view/icons/refresh.png")));
+		btnSendRes
+				.setIcon(new ImageIcon(
+						ApduListPanel.class
+								.getResource("/ch/compass/gonzoproxy/mvc/view/icons/refresh.png")));
 		GridBagConstraints gbc_btnSendRes = new GridBagConstraints();
 		gbc_btnSendRes.insets = new Insets(0, 0, 0, 5);
 		gbc_btnSendRes.gridx = 3;
 		gbc_btnSendRes.gridy = 0;
 		panel_options.add(btnSendRes, gbc_btnSendRes);
-		
+
 		btnClear = new JButton("");
 		btnClear.setToolTipText("Cancel session");
-		btnClear.setIcon(new ImageIcon(ApduListPanel.class.getResource("/ch/compass/gonzoproxy/mvc/view/icons/cross.png")));
+		btnClear.setIcon(new ImageIcon(ApduListPanel.class
+				.getResource("/ch/compass/gonzoproxy/mvc/view/icons/cross.png")));
 		btnClear.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				controller.clearSession();
 			}
 		});
-		
+
 		GridBagConstraints gbc_btnClear = new GridBagConstraints();
 		gbc_btnClear.insets = new Insets(0, 0, 0, 5);
 		gbc_btnClear.gridx = 4;

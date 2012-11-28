@@ -29,13 +29,17 @@ public class Packet implements Serializable, Cloneable {
 	}
 
 	public String getPacketFromFields() {
-		StringBuilder mergedFields = new StringBuilder();
 
-		for (Field field : this.getFields()) {
-			mergedFields.append(field.getValue() + " ");
+		if (this.fields.size() == 0) {
+			return new String(originalPacket);
+		} else {
+			StringBuilder mergedFields = new StringBuilder();
+
+			for (Field field : this.getFields()) {
+				mergedFields.append(field.getValue() + " ");
+			}
+			return mergedFields.substring(0, mergedFields.length() - 1);
 		}
-
-		return mergedFields.substring(0, mergedFields.length() - 1);
 	}
 
 	public void setPlainPacket(byte[] packet) {

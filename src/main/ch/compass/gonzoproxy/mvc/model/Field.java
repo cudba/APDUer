@@ -54,4 +54,18 @@ public class Field implements Serializable, Cloneable {
 		return clonedField;
 	}
 
+	public String toAscii() {
+		StringBuffer sb = new StringBuffer("");
+		String ascii = this.value.replaceAll("\\s", "");
+		String[] strArr = ascii.split("(?<=\\G..)");
+
+		for (String a : strArr) {
+			int c = Integer.parseInt(a, 16);
+			char chr = (char) c;
+			sb.append(chr);
+		}
+
+		return sb.toString();
+	}
+
 }
