@@ -34,7 +34,8 @@ public class ApduDetailPanel extends JPanel {
 	public ApduDetailPanel(RelayController controller) {
 		this.controller = controller;
 		this.editApdu = new Packet(new byte[0]);
-		this.detailTableModel = new DetailTableModel(editApdu, controller.getSessionModel());
+		this.detailTableModel = new DetailTableModel(editApdu,
+				controller.getSessionModel());
 		initGui();
 
 	}
@@ -60,15 +61,16 @@ public class ApduDetailPanel extends JPanel {
 		table_detail = new JTable();
 		table_detail.setModel(detailTableModel);
 		table_detail.addMouseListener(new MouseAdapter() {
-			  public void mouseClicked(MouseEvent e) {
-			    if (e.getClickCount() == 2) {
-			      JTable target = (JTable)e.getSource();
-			      int row = target.getSelectedRow();
-			      AddNewModifierDialog ns = new AddNewModifierDialog(editApdu, row, controller);
-					ns.setVisible(true);
-			    }
-			  }
-			});
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					JTable target = (JTable) e.getSource();
+					int row = target.getSelectedRow();
+					AddNewModifierDialog nd = new AddNewModifierDialog(
+							editApdu, editApdu.getFields().get(row), controller);
+					nd.setVisible(true);
+				}
+			}
+		});
 		configureTable(table_detail);
 		scrollPane.setViewportView(table_detail);
 
@@ -121,9 +123,9 @@ public class ApduDetailPanel extends JPanel {
 
 		textPane_ascii = new JTextPane();
 		scrollPane_ascii.setViewportView(textPane_ascii);
-		
-//		textPane_ascii.setEnabled(false);
-//		textPane_hex.setEnabled(false);
+
+		// textPane_ascii.setEnabled(false);
+		// textPane_hex.setEnabled(false);
 	}
 
 	public void clearAllFields() {
@@ -141,7 +143,7 @@ public class ApduDetailPanel extends JPanel {
 		textPane_ascii.setText(editApdu.toAscii());
 		textPane_hex.setText(new String(editApdu.getPlainPacket()));
 	}
-	
+
 	private void configureTable(JTable table) {
 		table.setSelectionMode(0);
 		// table.getSelectionModel().addListSelectionListener(this.selectListController);

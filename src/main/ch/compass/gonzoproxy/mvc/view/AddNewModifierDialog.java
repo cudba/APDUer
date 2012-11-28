@@ -26,18 +26,17 @@ public class AddNewModifierDialog extends JDialog {
 	private JTextField textFieldFieldname;
 	private RelayController controller;
 	private Packet editApdu;
-	private int row;
+	private Field field;
 
-	public AddNewModifierDialog(Packet editApdu, int row, RelayController controller) {
+	public AddNewModifierDialog(Packet editApdu, Field field, RelayController controller) {
 		this.controller = controller;
 		this.editApdu = editApdu;
-		this.row = row;
+		this.field = field;
 		initGui();
-		setFields(row);
+		setFields();
 	}
 
-	private void setFields(int row) {
-		Field field = editApdu.getFields().get(row);
+	private void setFields() {
 		String description = "no description";
 		if (field.getDescription() != null) {
 			description = field.getDescription();
@@ -94,7 +93,7 @@ public class AddNewModifierDialog extends JDialog {
 			gbc_textFieldFieldname.gridy = 1;
 			contentPane.add(textFieldFieldname, gbc_textFieldFieldname);
 			textFieldFieldname.setColumns(10);
-			JLabel lblOldValue = new JLabel("Old value: ");
+			JLabel lblOldValue = new JLabel("Replace: ");
 			GridBagConstraints gbc_lblOldValue = new GridBagConstraints();
 			gbc_lblOldValue.anchor = GridBagConstraints.WEST;
 			gbc_lblOldValue.insets = new Insets(0, 0, 5, 5);
@@ -109,7 +108,7 @@ public class AddNewModifierDialog extends JDialog {
 			gbc_textFieldOldValue.gridy = 2;
 			contentPane.add(textFieldOldValue, gbc_textFieldOldValue);
 			textFieldOldValue.setColumns(10);
-			JLabel lblNewValue = new JLabel("New value: ");
+			JLabel lblNewValue = new JLabel("with: ");
 			GridBagConstraints gbc_lblNewValue = new GridBagConstraints();
 			gbc_lblNewValue.anchor = GridBagConstraints.WEST;
 			gbc_lblNewValue.insets = new Insets(0, 0, 5, 5);
@@ -129,7 +128,7 @@ public class AddNewModifierDialog extends JDialog {
 				
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					controller.addModifierRule(editApdu.getDescription(), editApdu.getFields().get(row).getName(), textFieldOldValue.getText(), textFieldNewValue.getText());
+					controller.addModifierRule(editApdu.getDescription(), field.getName(), textFieldOldValue.getText(), textFieldNewValue.getText());
 					AddNewModifierDialog.this.dispose();
 				}
 			});
@@ -153,7 +152,6 @@ public class AddNewModifierDialog extends JDialog {
 			contentPane.add(btnCancel, gbc_btnCancel);
 			
 			textFieldFieldname.setEnabled(false);
-			textFieldOldValue.setEnabled(false);
 			textFieldPacketname.setEnabled(false);
 	}
 }
