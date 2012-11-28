@@ -4,23 +4,23 @@ import java.util.ArrayList;
 
 import ch.compass.gonzoproxy.mvc.model.Field;
 
-public class ParsingHelper {
+public class PacketUtils {
 
 	public static final int NEXT_IDENTIFIER_OFFSET = 2;
 	public static final int DEFAULT_FIELDLENGTH = 1;
 	public static final String CONTENT_LENGTH_FIELD = "Lc";
 	public static final String CONTENT_IDENTIFIER = "Ci";
 	
-	public static int encodingOffset = 2;
-	public static int whitespaceOffset = 1;
+	public static final int ENCODING_OFFSET = 2;
+	public static final int WHITESPACE_OFFSET = 1;
 
 	public static int getEncodedFieldLength(int fieldLength, boolean whitespace) {
 		if(whitespace) {
-			return fieldLength * (encodingOffset + whitespaceOffset);
+			return fieldLength * (ENCODING_OFFSET + WHITESPACE_OFFSET);
 		}
 		else {
-			return fieldLength * (encodingOffset + whitespaceOffset)
-					- whitespaceOffset;
+			return fieldLength * (ENCODING_OFFSET + WHITESPACE_OFFSET)
+					- WHITESPACE_OFFSET;
 		}
 	}
 
@@ -42,7 +42,7 @@ public class ParsingHelper {
 	public static int getRemainingContentSize(int contentStartIndex,
 			int contentLength, int offset) {
 		return contentLength
-				- ((offset - contentStartIndex) / (encodingOffset + whitespaceOffset));
+				- ((offset - contentStartIndex) / (ENCODING_OFFSET + WHITESPACE_OFFSET));
 	}
 
 	public static boolean isContentLengthField(Field processingField) {
@@ -51,7 +51,7 @@ public class ParsingHelper {
 	}
 
 	public static int calculateSubContentLength(int offset, int nextIdentifier) {
-		return (nextIdentifier - offset) / (encodingOffset + whitespaceOffset);
+		return (nextIdentifier - offset) / (ENCODING_OFFSET + WHITESPACE_OFFSET);
 	}
 
 	public static boolean isContentIdentifierField(Field processingField) {
@@ -62,7 +62,7 @@ public class ParsingHelper {
 		return fieldLength > DEFAULT_FIELDLENGTH;
 	}
 
-	public static byte[] extractFieldFromBuffer(byte[] plainApdu,
+	public static byte[] extractField(byte[] plainApdu,
 			int fieldLength, int currentOffset) {
 		return ByteArraysUtils.trim(plainApdu, currentOffset, fieldLength);
 	}
@@ -83,7 +83,7 @@ public class ParsingHelper {
 	
 	public static boolean isIdentifiedContent(ArrayList<Field> templateFields, int i,
 			Field processingField) {
-		return ParsingHelper.isContentIdentifierField(processingField) && templateFields.size() > i + 1;
+		return PacketUtils.isContentIdentifierField(processingField) && templateFields.size() > i + 1;
 	}
 
 }

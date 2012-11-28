@@ -5,7 +5,7 @@ public class Rule {
 	private String correspondingField;
 	private String originalValue;
 	private String replacedValue;
-	private boolean isActive;
+	private boolean isActive = true;
 
 	public Rule(String correspondingField, String originalValue,
 			String replacedValue) {

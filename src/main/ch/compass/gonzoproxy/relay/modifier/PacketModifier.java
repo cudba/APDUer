@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.mvc.model.Packet;
+import ch.compass.gonzoproxy.utils.PacketUtils;
 
 public class PacketModifier {
 
@@ -25,17 +26,60 @@ public class PacketModifier {
 
 		for (Field field : modifiedPacket.getFields()) {
 			Rule rule = modifier.findMatchingRule(field);
-			if (rule != null) {
+			if (rule != null && rule.isActive()) {
 				if (rule.getOriginalValue().isEmpty()) {
 					field.setValue(rule.getReplacedValue());
 				} else {
 					field.replaceValue(rule.getOriginalValue(),
 							rule.getReplacedValue());
 				}
+				if (modifier.shouldUpdateLength()) {
+					int lengthDiff = computeLengthDifference(
+							rule.getOriginalValue(), rule.getReplacedValue());
+					int updatedPacketSize = modifiedPacket.getSize()
+							+ lengthDiff;
+					modifiedPacket.setSize(updatedPacketSize);
+					updateContentLengthField(modifiedPacket, lengthDiff);
+				}
+
+				modifiedPacket.isModified(true);
 			}
 		}
-		modifiedPacket.isModified(true);
 		return modifiedPacket;
+	}
+
+	private void updateContentLengthField(Packet packet, int fieldLengthDiff) {
+
+		Field contentLengthField = findContentLengthField(packet);
+		int currentContentLength = Integer.parseInt(
+				contentLengthField.getValue(), 16);
+		int newContentLength = currentContentLength + fieldLengthDiff;
+		contentLengthField.setValue(toHexString(newContentLength));
+
+	}
+
+	private String toHexString(int newContentLength) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(Integer.toHexString(newContentLength));
+		if (sb.length() < 2) {
+		    sb.insert(0, '0'); 
+		}
+		return sb.toString();
+	}
+
+	private Field findContentLengthField(Packet packet) {
+		for (Field field : packet.getFields()) {
+			if (field.getName().equals(PacketUtils.CONTENT_LENGTH_FIELD))
+				return field;
+		}
+		return new Field();
+	}
+
+	private int computeLengthDifference(String originalValue,
+			String replacedValue) {
+		int diff = (replacedValue.length() - originalValue.length())
+				/ (PacketUtils.ENCODING_OFFSET + PacketUtils.WHITESPACE_OFFSET);
+		return diff;
 	}
 
 	private boolean ruleSetMatches(RuleSet existingRuleSet,
@@ -44,14 +88,16 @@ public class PacketModifier {
 				originalPacket.getDescription());
 	}
 
-	public void addRule(String packetName, Rule fieldRule) {
+	public void addRule(String packetName, Rule fieldRule, Boolean updateLength) {
 		RuleSet existingRuleSet = findRuleSet(packetName);
 		if (existingRuleSet != null) {
 			existingRuleSet.add(fieldRule);
+			existingRuleSet.shouldUpdateLength(updateLength);
 		} else {
 			RuleSet createdRuleSet = new RuleSet(packetName);
 			createdRuleSet.add(fieldRule);
 			modifierRules.add(createdRuleSet);
+			createdRuleSet.shouldUpdateLength(updateLength);
 		}
 	}
 

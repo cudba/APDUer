@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.mvc.model.Packet;
-import ch.compass.gonzoproxy.utils.ParsingHelper;
+import ch.compass.gonzoproxy.utils.PacketUtils;
 
 public class ParsingUnit {
 
@@ -14,9 +14,9 @@ public class ParsingUnit {
 		byte[] packet = processingPacket.getOriginalPacket();
 
 		int contentStartIndex = 0;
-		int contentLength = ParsingHelper.DEFAULT_FIELDLENGTH;
+		int contentLength = PacketUtils.DEFAULT_FIELDLENGTH;
 
-		int fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
+		int fieldLength = PacketUtils.DEFAULT_FIELDLENGTH;
 		int offset = 0;
 
 		for (int i = 0; i < templateFields.size(); i++) {
@@ -25,10 +25,10 @@ public class ParsingUnit {
 			processingPacket.addField(processingField);
 
 			int currentFieldOffset = offset;
-			offset += ParsingHelper.getEncodedFieldLength(fieldLength, true);
+			offset += PacketUtils.getEncodedFieldLength(fieldLength, true);
 
-			if (ParsingHelper.isContentLengthField(processingField)) {
-				if (ParsingHelper.isContentIdentifierField(templateFields
+			if (PacketUtils.isContentLengthField(processingField)) {
+				if (PacketUtils.isContentIdentifierField(templateFields
 						.get(i + 1))) {
 					contentLength = Integer.parseInt(
 							processingField.getValue(), 16);
@@ -38,29 +38,29 @@ public class ParsingUnit {
 							16);
 				}
 
-			} else if (ParsingHelper.isIdentifiedContent(templateFields, i,
+			} else if (PacketUtils.isIdentifiedContent(templateFields, i,
 					processingField)) {
-				int nextContentIdentifierField = ParsingHelper
+				int nextContentIdentifierField = PacketUtils
 						.findNextContentIdentifierField(i + 1, templateFields);
 
 				switch (nextContentIdentifierField) {
 				case 0:
-					fieldLength = ParsingHelper.getRemainingContentSize(
+					fieldLength = PacketUtils.getRemainingContentSize(
 							contentStartIndex, contentLength, offset);
 					break;
 				case 1:
-					fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
+					fieldLength = PacketUtils.DEFAULT_FIELDLENGTH;
 					break;
 				default:
-					int nextIdentifierIndex = ParsingHelper.findFieldInPacket(
+					int nextIdentifierIndex = PacketUtils.findFieldInPacket(
 							packet, currentFieldOffset,
 							templateFields.get(i + nextContentIdentifierField));
-					fieldLength = ParsingHelper.calculateSubContentLength(
+					fieldLength = PacketUtils.calculateSubContentLength(
 							offset, nextIdentifierIndex);
 					break;
 				}
 			} else {
-				fieldLength = ParsingHelper.DEFAULT_FIELDLENGTH;
+				fieldLength = PacketUtils.DEFAULT_FIELDLENGTH;
 			}
 		}
 		return true;
@@ -68,12 +68,12 @@ public class ParsingUnit {
 
 	private void parseField(byte[] payload, int fieldLength, int offset,
 			Field processingField) {
-		if (ParsingHelper.hasCustomLenght(fieldLength)) {
+		if (PacketUtils.hasCustomLenght(fieldLength)) {
 			parseValueToField(payload, offset,
-					ParsingHelper.getEncodedFieldLength(fieldLength, false),
+					PacketUtils.getEncodedFieldLength(fieldLength, false),
 					processingField);
 		} else {
-			int encodedFieldLength = ParsingHelper.getEncodedFieldLength(
+			int encodedFieldLength = PacketUtils.getEncodedFieldLength(
 					fieldLength, false);
 			parseValueToField(payload, offset, encodedFieldLength,
 					processingField);
@@ -83,7 +83,7 @@ public class ParsingUnit {
 	private void parseValueToField(byte[] payload, int offset, int fieldLength,
 			Field field) {
 		if ((offset + fieldLength) <= payload.length) {
-			byte[] value = ParsingHelper.extractFieldFromBuffer(payload,
+			byte[] value = PacketUtils.extractField(payload,
 					fieldLength, offset);
 			setFieldValue(field, value);
 		}
@@ -94,10 +94,13 @@ public class ParsingUnit {
 	}
 
 	public void parseByDefault(Packet processingPacket) {
+		String packetDescription = "Unknown Packet";
 		String fieldName = "unknown";
 		String fieldValue = new String(processingPacket.getOriginalPacket());
 		String fieldDescription = "Unknown Packet, parsed by default template";
+		
 		Field defaultField = new Field(fieldName, fieldValue, fieldDescription);
 		processingPacket.addField(defaultField);
+		processingPacket.setDescription(packetDescription);
 	}
 }
