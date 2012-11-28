@@ -5,7 +5,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -102,7 +101,7 @@ public class ModifierDialog extends JDialog {
 		scrollPane.setViewportView(tableRules);
 
 		chckbxUpdateLengthAutomatically = new JCheckBox(
-				"Update length automatically");
+				"Update Content Length automatically");
 		GridBagConstraints gbc_chckbxUpdateLengthAutomatically = new GridBagConstraints();
 		gbc_chckbxUpdateLengthAutomatically.anchor = GridBagConstraints.WEST;
 		gbc_chckbxUpdateLengthAutomatically.insets = new Insets(0, 0, 0, 5);
@@ -127,7 +126,7 @@ public class ModifierDialog extends JDialog {
 		// TODO Auto-generated method stub
 		this.editRuleSet = ruleSet;
 		chckbxUpdateLengthAutomatically.setSelected(ruleSet
-				.shouldUpdateLength());
+				.shouldUpdateContentLength());
 	}
 
 }
