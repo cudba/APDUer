@@ -28,28 +28,33 @@ public class PacketModifier {
 			Rule rule = modifier.findMatchingRule(field);
 
 			if (rule != null && rule.isActive()) {
-				int fieldLengthDiff = 0;
+				int fieldLengthDiff;
 
 				if (rule.getOriginalValue().isEmpty()) {
+					fieldLengthDiff= computeLengthDifference(field.getValue(),
+							rule.getReplacedValue());
+					
+					updatePacketLenght(modifiedPacket, fieldLengthDiff);
+
 					if (modifier.shouldUpdateLength()) {
-						fieldLengthDiff= computeLengthDifference(field.getValue(),
-								rule.getReplacedValue());
 						updateContentLengthField(modifiedPacket,
 								fieldLengthDiff);
 					}
 					field.setValue(rule.getReplacedValue());
 
 				} else {
+					fieldLengthDiff = computeLengthDifference(rule.getOriginalValue(),
+							rule.getReplacedValue());
+					
+					updatePacketLenght(modifiedPacket, fieldLengthDiff);
+					
 					if (modifier.shouldUpdateLength()) {
-						fieldLengthDiff = computeLengthDifference(rule.getOriginalValue(),
-								rule.getReplacedValue());
 						updateContentLengthField(modifiedPacket,
 								fieldLengthDiff);
 					}
 					field.replaceValue(rule.getOriginalValue(),
 							rule.getReplacedValue());
 				}
-				updatePacketLenght(modifiedPacket, fieldLengthDiff);
 				modifiedPacket.isModified(true);
 			}
 		}
