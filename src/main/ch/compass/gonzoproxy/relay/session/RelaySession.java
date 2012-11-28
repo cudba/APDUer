@@ -39,22 +39,9 @@ public class RelaySession implements Runnable {
 	}
 
 	public void stopForwarder() {
-//		if (commandForwarder != null) {
 			commandForwarder.stop();
-//		}
-//		if (responseForwarder != null) {
 			responseForwarder.stop();
-			
-			// serverSocket soett im finally nachem 'establish connection' gschlossa werda
-//		}
-//		if (serverSocket != null) {
-//			try {
-//				serverSocket.close();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
+			closeSockets();
 	}
 
 	private void initForwarder() {
@@ -90,6 +77,15 @@ public class RelaySession implements Runnable {
 	private void startForwardingThreads() {
 		new Thread(commandForwarder).start();
 		new Thread(responseForwarder).start();
+	}
+	
+	private void closeSockets() {
+		try {
+			initiator.close();
+			target.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

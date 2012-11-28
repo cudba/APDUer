@@ -36,7 +36,7 @@ public class PacketModifier {
 					
 					updatePacketLenght(modifiedPacket, fieldLengthDiff);
 
-					if (modifier.shouldUpdateLength()) {
+					if (shouldUpdateContentLength(modifier, field)) {
 						updateContentLengthField(modifiedPacket,
 								fieldLengthDiff);
 					}
@@ -48,7 +48,7 @@ public class PacketModifier {
 					
 					updatePacketLenght(modifiedPacket, fieldLengthDiff);
 					
-					if (modifier.shouldUpdateLength()) {
+					if (modifier.shouldUpdateContentLength()) {
 						updateContentLengthField(modifiedPacket,
 								fieldLengthDiff);
 					}
@@ -59,6 +59,10 @@ public class PacketModifier {
 			}
 		}
 		return modifiedPacket;
+	}
+
+	private boolean shouldUpdateContentLength(RuleSet modifier, Field field) {
+		return modifier.shouldUpdateContentLength() && field.getName().toUpperCase().contains(PacketUtils.CONTENT_DATA);
 	}
 
 	private void updatePacketLenght(Packet modifiedPacket, int fieldLengthDiff) {

@@ -56,7 +56,7 @@ public class RuleSet {
 		
 	}
 	
-	public boolean shouldUpdateLength(){
+	public boolean shouldUpdateContentLength(){
 		return updateLength;
 	}
 }

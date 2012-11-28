@@ -68,6 +68,7 @@ public class RelayController {
 
 	public void newSession(String portListen, String remoteHost,
 			String remotePort, String mode) {
+		clearOldSession();
 		generateNewSessionDescription(portListen, remoteHost, remotePort, mode);
 		startRelaySession();
 
@@ -82,7 +83,7 @@ public class RelayController {
 		sessionModel.setPacketModifier(packetModifier);
 	}
 
-	public void clearSession() {
+	public void clearOldSession() {
 		if (relaySession != null) {
 			relaySession.stopForwarder();
 		}
