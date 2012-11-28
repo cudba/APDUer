@@ -39,10 +39,28 @@ public class RuleModel extends AbstractTableModel{
 			return rule.getOriginalValue();
 		case 2:
 			return rule.getReplacedValue();
+		case 3:
+			return rule.isActive();
 		}
 		
 		return null;
 	}
+	
+	@Override
+    public Class getColumnClass(int column) {
+        switch (column) {
+            case 0:
+                return String.class;
+            case 1:
+                return String.class;
+            case 2:
+                return String.class;
+            case 3:
+                return Boolean.class;
+            default:
+                return String.class;
+        }
+    }
 	
 	public void setRules(ArrayList<Rule> rules){
 		this.rules = rules;

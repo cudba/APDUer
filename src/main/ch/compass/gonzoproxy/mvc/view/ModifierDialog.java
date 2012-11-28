@@ -3,6 +3,9 @@ package ch.compass.gonzoproxy.mvc.view;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -19,6 +22,8 @@ import ch.compass.gonzoproxy.mvc.controller.RelayController;
 import ch.compass.gonzoproxy.mvc.model.RuleModel;
 import ch.compass.gonzoproxy.mvc.model.RuleSetModel;
 import ch.compass.gonzoproxy.relay.modifier.PacketModifier;
+import ch.compass.gonzoproxy.relay.modifier.Rule;
+import ch.compass.gonzoproxy.relay.modifier.RuleSet;
 
 public class ModifierDialog extends JDialog {
 
@@ -29,6 +34,9 @@ public class ModifierDialog extends JDialog {
 	private JList<String> listRuleSet;
 	private RuleModel ruleModel;
 	private PacketModifier modifier;
+	protected RuleSet editRuleSet;
+	private JCheckBox chckbxUpdateLengthAutomatically;
+	protected Rule editRule;
 
 	public ModifierDialog(RelayController controller) {
 		this.controller = controller;
@@ -60,13 +68,16 @@ public class ModifierDialog extends JDialog {
 		gbc_scrollPane_1.gridx = 0;
 		gbc_scrollPane_1.gridy = 0;
 		contentPane.add(scrollPane_1, gbc_scrollPane_1);
-		
-		listRuleSet = new JList<String>(new RuleSetModel(modifier.getRuleSets()));
+
+		listRuleSet = new JList<String>(
+				new RuleSetModel(modifier.getRuleSets()));
 		listRuleSet.addListSelectionListener(new ListSelectionListener() {
-			
+
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				ModifierDialog.this.ruleModel.setRules(modifier.getRuleSets().get(listRuleSet.getSelectedIndex()).getRules());
+				setEditRuleSet(modifier.getRuleSets().get(
+						listRuleSet.getSelectedIndex()));
+				ruleModel.setRules(editRuleSet.getRules());
 			}
 		});
 		scrollPane_1.setViewportView(listRuleSet);
@@ -81,9 +92,16 @@ public class ModifierDialog extends JDialog {
 
 		ruleModel = new RuleModel();
 		tableRules = new JTable(ruleModel);
+		tableRules.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				JTable target = (JTable) e.getSource();
+				int row = target.getSelectedRow();
+				setEditRule(editRuleSet.getRules().get(row));
+			}
+		});
 		scrollPane.setViewportView(tableRules);
 
-		JCheckBox chckbxUpdateLengthAutomatically = new JCheckBox(
+		chckbxUpdateLengthAutomatically = new JCheckBox(
 				"Update length automatically");
 		GridBagConstraints gbc_chckbxUpdateLengthAutomatically = new GridBagConstraints();
 		gbc_chckbxUpdateLengthAutomatically.anchor = GridBagConstraints.WEST;
@@ -99,6 +117,17 @@ public class ModifierDialog extends JDialog {
 		gbc_btnDeleteSelectedRule.gridx = 1;
 		gbc_btnDeleteSelectedRule.gridy = 1;
 		contentPane.add(btnDeleteSelectedRule, gbc_btnDeleteSelectedRule);
+	}
+
+	protected void setEditRule(Rule rule) {
+		this.editRule = rule;
+	}
+
+	protected void setEditRuleSet(RuleSet ruleSet) {
+		// TODO Auto-generated method stub
+		this.editRuleSet = ruleSet;
+		chckbxUpdateLengthAutomatically.setSelected(ruleSet
+				.shouldUpdateLength());
 	}
 
 }
