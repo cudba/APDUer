@@ -92,4 +92,12 @@ public class ParsingUnit {
 	private void setFieldValue(Field field, byte[] value) {
 		field.setValue(new String(value));
 	}
+
+	public void parseByDefault(Packet processingPacket) {
+		String fieldName = "unknown";
+		String fieldValue = new String(processingPacket.getOriginalPacket());
+		String fieldDescription = "Unknown Packet, parsed by default template";
+		Field defaultField = new Field(fieldName, fieldValue, fieldDescription);
+		processingPacket.addField(defaultField);
+	}
 }

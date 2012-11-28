@@ -54,4 +54,8 @@ public class Field implements Serializable, Cloneable {
 		return clonedField;
 	}
 
+	public void replaceValue(String originalValue, String replacedValue) {
+		value = value.replace(originalValue, replacedValue);
+	}
+
 }
