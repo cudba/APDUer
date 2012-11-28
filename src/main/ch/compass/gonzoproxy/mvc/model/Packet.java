@@ -30,16 +30,12 @@ public class Packet implements Serializable, Cloneable {
 
 	public String getPacketFromFields() {
 
-		if (this.fields.size() == 0) {
-			return new String(originalPacket);
-		} else {
-			StringBuilder mergedFields = new StringBuilder();
+		StringBuilder mergedFields = new StringBuilder();
 
-			for (Field field : this.getFields()) {
-				mergedFields.append(field.getValue() + " ");
-			}
-			return mergedFields.substring(0, mergedFields.length() - 1);
+		for (Field field : this.getFields()) {
+			mergedFields.append(field.getValue() + " ");
 		}
+		return mergedFields.substring(0, mergedFields.length() - 1);
 	}
 
 	public void setPlainPacket(byte[] packet) {

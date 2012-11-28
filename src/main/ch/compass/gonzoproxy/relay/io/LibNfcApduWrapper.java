@@ -15,21 +15,16 @@ public class LibNfcApduWrapper implements ApduWrapper {
 		this.trailer = apdu.getTrailer();
 		this.preamble = computePreamble(apdu);
 
-		if (apdu.getFields().size() == 0) {
-			this.plainApdu = apdu.getOriginalPacket();
+		StringBuilder mergedFields = new StringBuilder();
 
-		} else {
-			StringBuilder mergedFields = new StringBuilder();
-
-			for (Field field : apdu.getFields()) {
-				mergedFields.append(field.getValue() + " ");
-			}
-
-			this.plainApdu = mergedFields.substring(0,
-					mergedFields.length() - 1).getBytes();
-
-			// plainApdu = mergedFields.toString().getBytes();
+		for (Field field : apdu.getFields()) {
+			mergedFields.append(field.getValue() + " ");
 		}
+
+		this.plainApdu = mergedFields.substring(0, mergedFields.length() - 1)
+				.getBytes();
+
+		// plainApdu = mergedFields.toString().getBytes();
 
 		// TODO compute new size of APDU and put into preamble
 
