@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 public class Field implements Serializable, Cloneable {
 
-
 	private static final long serialVersionUID = -6724126085297330455L;
 
 	private String name;
@@ -12,9 +11,9 @@ public class Field implements Serializable, Cloneable {
 	private String description;
 
 	public Field() {
-		
+
 	}
-	
+
 	public Field(String name, String value, String description) {
 		this.name = name;
 		this.value = value;
@@ -44,7 +43,7 @@ public class Field implements Serializable, Cloneable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	@Override
 	public Field clone() {
 		Field clonedField = new Field();
@@ -66,6 +65,10 @@ public class Field implements Serializable, Cloneable {
 		}
 
 		return sb.toString();
+	}
+
+	public void replaceValue(String originalValue, String replacedValue) {
+		value = value.replace(originalValue, replacedValue);
 	}
 
 }

@@ -17,8 +17,6 @@ public class ParsingHandler {
 
 	private static final String TEMPLATE_FOLDER = "templates/";
 
-	private static final String UNPARSABLE_PACKET = "Unparsable Packet";
-
 	private ArrayList<PacketTemplate> templates = new ArrayList<PacketTemplate>();
 
 	private ParsingUnit parsingUnit;
@@ -62,7 +60,7 @@ public class ParsingHandler {
 	}
 
 	private void parseByDefault(Packet processingPacket) {
-		processingPacket.setDescription(UNPARSABLE_PACKET);
+		parsingUnit.parseByDefault(processingPacket);
 	}
 
 	private boolean parseByTemplate(Packet processingPacket) {

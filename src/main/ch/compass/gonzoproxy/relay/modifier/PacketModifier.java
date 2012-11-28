@@ -26,14 +26,20 @@ public class PacketModifier {
 		for (Field field : modifiedPacket.getFields()) {
 			Rule rule = modifier.findMatchingRule(field);
 			if (rule != null) {
-				field.setValue(rule.getReplacedValue());
+				if (rule.getOriginalValue().isEmpty()) {
+					field.setValue(rule.getReplacedValue());
+				} else {
+					field.replaceValue(rule.getOriginalValue(),
+							rule.getReplacedValue());
+				}
 			}
 		}
 		modifiedPacket.isModified(true);
 		return modifiedPacket;
 	}
 
-	private boolean ruleSetMatches(RuleSet existingRuleSet, Packet originalPacket) {
+	private boolean ruleSetMatches(RuleSet existingRuleSet,
+			Packet originalPacket) {
 		return existingRuleSet.getCorrespondingPacket().equals(
 				originalPacket.getDescription());
 	}
