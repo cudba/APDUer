@@ -101,7 +101,7 @@ public class Forwarder implements Runnable {
 
 	private void initForwardingComponents() {
 		try {
-			parsingHandler = new ParsingHandler(sessionModel.getSessionFormat());
+			parsingHandler = new ParsingHandler();
 			configureStreamHandler();
 		} catch (UnexpectedException e) {
 			e.printStackTrace();

@@ -1,6 +1,6 @@
 package ch.compass.gonzoproxy.relay.io;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,7 +13,6 @@ import java.util.List;
 import org.junit.Test;
 
 import ch.compass.gonzoproxy.mvc.model.Packet;
-import ch.compass.gonzoproxy.mvc.model.ParserSettings;
 import ch.compass.gonzoproxy.relay.parser.ParsingHandler;
 
 public class PacketPersistingHandlerTest {
@@ -23,7 +22,7 @@ public class PacketPersistingHandlerTest {
 	@Test
 	public void testSaveAndLoadPackets() throws IOException, ClassNotFoundException {
 		
-		ParsingHandler parserHanlder = new ParsingHandler(ParserSettings.LibNFC);
+		ParsingHandler parserHanlder = new ParsingHandler();
 		
 		
 		String fakePlainApdu = "77 07 82 00 07 94 76 00 0a 85";

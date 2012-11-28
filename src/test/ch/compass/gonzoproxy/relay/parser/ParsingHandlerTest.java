@@ -8,13 +8,12 @@ import org.junit.Test;
 
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.mvc.model.Packet;
-import ch.compass.gonzoproxy.mvc.model.ParserSettings;
 
 public class ParsingHandlerTest {
 	ParsingHandler parserHanlder;
 	
 	@Before public void initialize() {
-		parserHanlder = new ParsingHandler(ParserSettings.LibNFC);
+		parserHanlder = new ParsingHandler();
 	    }
 
 	@Test
@@ -75,8 +74,9 @@ public class ParsingHandlerTest {
 
 		parserHanlder.tryParse(packet);
 
-		assertEquals(0, packet.getFields().size());
+		assertEquals(1, packet.getFields().size());
 		assertArrayEquals(fakePlainPacket.getBytes(), packet.getOriginalPacket());
+		assertEquals(new String(fakePlainPacket), packet.getFields().get(0).getValue());
 
 	}
 
@@ -128,32 +128,4 @@ public class ParsingHandlerTest {
 		assertEquals(trimmedPacket, mergedFields.toString());
 
 	}
-	
-	@Test
-	public void testProcessPacketNoWhitespaces() {
-		
-		ParsingHandler customParserHandler = new ParsingHandler(ParserSettings.NoWhiteSpaces);
-
-		String fakePlainPacket = "77078200079476000a85";
-		String noWhitespacesInput = "#R-Packet 000a:77078200079476000a85$";
-		Packet packet = new Packet(noWhitespacesInput.getBytes());
-		packet.setPlainPacket(fakePlainPacket.getBytes());
-
-		customParserHandler.tryParse(packet);
-
-		StringBuilder mergedFields = new StringBuilder();
-
-		for (Field field : packet.getFields()) {
-			mergedFields.append(field.getValue());
-		}
-
-		String packetDescription = "Get Processing Options Response";
-		String trimmedPacket = "77078200079476000a85";
-		assertEquals(packetDescription, packet.getDescription());
-		assertEquals("82", packet.getFields().get(2).getValue());
-		assertArrayEquals(fakePlainPacket.getBytes(), packet.getOriginalPacket());
-		assertEquals(trimmedPacket, mergedFields.toString());
-
-	}
-	
 }

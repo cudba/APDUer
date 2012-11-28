@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 
 import ch.compass.gonzoproxy.mvc.model.CurrentSessionModel;
 import ch.compass.gonzoproxy.mvc.model.Packet;
-import ch.compass.gonzoproxy.mvc.model.ParserSettings;
 import ch.compass.gonzoproxy.relay.modifier.PacketModifier;
 import ch.compass.gonzoproxy.relay.modifier.Rule;
 import ch.compass.gonzoproxy.relay.session.RelaySession;
@@ -70,7 +69,6 @@ public class RelayController {
 				Integer.parseInt(remotePort));
 		sessionModel.clearData();
 		sessionModel.setMode(mode);
-		sessionModel.setSessionFormat(ParserSettings.LibNFC);
 		sessionModel.setPacketModifier(packetModifier);
 	}
 
@@ -91,7 +89,7 @@ public class RelayController {
 	public void addModifierRule(String packetName, String fieldName,
 			String originalValue, String replacedValue, Boolean updateLength) {
 		Rule fieldRule = new Rule(fieldName, originalValue, replacedValue);
-		packetModifier.addRule(packetName, fieldRule);
+		packetModifier.addRule(packetName, fieldRule, updateLength);
 	}
 
 	public void changeCommandTrap() {

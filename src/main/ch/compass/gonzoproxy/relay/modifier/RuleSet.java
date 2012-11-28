@@ -10,6 +10,8 @@ public class RuleSet {
 
 	private ArrayList<Rule> rules = new ArrayList<Rule>();
 
+	private Boolean updateLength;
+
 	public RuleSet(String correspondingPacket) {
 		this.correspondingPacket = correspondingPacket;
 	}
@@ -47,5 +49,14 @@ public class RuleSet {
 	public boolean equals(Object object) {
 		return ((RuleSet) object).getCorrespondingPacket().equals(
 				correspondingPacket);
+	}
+
+	public void shouldUpdateLength(Boolean updateLength) {
+		this.updateLength = updateLength;
+		
+	}
+	
+	public boolean shouldUpdateLength(){
+		return updateLength;
 	}
 }
