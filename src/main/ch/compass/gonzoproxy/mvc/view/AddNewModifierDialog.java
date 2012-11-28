@@ -16,6 +16,7 @@ import ch.compass.gonzoproxy.mvc.controller.RelayController;
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.mvc.model.Packet;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JCheckBox;
 
 public class AddNewModifierDialog extends JDialog {
 	private static final long serialVersionUID = -1789866876175936281L;
@@ -27,6 +28,8 @@ public class AddNewModifierDialog extends JDialog {
 	private RelayController controller;
 	private Packet editApdu;
 	private Field field;
+	private JCheckBox chckbxReplaceWhole;
+	private JCheckBox chckbxUpdateLengthAutomatically;
 
 	public AddNewModifierDialog(Packet editApdu, Field field, RelayController controller) {
 		this.controller = controller;
@@ -51,12 +54,12 @@ public class AddNewModifierDialog extends JDialog {
 		setResizable(false);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setTitle("Add new modifier");
-		setBounds(100, 100, 457, 227);
+		setBounds(100, 100, 457, 225);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				Double.MIN_VALUE };
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -93,7 +96,7 @@ public class AddNewModifierDialog extends JDialog {
 			gbc_textFieldFieldname.gridy = 1;
 			contentPane.add(textFieldFieldname, gbc_textFieldFieldname);
 			textFieldFieldname.setColumns(10);
-			JLabel lblOldValue = new JLabel("Replace: ");
+			JLabel lblOldValue = new JLabel("Old value (pattern): ");
 			GridBagConstraints gbc_lblOldValue = new GridBagConstraints();
 			gbc_lblOldValue.anchor = GridBagConstraints.WEST;
 			gbc_lblOldValue.insets = new Insets(0, 0, 5, 5);
@@ -108,7 +111,7 @@ public class AddNewModifierDialog extends JDialog {
 			gbc_textFieldOldValue.gridy = 2;
 			contentPane.add(textFieldOldValue, gbc_textFieldOldValue);
 			textFieldOldValue.setColumns(10);
-			JLabel lblNewValue = new JLabel("with: ");
+			JLabel lblNewValue = new JLabel("New value: ");
 			GridBagConstraints gbc_lblNewValue = new GridBagConstraints();
 			gbc_lblNewValue.anchor = GridBagConstraints.WEST;
 			gbc_lblNewValue.insets = new Insets(0, 0, 5, 5);
@@ -128,14 +131,43 @@ public class AddNewModifierDialog extends JDialog {
 				
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					controller.addModifierRule(editApdu.getDescription(), field.getName(), textFieldOldValue.getText(), textFieldNewValue.getText(), false);
+					String oldValue = textFieldOldValue.getText();
+					if(chckbxReplaceWhole.isSelected()){
+						oldValue = "";
+					}
+					controller.addModifierRule(editApdu.getDescription(), field.getName(), oldValue, textFieldNewValue.getText(), chckbxUpdateLengthAutomatically.isSelected());
 					AddNewModifierDialog.this.dispose();
 				}
 			});
+			
+			chckbxReplaceWhole = new JCheckBox("Replace whole field with new value");
+			chckbxReplaceWhole.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(chckbxReplaceWhole.isSelected()){
+						textFieldOldValue.setEnabled(false);
+					}else{
+						textFieldOldValue.setEnabled(true);
+					}
+				}
+			});
+			GridBagConstraints gbc_chckbxReplaceWhole = new GridBagConstraints();
+			gbc_chckbxReplaceWhole.anchor = GridBagConstraints.WEST;
+			gbc_chckbxReplaceWhole.insets = new Insets(0, 0, 5, 0);
+			gbc_chckbxReplaceWhole.gridx = 1;
+			gbc_chckbxReplaceWhole.gridy = 4;
+			contentPane.add(chckbxReplaceWhole, gbc_chckbxReplaceWhole);
+			
+			chckbxUpdateLengthAutomatically = new JCheckBox("Update length automatically");
+			GridBagConstraints gbc_chckbxUpdateLengthAutomatically = new GridBagConstraints();
+			gbc_chckbxUpdateLengthAutomatically.anchor = GridBagConstraints.WEST;
+			gbc_chckbxUpdateLengthAutomatically.insets = new Insets(0, 0, 5, 0);
+			gbc_chckbxUpdateLengthAutomatically.gridx = 1;
+			gbc_chckbxUpdateLengthAutomatically.gridy = 5;
+			contentPane.add(chckbxUpdateLengthAutomatically, gbc_chckbxUpdateLengthAutomatically);
 			GridBagConstraints gbc_btnSave = new GridBagConstraints();
 			gbc_btnSave.insets = new Insets(0, 0, 0, 5);
 			gbc_btnSave.gridx = 0;
-			gbc_btnSave.gridy = 5;
+			gbc_btnSave.gridy = 6;
 			contentPane.add(btnSave, gbc_btnSave);
 			JButton btnCancel = new JButton("Cancel");
 			btnCancel.addActionListener(new ActionListener() {
@@ -148,7 +180,7 @@ public class AddNewModifierDialog extends JDialog {
 			GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 			gbc_btnCancel.anchor = GridBagConstraints.WEST;
 			gbc_btnCancel.gridx = 1;
-			gbc_btnCancel.gridy = 5;
+			gbc_btnCancel.gridy = 6;
 			contentPane.add(btnCancel, gbc_btnCancel);
 			
 			textFieldFieldname.setEnabled(false);

@@ -34,6 +34,7 @@ public class RelayController {
 	private void loadModifier() {
 		// TODO: load persited modifiers from file
 		packetModifier = new PacketModifier();
+		sessionModel.setPacketModifier(packetModifier);
 	}
 
 	private void loadModes() {
@@ -55,6 +56,15 @@ public class RelayController {
 	public void startRelaySession() {
 		relaySession = new RelaySession(sessionModel);
 		new Thread(relaySession).start();
+		
+//		try {
+//			Runtime.getRuntime().exec("socat TCP-LISTEN:4321,reuseaddr \"EXEC:nfc-relay-picc -i,fdin=3,fdout=4\"");
+//			Runtime.getRuntime().exec("socat TCP:127.0.0.1:1234 \"EXEC:nfc-relay-picc -t,fdin=3,fdout=4\"");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
 	}
 
 	public void newSession(String portListen, String remoteHost,

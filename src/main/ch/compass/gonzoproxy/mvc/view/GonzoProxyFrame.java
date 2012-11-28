@@ -145,6 +145,14 @@ public class GonzoProxyFrame extends JFrame {
 		menuBar.add(mnTools);
 
 		mntmModifier = new JMenuItem("Modifier");
+		mntmModifier.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				ModifierDialog md = new ModifierDialog(controller);
+				md.setVisible(true);
+			}
+		});
 		mnTools.add(mntmModifier);
 
 		mntmLoadTemplate = new JMenuItem("Load template");
