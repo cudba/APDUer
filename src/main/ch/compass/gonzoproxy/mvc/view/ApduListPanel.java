@@ -1,5 +1,7 @@
 package ch.compass.gonzoproxy.mvc.view;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,6 +20,7 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import ch.compass.gonzoproxy.mvc.controller.RelayController;
@@ -76,6 +79,7 @@ public class ApduListPanel extends JPanel {
 
 			@Override
 			public void packetReceived(Packet receivedPacket) {
+				table_apduList.scrollRectToVisible(table_apduList.getCellRect(table_apduList.getRowCount()-1, table_apduList.getColumnCount(), true));
 			}
 
 			@Override
@@ -124,7 +128,25 @@ public class ApduListPanel extends JPanel {
 		gbc_scrollPane_0.gridy = 0;
 		panel_table.add(scrollPane_0, gbc_scrollPane_0);
 
-		table_apduList = new JTable();
+		table_apduList = new JTable(){
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column)
+			{
+				Component c = super.prepareRenderer(renderer, row, column);
+	
+				if (!isRowSelected(row)){
+					
+					if(table_apduList.getModel().getValueAt(row, 1).equals("COM")){
+						c.setBackground(Color.LIGHT_GRAY);
+					}else{
+						c.setBackground(getBackground());
+					}
+					if(ApduListPanel.this.currentSession.getPacketList().get(row).isModified()){
+						c.setBackground(Color.PINK);
+					}
+				}
+				return c;
+			}
+		};
 		table_apduList.setModel(new ApduTableModel(currentSession,
 				new String[] { "#", "Type", "APDU", "ASCII", "Description" }));
 
@@ -312,7 +334,6 @@ public class ApduListPanel extends JPanel {
 
 	private void configureTable(JTable table) {
 		table.setSelectionMode(0);
-		// table.getSelectionModel().addListSelectionListener(this.selectListController);
 		table.getTableHeader().setReorderingAllowed(false);
 		Enumeration<TableColumn> a = table.getColumnModel().getColumns();
 		for (int i = 0; a.hasMoreElements(); i++) {
