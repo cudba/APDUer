@@ -37,7 +37,6 @@ public class ParsingHandlerTest {
 		assertEquals(packetDescription, packet.getDescription());
 		assertArrayEquals(fakePlainPacket.getBytes(), packet.getOriginalPacket());
 		assertEquals(trimmedPacket, mergedFields.toString());
-
 	}
 
 	@Test

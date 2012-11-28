@@ -26,26 +26,39 @@ public class PacketModifier {
 
 		for (Field field : modifiedPacket.getFields()) {
 			Rule rule = modifier.findMatchingRule(field);
+
 			if (rule != null && rule.isActive()) {
+				int fieldLengthDiff = 0;
+
 				if (rule.getOriginalValue().isEmpty()) {
+					if (modifier.shouldUpdateLength()) {
+						fieldLengthDiff= computeLengthDifference(field.getValue(),
+								rule.getReplacedValue());
+						updateContentLengthField(modifiedPacket,
+								fieldLengthDiff);
+					}
 					field.setValue(rule.getReplacedValue());
+
 				} else {
+					if (modifier.shouldUpdateLength()) {
+						fieldLengthDiff = computeLengthDifference(rule.getOriginalValue(),
+								rule.getReplacedValue());
+						updateContentLengthField(modifiedPacket,
+								fieldLengthDiff);
+					}
 					field.replaceValue(rule.getOriginalValue(),
 							rule.getReplacedValue());
 				}
-				if (modifier.shouldUpdateLength()) {
-					int lengthDiff = computeLengthDifference(
-							rule.getOriginalValue(), rule.getReplacedValue());
-					int updatedPacketSize = modifiedPacket.getSize()
-							+ lengthDiff;
-					modifiedPacket.setSize(updatedPacketSize);
-					updateContentLengthField(modifiedPacket, lengthDiff);
-				}
-
+				updatePacketLenght(modifiedPacket, fieldLengthDiff);
 				modifiedPacket.isModified(true);
 			}
 		}
 		return modifiedPacket;
+	}
+
+	private void updatePacketLenght(Packet modifiedPacket, int fieldLengthDiff) {
+		int updatedPacketSize = modifiedPacket.getSize() + fieldLengthDiff;
+		modifiedPacket.setSize(updatedPacketSize);
 	}
 
 	private void updateContentLengthField(Packet packet, int fieldLengthDiff) {
@@ -62,7 +75,7 @@ public class PacketModifier {
 		StringBuilder sb = new StringBuilder();
 		sb.append(Integer.toHexString(newContentLength));
 		if (sb.length() < 2) {
-		    sb.insert(0, '0'); 
+			sb.insert(0, '0');
 		}
 		return sb.toString();
 	}

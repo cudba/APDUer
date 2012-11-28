@@ -18,12 +18,11 @@ public class ParsingHandler {
 
 	private ArrayList<PacketTemplate> templates = new ArrayList<PacketTemplate>();
 
-	private ParsingUnit parsingUnit;
-	private TemplateValidator templateValidator;
+	private ParsingUnit parsingUnit = new ParsingUnit();
+	private TemplateValidator templateValidator = new TemplateValidator();
 
 	public ParsingHandler() {
 		loadTemplates();
-		initParsingComponents();
 	}
 
 	public void tryParse(Packet processingPacket) {
@@ -76,11 +75,5 @@ public class ParsingHandler {
 			return parsingUnit.parseBy(bestMatchingTemplate, processingPacket);
 		}
 		return false;
-	}
-
-	private void initParsingComponents() {
-		parsingUnit = new ParsingUnit();
-		templateValidator = new TemplateValidator();
-		
 	}
 }
