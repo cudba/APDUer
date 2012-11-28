@@ -5,6 +5,7 @@ public class Rule {
 	private String correspondingField;
 	private String originalValue;
 	private String replacedValue;
+	private boolean isActive;
 
 	public Rule(String correspondingField, String originalValue,
 			String replacedValue) {
@@ -35,6 +36,14 @@ public class Rule {
 
 	public void setReplacedValue(String replacedValue) {
 		this.replacedValue = replacedValue;
+	}
+	
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	
+	public boolean isActive() {
+		return isActive;
 	}
 
 	@Override
