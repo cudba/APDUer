@@ -6,13 +6,13 @@ import java.util.ArrayList;
 public class Packet implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -4766720932383072042L;
-	
+
 	private boolean isModified = false;
-	
-	private byte[] plainPacket;
+
+	private byte[] originalPacket;
 	private byte[] preamble;
 	private byte[] trailer;
-	
+
 	private String description;
 	private ForwardingType type;
 	private int size;
@@ -24,12 +24,22 @@ public class Packet implements Serializable, Cloneable {
 		this.streamInput = streamInput;
 	}
 
-	public byte[] getPlainPacket() {
-		return plainPacket;
+	public byte[] getOriginalPacket() {
+		return originalPacket;
+	}
+
+	public String getPacketFromFields() {
+		StringBuilder mergedFields = new StringBuilder();
+
+		for (Field field : this.getFields()) {
+			mergedFields.append(field.getValue() + " ");
+		}
+
+		return mergedFields.substring(0, mergedFields.length() - 1);
 	}
 
 	public void setPlainPacket(byte[] packet) {
-		this.plainPacket = packet;
+		this.originalPacket = packet;
 	}
 
 	public String getDescription() {
@@ -58,12 +68,12 @@ public class Packet implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return new String(plainPacket);
+		return new String(originalPacket);
 	}
 
 	public String toAscii() {
 		StringBuffer sb = new StringBuffer("");
-		String ascii = new String(plainPacket).replaceAll("\\s","");
+		String ascii = getPacketFromFields().replaceAll("\\s", "");
 		String[] strArr = ascii.split("(?<=\\G..)");
 
 		for (String a : strArr) {
@@ -106,13 +116,13 @@ public class Packet implements Serializable, Cloneable {
 	public void addField(Field field) {
 		fields.add(field);
 	}
-	
+
 	@Override
-	public Packet clone()  {
+	public Packet clone() {
 		Packet clonedPacket = new Packet(streamInput);
 		clonedPacket.setDescription(description);
 		clonedPacket.setPreamble(preamble);
-		clonedPacket.setPlainPacket(plainPacket);
+		clonedPacket.setPlainPacket(originalPacket);
 		clonedPacket.setTrailer(trailer);
 		clonedPacket.setSize(size);
 		clonedPacket.setType(type);
@@ -125,8 +135,8 @@ public class Packet implements Serializable, Cloneable {
 	public boolean isModified() {
 		return isModified;
 	}
-	
-	public void isModified(boolean isModified){
+
+	public void isModified(boolean isModified) {
 		this.isModified = isModified;
 	}
 }

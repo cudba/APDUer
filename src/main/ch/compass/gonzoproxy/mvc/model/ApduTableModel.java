@@ -72,7 +72,7 @@ public class ApduTableModel extends AbstractTableModel {
 		case 1:
 			return apdu.getType().getId();
 		case 2:
-			return new String(apdu.getPlainPacket());
+			return apdu.getPacketFromFields();
 		case 3:
 			return apdu.toAscii();
 		case 4:

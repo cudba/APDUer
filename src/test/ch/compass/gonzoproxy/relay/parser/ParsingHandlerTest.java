@@ -36,7 +36,7 @@ public class ParsingHandlerTest {
 		String packetDescription = "Case 4 Select Command";
 		String trimmedPacket = "00a4040007d2 76 00 00 85 01 0100";
 		assertEquals(packetDescription, packet.getDescription());
-		assertArrayEquals(fakePlainPacket.getBytes(), packet.getPlainPacket());
+		assertArrayEquals(fakePlainPacket.getBytes(), packet.getOriginalPacket());
 		assertEquals(trimmedPacket, mergedFields.toString());
 
 	}
@@ -60,7 +60,7 @@ public class ParsingHandlerTest {
 		String packetDescription = "Case 3 Select Command";
 		String trimmedPacket = "00a4040007d2 76 00 00 85 01 00";
 		assertEquals(packetDescription, packet.getDescription());
-		assertArrayEquals(fakePlainPacket.getBytes(), packet.getPlainPacket());
+		assertArrayEquals(fakePlainPacket.getBytes(), packet.getOriginalPacket());
 		assertEquals(trimmedPacket, mergedFields.toString());
 
 	}
@@ -76,7 +76,7 @@ public class ParsingHandlerTest {
 		parserHanlder.tryParse(packet);
 
 		assertEquals(0, packet.getFields().size());
-		assertArrayEquals(fakePlainPacket.getBytes(), packet.getPlainPacket());
+		assertArrayEquals(fakePlainPacket.getBytes(), packet.getOriginalPacket());
 
 	}
 
@@ -99,7 +99,7 @@ public class ParsingHandlerTest {
 		String packetDescription = "Get Processing Options Response";
 		String trimmedPacket = "77078200079476 00 0a85";
 		assertEquals(packetDescription, packet.getDescription());
-		assertArrayEquals(fakePlainPacket.getBytes(), packet.getPlainPacket());
+		assertArrayEquals(fakePlainPacket.getBytes(), packet.getOriginalPacket());
 		assertEquals(trimmedPacket, mergedFields.toString());
 
 	}
@@ -124,7 +124,7 @@ public class ParsingHandlerTest {
 		String packetDescription = "Select Response";
 		String trimmedPacket = "6f2f840e 32 50 41 59 2e 53 59 53 2e 44 44 46 30 31a51d bf 0c 1a 61 18 4f 07 a0 00 00 00 04 10 10 87 01 01 50 0a 4d 61 73 74 65 72 43 61 72 649000";
 		assertEquals(packetDescription, packet.getDescription());
-		assertArrayEquals(fakePlainPacket.getBytes(), packet.getPlainPacket());
+		assertArrayEquals(fakePlainPacket.getBytes(), packet.getOriginalPacket());
 		assertEquals(trimmedPacket, mergedFields.toString());
 
 	}
@@ -151,7 +151,7 @@ public class ParsingHandlerTest {
 		String trimmedPacket = "77078200079476000a85";
 		assertEquals(packetDescription, packet.getDescription());
 		assertEquals("82", packet.getFields().get(2).getValue());
-		assertArrayEquals(fakePlainPacket.getBytes(), packet.getPlainPacket());
+		assertArrayEquals(fakePlainPacket.getBytes(), packet.getOriginalPacket());
 		assertEquals(trimmedPacket, mergedFields.toString());
 
 	}

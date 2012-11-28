@@ -128,7 +128,7 @@ public class AddNewModifierDialog extends JDialog {
 				
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					controller.addModifierRule(editApdu.getDescription(), field.getName(), textFieldOldValue.getText(), textFieldNewValue.getText());
+					controller.addModifierRule(editApdu.getDescription(), field.getName(), textFieldOldValue.getText(), textFieldNewValue.getText(), false);
 					AddNewModifierDialog.this.dispose();
 				}
 			});

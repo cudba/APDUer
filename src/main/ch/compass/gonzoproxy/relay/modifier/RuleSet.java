@@ -24,32 +24,13 @@ public class RuleSet {
 	}
 
 	public void add(Rule rule) {
-		
-		Rule existingRule = find(rule);
-		if(existingRule != null){
-			overrideExistingRule(existingRule, rule);
-		}else {
 			rules.add(rule);
-		}
-		
 	}
 	
 	public ArrayList<Rule> getRules() {
 		return rules;
 	}
-
-	private Rule find(Rule rule) {
-		for (Rule existingRule : rules) {
-			if(existingRule.equals(rule))
-				return existingRule;
-		}
-		return null;
-	}
 	
-	private void overrideExistingRule(Rule existingRule, Rule createdRule) {
-		existingRule.setReplacedValue(createdRule.getReplacedValue());
-	}
-
 	public Rule findMatchingRule(Field field) {
 		for (Rule rule : rules) {
 			if(isMatchingRule(field, rule))

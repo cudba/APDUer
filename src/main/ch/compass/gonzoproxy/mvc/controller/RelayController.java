@@ -29,8 +29,6 @@ public class RelayController {
 		loadModes();
 		loadModifier();
 
-		// just for demonstration
-//		 fakeRule();
 	}
 
 	private void loadModifier() {
@@ -91,7 +89,7 @@ public class RelayController {
 	}
 
 	public void addModifierRule(String packetName, String fieldName,
-			String originalValue, String replacedValue) {
+			String originalValue, String replacedValue, Boolean updateLength) {
 		Rule fieldRule = new Rule(fieldName, originalValue, replacedValue);
 		packetModifier.addRule(packetName, fieldRule);
 	}
@@ -150,11 +148,4 @@ public class RelayController {
 		}
 	}
 
-	private void fakeRule() {
-		
-		// replace status byte 90 with FF
-		Rule statusByteRule = new Rule("Status Byte 1", "90", "FF");
-		packetModifier.addRule("Select Response", statusByteRule);
-
-	}
 }

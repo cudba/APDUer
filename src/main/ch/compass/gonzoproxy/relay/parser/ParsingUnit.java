@@ -11,7 +11,7 @@ public class ParsingUnit {
 	public boolean parseBy(PacketTemplate template, Packet processingPacket) {
 		processingPacket.setDescription(template.getPacketDescription());
 		ArrayList<Field> templateFields = template.getFields();
-		byte[] packet = processingPacket.getPlainPacket();
+		byte[] packet = processingPacket.getOriginalPacket();
 
 		int contentStartIndex = 0;
 		int contentLength = ParsingHelper.DEFAULT_FIELDLENGTH;

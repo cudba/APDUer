@@ -9,7 +9,7 @@ import ch.compass.gonzoproxy.utils.ParsingHelper;
 public class TemplateValidator {
 
 	public boolean accept(PacketTemplate template, Packet processingPacket) {
-		byte[] packet = processingPacket.getPlainPacket();
+		byte[] packet = processingPacket.getOriginalPacket();
 		ArrayList<Field> templateFields = template.getFields();
 
 		int contentStartIndex = 0;

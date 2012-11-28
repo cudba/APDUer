@@ -141,7 +141,7 @@ public class ApduDetailPanel extends JPanel {
 
 	private void updateFields() {
 		textPane_ascii.setText(editApdu.toAscii());
-		textPane_hex.setText(new String(editApdu.getPlainPacket()));
+		textPane_hex.setText(new String(editApdu.getOriginalPacket()));
 	}
 
 	private void configureTable(JTable table) {
