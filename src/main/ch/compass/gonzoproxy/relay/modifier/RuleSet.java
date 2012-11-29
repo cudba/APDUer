@@ -1,10 +1,13 @@
 package ch.compass.gonzoproxy.relay.modifier;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import ch.compass.gonzoproxy.mvc.model.Field;
 
-public class RuleSet {
+public class RuleSet implements Serializable {
+
+	private static final long serialVersionUID = -3893571727728725384L;
 
 	private String correspondingPacket;
 
@@ -45,12 +48,6 @@ public class RuleSet {
 				&& field.getValue().contains(rule.getOriginalValue());
 	}
 
-	@Override
-	public boolean equals(Object object) {
-		return ((RuleSet) object).getCorrespondingPacket().equals(
-				correspondingPacket);
-	}
-
 	public void shouldUpdateLength(Boolean updateLength) {
 		this.updateLength = updateLength;
 		
@@ -58,5 +55,11 @@ public class RuleSet {
 	
 	public boolean shouldUpdateContentLength(){
 		return updateLength;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		return ((RuleSet) object).getCorrespondingPacket().equals(
+				correspondingPacket);
 	}
 }

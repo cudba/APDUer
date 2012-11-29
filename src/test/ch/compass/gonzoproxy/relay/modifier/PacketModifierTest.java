@@ -1,7 +1,8 @@
 package ch.compass.gonzoproxy.relay.modifier;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import ch.compass.gonzoproxy.mvc.model.Field;
 import ch.compass.gonzoproxy.mvc.model.Packet;
@@ -17,24 +18,29 @@ public class PacketModifierTest {
 		Rule rule = new Rule("Modified Field", "0f", "a5");
 		packetModifier.addRule("Modified Packet", rule, false);
 
-		assertEquals(rule, packetModifier.getRuleSets().get(0).getRules()
-				.get(0));
+		Rule actualAddedRule = packetModifier.getRuleSets().get(0).getRules()
+				.get(0);
+		assertEquals(rule, actualAddedRule);
 	}
 
 	@Test
-	public void testOverrideExistingRule() {
+	public void testAddExistingRule() {
 		PacketModifier packetModifier = new PacketModifier();
 
 		Rule rule = new Rule("Modified Field", "0f", "a5");
 		packetModifier.addRule("Modified Packet", rule, false);
 
-		Rule overridingRule = new Rule("Modified Field", "0f", "ff");
-		packetModifier.addRule("Modified Packet", overridingRule, false);
+		Rule addedRule = new Rule("Modified Field", "0f", "ff");
+		packetModifier.addRule("Modified Packet", addedRule, false);
 		
-		assertEquals(1, packetModifier.getRuleSets().size());
-		assertEquals(2, packetModifier.getRuleSets().get(0).getRules().size());
-		assertEquals(overridingRule, packetModifier.getRuleSets().get(0)
-				.getRules().get(0));
+		int actualRuleSetCount = packetModifier.getRuleSets().size();
+		int actualRuleCount = packetModifier.getRuleSets().get(0).getRules().size();
+		
+		assertEquals(1, actualRuleSetCount);
+		assertEquals(2, actualRuleCount);
+		Rule actualAddedRule = packetModifier.getRuleSets().get(0)
+				.getRules().get(0);
+		assertEquals(addedRule, actualAddedRule);
 	}
 
 	@Test
@@ -49,18 +55,23 @@ public class PacketModifierTest {
 		String fakePlainApdu = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		Packet receivedPacket = new Packet(libnfcInput.getBytes());
-		receivedPacket.setPlainPacket(fakePlainApdu.getBytes());
+		receivedPacket.setOriginalPacketData(fakePlainApdu.getBytes());
 		receivedPacket.setDescription("Modified Packet");
 
 		receivedPacket.addField(new Field("FooName", "00", "FooDescription"));
 		receivedPacket.addField(new Field("Modified Field", "0f",
 				"FooDescriptoin"));
 
-		Packet modifiedPacket = packetModifier.tryModify(receivedPacket);
+		Packet modifiedPacket = packetModifier.modifyByRule(receivedPacket);
 
-		assertEquals(rule.getReplacedValue(), modifiedPacket.getFields().get(1)
-				.getValue());
-		assertEquals("0f", receivedPacket.getFields().get(1).getValue());
+		String expectedReplacedValue = rule.getReplacedValue();
+		String actualReplacedValue = modifiedPacket.getFields().get(1)
+				.getValue();
+		String expectedOriginalValue = "0f";
+		String actualOriginalValue = receivedPacket.getFields().get(1).getValue();
+
+		assertEquals(expectedReplacedValue, actualReplacedValue);
+		assertEquals(expectedOriginalValue, actualOriginalValue);
 
 	}
 
@@ -76,14 +87,14 @@ public class PacketModifierTest {
 		String fakePlainApdu = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		Packet receivedPacket = new Packet(libnfcInput.getBytes());
-		receivedPacket.setPlainPacket(fakePlainApdu.getBytes());
+		receivedPacket.setOriginalPacketData(fakePlainApdu.getBytes());
 		receivedPacket.setDescription("Modified Packet");
 
 		receivedPacket.addField(new Field("FooName", "00", "FooDescription"));
 		receivedPacket.addField(new Field("Modified Field", "0f c7",
 				"FooDescriptoin"));
 
-		Packet modifiedPacket = packetModifier.tryModify(receivedPacket);
+		Packet modifiedPacket = packetModifier.modifyByRule(receivedPacket);
 
 		String expectedReplacedValue = rule.getReplacedValue();
 		String actualReplacedValue = modifiedPacket.getFields().get(1).getValue();
@@ -108,14 +119,14 @@ public class PacketModifierTest {
 		String fakePlainApdu = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		Packet receivedPacket = new Packet(libnfcInput.getBytes());
-		receivedPacket.setPlainPacket(fakePlainApdu.getBytes());
+		receivedPacket.setOriginalPacketData(fakePlainApdu.getBytes());
 		receivedPacket.setDescription("Modified Packet");
 
 		receivedPacket.addField(new Field("FooName", "00", "FooDescription"));
 		receivedPacket.addField(new Field("Modified Field", "0f",
 				"FooDescriptoin"));
 
-		Packet modifiedPacket = packetModifier.tryModify(receivedPacket);
+		Packet modifiedPacket = packetModifier.modifyByRule(receivedPacket);
 
 		String expectedValue = "0f";
 		String actualValue = modifiedPacket.getFields().get(1).getValue();
@@ -136,7 +147,7 @@ public class PacketModifierTest {
 		String fakePlainApdu = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		Packet receivedPacket = new Packet(libnfcInput.getBytes());
-		receivedPacket.setPlainPacket(fakePlainApdu.getBytes());
+		receivedPacket.setOriginalPacketData(fakePlainApdu.getBytes());
 		receivedPacket.setDescription("Modified Packet");
 
 		receivedPacket.addField(new Field("Lc", "03", "Content Length"));
@@ -144,7 +155,7 @@ public class PacketModifierTest {
 				"FooDescriptoin"));
 		receivedPacket.setSize(3);
 
-		Packet modifiedPacket = packetModifier.tryModify(receivedPacket);
+		Packet modifiedPacket = packetModifier.modifyByRule(receivedPacket);
 
 		String expectedReplacedValue = rule.getReplacedValue() + " b8";
 		String actualReplacedValue = modifiedPacket.getFields().get(1).getValue();
@@ -177,7 +188,7 @@ public class PacketModifierTest {
 		String fakePlainApdu = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
 		Packet receivedPacket = new Packet(libnfcInput.getBytes());
-		receivedPacket.setPlainPacket(fakePlainApdu.getBytes());
+		receivedPacket.setOriginalPacketData(fakePlainApdu.getBytes());
 		receivedPacket.setDescription("Modified Packet");
 
 		receivedPacket.addField(new Field("Lc", "03", "Content Length"));
@@ -185,7 +196,7 @@ public class PacketModifierTest {
 				"FooDescriptoin"));
 		receivedPacket.setSize(3);
 
-		Packet modifiedPacket = packetModifier.tryModify(receivedPacket);
+		Packet modifiedPacket = packetModifier.modifyByRule(receivedPacket);
 
 		String expectedReplacedValue = rule.getReplacedValue() + " b8";
 		String actualReplacedValue = modifiedPacket.getFields().get(1).getValue();
@@ -205,4 +216,25 @@ public class PacketModifierTest {
 		assertEquals("03", contentLengthField.getValue());
 		assertEquals(4, modifiedPacket.getSize());
 	}
+	
+	@Test
+	public void testModifyByRegex() {
+
+		PacketModifier packetModifier = new PacketModifier();
+
+		String fakePlainApdu = "00 a4 04 00 07 d2 76 00 00 85 01 01 00";
+		String libnfcInput = "C-APDU 000d: 00 a4 04 00 07 d2 76 00 00 85 01 01 00";
+		Packet receivedPacket = new Packet(libnfcInput.getBytes());
+		receivedPacket.setOriginalPacketData(fakePlainApdu.getBytes());
+		receivedPacket.setDescription("Modified Packet");
+
+		receivedPacket.addField(new Field("Lc", "03", "Content Length"));
+		receivedPacket.addField(new Field("Modified Field", "0f c7 b8",
+				"FooDescriptoin"));
+		receivedPacket.setSize(3);
+		
+		Packet modifiedPacket = packetModifier.modifyByRegex(receivedPacket);
+	}
+	
+	
 }

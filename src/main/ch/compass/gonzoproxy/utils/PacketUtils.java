@@ -26,7 +26,7 @@ public class PacketUtils {
 	}
 
 
-	public static int findFieldInPacket(byte[] plainPacket, int offset,
+	public static int findFieldInPlainPacket(byte[] plainPacket, int offset,
 			Field field) {
 		String nextIdentifier = field.getValue();
 		byte[] byteField = new byte[2];
@@ -63,9 +63,9 @@ public class PacketUtils {
 		return fieldLength > DEFAULT_FIELDLENGTH;
 	}
 
-	public static byte[] extractField(byte[] plainApdu,
+	public static byte[] extractField(byte[] plainPacket,
 			int fieldLength, int currentOffset) {
-		return ByteArraysUtils.trim(plainApdu, currentOffset, fieldLength);
+		return ByteArraysUtils.trim(plainPacket, currentOffset, fieldLength);
 	}
 
 
@@ -82,9 +82,9 @@ public class PacketUtils {
 		return 0;
 	}
 	
-	public static boolean isIdentifiedContent(ArrayList<Field> templateFields, int i,
+	public static boolean isIdentifiedContent(ArrayList<Field> templateFields, int offset,
 			Field processingField) {
-		return PacketUtils.isContentIdentifierField(processingField) && templateFields.size() > i + 1;
+		return PacketUtils.isContentIdentifierField(processingField) && templateFields.size() > offset + 1;
 	}
 
 }

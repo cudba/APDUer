@@ -52,7 +52,7 @@ public class EtNfcApduExtractor implements ApduExtractor {
 		byte[] trailer = getApduTrailer(rawApdu, size);
 		Packet newApdu = new Packet(rawApdu);
 		newApdu.setPreamble(preamble);
-		newApdu.setPlainPacket(plainApdu);
+		newApdu.setOriginalPacketData(plainApdu);
 		newApdu.setTrailer(trailer);
 		newApdu.setSize(size);
 		return newApdu;

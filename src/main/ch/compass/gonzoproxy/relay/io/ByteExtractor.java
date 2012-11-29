@@ -43,7 +43,7 @@ public class ByteExtractor implements ApduExtractor {
 			byte[]asciiPacket = packetAsHexString.getBytes();
 			
 			Packet packet = new Packet(asciiPacket);
-			packet.setPlainPacket(asciiPacket);
+			packet.setOriginalPacketData(asciiPacket);
 			
 			packetQueue.add(packet);
 			
@@ -57,7 +57,7 @@ public class ByteExtractor implements ApduExtractor {
 			Packet packet = new Packet(packetAsHexString.getBytes());
 			String plainPacket = packetAsHexString.substring(2, packetAsHexString.length() -2);
 			System.out.println(plainPacket);
-			packet.setPlainPacket(plainPacket.getBytes());
+			packet.setOriginalPacketData(plainPacket.getBytes());
 			packetQueue.add(packet);
 		}
 

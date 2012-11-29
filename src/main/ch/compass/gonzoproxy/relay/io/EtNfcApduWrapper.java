@@ -12,7 +12,7 @@ public class EtNfcApduWrapper implements ApduWrapper{
 
 	public byte[] wrap(Packet apdu) {
 		this.trailer = apdu.getTrailer();
-		this.plainApdu = apdu.getOriginalPacket();
+		this.plainApdu = apdu.getOriginalPacketData();
 		this.preamble = computePreamble(apdu);
 
 		int newSize = preamble.length + plainApdu.length + trailer.length;

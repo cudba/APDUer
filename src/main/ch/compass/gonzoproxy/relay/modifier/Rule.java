@@ -1,6 +1,10 @@
 package ch.compass.gonzoproxy.relay.modifier;
 
-public class Rule {
+import java.io.Serializable;
+
+public class Rule implements Serializable {
+
+	private static final long serialVersionUID = 5194499674217471000L;
 
 	private String correspondingField;
 	private String originalValue;

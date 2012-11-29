@@ -11,7 +11,7 @@ public class ParsingUnit {
 	public boolean parseBy(PacketTemplate template, Packet processingPacket) {
 		processingPacket.setDescription(template.getPacketDescription());
 		ArrayList<Field> templateFields = template.getFields();
-		byte[] packet = processingPacket.getOriginalPacket();
+		byte[] packet = processingPacket.getOriginalPacketData();
 
 		int contentStartIndex = 0;
 		int contentLength = PacketUtils.DEFAULT_FIELDLENGTH;
@@ -52,7 +52,7 @@ public class ParsingUnit {
 					fieldLength = PacketUtils.DEFAULT_FIELDLENGTH;
 					break;
 				default:
-					int nextIdentifierIndex = PacketUtils.findFieldInPacket(
+					int nextIdentifierIndex = PacketUtils.findFieldInPlainPacket(
 							packet, currentFieldOffset,
 							templateFields.get(i + nextContentIdentifierField));
 					fieldLength = PacketUtils.calculateSubContentLength(
@@ -96,7 +96,7 @@ public class ParsingUnit {
 	public void parseByDefault(Packet processingPacket) {
 		String packetDescription = "Unknown Packet";
 		String fieldName = "unknown";
-		String fieldValue = new String(processingPacket.getOriginalPacket());
+		String fieldValue = new String(processingPacket.getOriginalPacketData());
 		String fieldDescription = "Unknown Packet, parsed by default template";
 		
 		Field defaultField = new Field(fieldName, fieldValue, fieldDescription);

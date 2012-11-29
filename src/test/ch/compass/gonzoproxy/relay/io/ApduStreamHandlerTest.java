@@ -26,7 +26,7 @@ public class ApduStreamHandlerTest {
 		Queue<Packet> queue = streamHandler.readApdu(in);
 		Packet apdu = queue.poll();
 		assertArrayEquals(originalApduFake, apdu.getStreamInput());
-		assertArrayEquals(plainApduFake, apdu.getOriginalPacket());
+		assertArrayEquals(plainApduFake, apdu.getOriginalPacketData());
 		assertArrayEquals(preamleFake, apdu.getPreamble());
 		assertArrayEquals(trailerFake, apdu.getTrailer());
 	}
@@ -44,6 +44,6 @@ public class ApduStreamHandlerTest {
 		Queue<Packet> queue = streamHandler.readApdu(in);
 		Packet apdu = queue.poll();
 		assertArrayEquals(originalApduFake, apdu.getStreamInput());
-		assertArrayEquals(plainApduFake, apdu.getOriginalPacket());
+		assertArrayEquals(plainApduFake, apdu.getOriginalPacketData());
 	}
 }

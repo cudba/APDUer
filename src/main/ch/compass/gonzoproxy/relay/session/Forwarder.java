@@ -92,7 +92,7 @@ public class Forwarder implements Runnable {
 		parsingHandler.tryParse(packet);
 		sessionModel.addPacket(packet);
 		PacketModifier packetModifier = sessionModel.getPacketModifier();
-		Packet processedPacket = packetModifier.tryModify(packet);
+		Packet processedPacket = packetModifier.modifyByRule(packet);
 		if (processedPacket.isModified())
 			sessionModel.addPacket(processedPacket);
 	
